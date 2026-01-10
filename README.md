@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="../assets/logo.png" alt="CANVS Logo" width="120" />
-</p>
-
 <h1 align="center">CANVS</h1>
 <h3 align="center">The Spatial Social Layer</h3>
 
