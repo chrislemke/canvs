@@ -1,0 +1,29 @@
+name: 74_vendor_third_party_contracts
+path: planning/74_vendor_third_party_contracts
+purpose: Third-party vendor contracts and agreements
+
+contains:
+  - vendor contract documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - vendor
+  - contracts
+  - third-party
+  - agreements
+
+related:
+  - planning/37_integration_requirements
+  - planning/73_legal_docs
+
+category: planning
+
+ai_guidance: >
+  Third-party vendor agreements and contract tracking.
+  Reference for external service dependencies.
+
+priority: low
+
+updated: 2026-01-10

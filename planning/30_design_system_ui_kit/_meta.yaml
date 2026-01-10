@@ -1,0 +1,29 @@
+name: 30_design_system_ui_kit
+path: planning/30_design_system_ui_kit
+purpose: Design system and UI component library
+
+contains:
+  - design system documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - design-system
+  - ui-kit
+  - components
+  - tokens
+
+related:
+  - planning/29_clickable_prototype
+  - specs/design
+
+category: planning
+
+ai_guidance: >
+  Defines the design system including components, tokens,
+  and patterns. Reference for consistent UI development.
+
+priority: medium
+
+updated: 2026-01-10

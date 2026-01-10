@@ -1,0 +1,29 @@
+name: 07_target_customer_personas
+path: planning/07_target_customer_personas
+purpose: Detailed profiles of target users and customers
+
+contains:
+  - persona documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - personas
+  - users
+  - customers
+  - audience
+
+related:
+  - planning/01_problem_statement
+  - planning/08_jobs_to_be_done
+
+category: planning
+
+ai_guidance: >
+  Defines target user personas with demographics, behaviors,
+  and needs. Reference when making user-centric decisions.
+
+priority: high
+
+updated: 2026-01-10

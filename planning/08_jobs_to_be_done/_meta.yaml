@@ -1,0 +1,29 @@
+name: 08_jobs_to_be_done
+path: planning/08_jobs_to_be_done
+purpose: User jobs and tasks the product helps accomplish
+
+contains:
+  - jobs-to-be-done documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - jtbd
+  - jobs
+  - tasks
+  - user-needs
+
+related:
+  - planning/07_target_customer_personas
+  - planning/23_user_stories_acceptance_criteria
+
+category: planning
+
+ai_guidance: >
+  Documents the jobs users hire the product to do.
+  JTBD framework for understanding user motivations.
+
+priority: high
+
+updated: 2026-01-10

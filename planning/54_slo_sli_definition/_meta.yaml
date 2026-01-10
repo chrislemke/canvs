@@ -1,0 +1,29 @@
+name: 54_slo_sli_definition
+path: planning/54_slo_sli_definition
+purpose: Service level objectives and indicators
+
+contains:
+  - SLO/SLI documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - slo
+  - sli
+  - sla
+  - reliability
+
+related:
+  - planning/38_non_functional_requirements
+  - planning/53_monitoring_observability_plan
+
+category: planning
+
+ai_guidance: >
+  Defines service level objectives (SLOs) and indicators (SLIs).
+  Measurable targets for system reliability.
+
+priority: high
+
+updated: 2026-01-10

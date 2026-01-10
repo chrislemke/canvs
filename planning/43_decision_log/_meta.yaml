@@ -1,0 +1,29 @@
+name: 43_decision_log
+path: planning/43_decision_log
+purpose: Architecture decision records and project decisions
+
+contains:
+  - decision log documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - decisions
+  - adr
+  - architecture
+  - rationale
+
+related:
+  - planning/34_architecture_overview
+  - planning/42_risk_register
+
+category: planning
+
+ai_guidance: >
+  Records significant decisions with context and rationale.
+  Reference for understanding why decisions were made.
+
+priority: medium
+
+updated: 2026-01-10

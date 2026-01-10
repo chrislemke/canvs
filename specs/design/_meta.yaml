@@ -1,0 +1,40 @@
+name: design
+path: specs/design
+purpose: Visual design specifications, style guides, and design assets
+
+contains:
+  - design vision documents
+  - style specifications
+  - design assets
+  - app icons
+
+primary_files:
+  - specs.md
+  - design_vision_v1.html
+  - design_vision_v2.html
+  - design_vision_v3.html
+
+keywords:
+  - design
+  - visual
+  - style
+  - ui
+  - ux
+  - icons
+
+related:
+  - specs/design/app_icon
+  - specs
+  - planning/30_design_system_ui_kit
+
+category: docs
+
+ai_guidance: >
+  Contains visual design specifications including design vision
+  documents (HTML previews) and style specs. The app_icon subfolder
+  contains app icon variations. Review design_vision files to
+  understand the visual direction.
+
+priority: medium
+
+updated: 2026-01-10

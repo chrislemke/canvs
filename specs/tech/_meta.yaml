@@ -1,0 +1,34 @@
+name: tech
+path: specs/tech
+purpose: Technical specifications, architecture, and stack documentation
+
+contains:
+  - MVP specifications
+  - component specifications
+  - technology stack documentation
+
+primary_files: []
+
+keywords:
+  - technical
+  - architecture
+  - stack
+  - specifications
+  - mvp
+
+related:
+  - specs/tech/mvp
+  - specs/tech/parts
+  - specs/tech/stack
+  - specs
+
+category: docs
+
+ai_guidance: >
+  Contains all technical specifications organized by category.
+  mvp/ has MVP-specific specs, parts/ has component specs,
+  stack/ has technology stack documentation.
+
+priority: high
+
+updated: 2026-01-10

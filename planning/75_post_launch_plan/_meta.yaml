@@ -1,0 +1,29 @@
+name: 75_post_launch_plan
+path: planning/75_post_launch_plan
+purpose: Post-launch activities and monitoring plan
+
+contains:
+  - post-launch plan documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - post-launch
+  - monitoring
+  - support
+  - iteration
+
+related:
+  - planning/67_launch_readiness_checklist
+  - planning/77_post_launch_review_report
+
+category: planning
+
+ai_guidance: >
+  Plans for activities after launch including monitoring,
+  support, and iteration priorities.
+
+priority: high
+
+updated: 2026-01-10

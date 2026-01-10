@@ -1,0 +1,29 @@
+name: 56_runbook_operations_manual
+path: planning/56_runbook_operations_manual
+purpose: Operations runbook and manual
+
+contains:
+  - runbook documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - runbook
+  - operations
+  - manual
+  - procedures
+
+related:
+  - planning/55_incident_response_playbook
+  - planning/57_internal_documentation
+
+category: planning
+
+ai_guidance: >
+  Operational procedures and runbook for system management.
+  Reference for ops team and on-call engineers.
+
+priority: medium
+
+updated: 2026-01-10

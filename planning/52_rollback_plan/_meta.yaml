@@ -1,0 +1,29 @@
+name: 52_rollback_plan
+path: planning/52_rollback_plan
+purpose: Rollback procedures and disaster recovery
+
+contains:
+  - rollback plan documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - rollback
+  - recovery
+  - disaster
+  - backup
+
+related:
+  - planning/51_deployment_plan
+  - planning/55_incident_response_playbook
+
+category: planning
+
+ai_guidance: >
+  Rollback procedures and disaster recovery plans.
+  Critical for handling deployment failures.
+
+priority: high
+
+updated: 2026-01-10

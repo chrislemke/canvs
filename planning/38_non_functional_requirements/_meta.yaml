@@ -1,0 +1,29 @@
+name: 38_non_functional_requirements
+path: planning/38_non_functional_requirements
+purpose: Non-functional requirements (performance, scalability, etc.)
+
+contains:
+  - NFR documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - nfr
+  - performance
+  - scalability
+  - reliability
+
+related:
+  - planning/54_slo_sli_definition
+  - planning/39_security_privacy_requirements
+
+category: planning
+
+ai_guidance: >
+  Non-functional requirements including performance targets,
+  scalability needs, and reliability expectations.
+
+priority: high
+
+updated: 2026-01-10

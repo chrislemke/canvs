@@ -1,0 +1,164 @@
+# =============================================================================
+# Master Index - Project Overview
+# =============================================================================
+# High-level index of all project folders.
+# Use this to understand project structure and find the right area.
+# For detailed file listings, see _indices/<folder>_index.yaml files.
+# =============================================================================
+
+metadata:
+  name: master_index
+  purpose: High-level project overview and folder navigation
+  updated: "2026-01-10"
+
+# =============================================================================
+# PROJECT FOLDERS
+# =============================================================================
+
+folders:
+
+  # ---------------------------------------------------------------------------
+  # SYSTEM FOLDERS (Prefixed with _)
+  # ---------------------------------------------------------------------------
+
+  - path: _docs
+    summary: LLM and human guidance for working with the project
+    keywords: [guidance, instructions, how-to, llm-docs, best-practices]
+    category: docs
+    priority: high
+    index: _indices/docs_index.yaml
+
+  - path: _indices
+    summary: Index files for content discovery and navigation
+    keywords: [index, navigation, search, catalog]
+    category: docs
+    priority: high
+
+  - path: _templates
+    summary: Reusable boilerplate and schema definitions
+    keywords: [template, boilerplate, schema, reusable]
+    category: templates
+    priority: medium
+    index: _indices/templates_index.yaml
+
+  - path: _bucket
+    summary: Unstructured data storage and fallback location
+    keywords: [storage, bucket, temporary, misc, fallback]
+    category: notes
+    priority: low
+    index: _indices/bucket_index.yaml
+
+  # ---------------------------------------------------------------------------
+  # CONTENT FOLDERS
+  # ---------------------------------------------------------------------------
+
+  - path: planning
+    summary: Strategic planning documents (77 numbered folders)
+    keywords: [planning, strategy, roadmap, requirements, product]
+    category: planning
+    priority: high
+    index: _indices/planning_index.yaml
+
+  - path: vision
+    summary: Product vision and long-term direction
+    keywords: [vision, future, direction, goals]
+    category: planning
+    priority: high
+    index: _indices/vision_index.yaml
+
+  - path: specs
+    summary: Technical and design specifications
+    keywords: [specifications, design, technical, architecture]
+    category: docs
+    priority: high
+    index: _indices/specs_index.yaml
+    subindices:
+      - _indices/specs_design_index.yaml
+      - _indices/specs_tech_index.yaml
+      - _indices/specs_content_index.yaml
+
+  - path: scripts
+    summary: Utility scripts, automation, and development tools
+    keywords: [scripts, automation, hooks, tools, utilities]
+    category: tools
+    priority: medium
+    index: _indices/scripts_index.yaml
+
+  - path: research
+    summary: Research documents and findings
+    keywords: [research, analysis, findings, study]
+    category: research
+    priority: medium
+
+  - path: notes
+    summary: Project notes and temporary content
+    keywords: [notes, scratch, temporary, ideas]
+    category: notes
+    priority: low
+    index: _indices/notes_index.yaml
+
+  - path: presentation
+    summary: Presentation materials
+    keywords: [presentation, slides, demo, pitch]
+    category: docs
+    priority: medium
+    index: _indices/presentation_index.yaml
+
+  - path: coordination
+    summary: Workflow and collaboration files
+    keywords: [coordination, workflow, collaboration, tasks]
+    category: coordination
+    priority: medium
+    index: _indices/coordination_index.yaml
+
+  - path: memory
+    summary: Memory and data storage
+    keywords: [memory, data, storage, state]
+    category: notes
+    priority: low
+    index: _indices/memory_index.yaml
+
+# =============================================================================
+# ALL INDICES
+# =============================================================================
+
+indices:
+  - _indices/master.yaml
+  - _indices/docs_index.yaml
+  - _indices/templates_index.yaml
+  - _indices/bucket_index.yaml
+  - _indices/specs_index.yaml
+  - _indices/specs_design_index.yaml
+  - _indices/specs_tech_index.yaml
+  - _indices/specs_content_index.yaml
+  - _indices/planning_index.yaml
+  - _indices/vision_index.yaml
+  - _indices/coordination_index.yaml
+  - _indices/memory_index.yaml
+  - _indices/notes_index.yaml
+  - _indices/presentation_index.yaml
+  - _indices/scripts_index.yaml
+
+# =============================================================================
+# NAVIGATION GUIDANCE
+# =============================================================================
+
+navigation_guide:
+  start_here: _docs/start_here.yaml
+  about_project: _docs/about_this_project.yaml
+  best_practices: _docs/best_practice.yaml
+  index_lookup: _docs/index_lookup.yaml
+
+  for_planning: planning/
+  for_vision: vision/
+  for_specs: specs/
+  for_research: research/
+  for_storage: _bucket/storage/
+
+# =============================================================================
+# RELATED
+# =============================================================================
+
+related:
+  - _docs/index_maintenance.yaml
+  - _docs/understanding_meta_files.yaml

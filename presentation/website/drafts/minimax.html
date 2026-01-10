@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CANVS — The Weaver's Knot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* The Field Journal Palette */
+            --alabaster: #F0EFEA;
+            --terracotta: #D97757;
+            --charcoal: #2C2C2C;
+            --sand: #E8E4DC;
+            --clay: #C4A494;
+            --highlighter: #FFE066;
+
+            /* Paper texture simulation */
+            --paper-grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitching='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--alabaster);
+            color: var(--charcoal);
+            line-height: 1.7;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Paper texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background: var(--paper-grain);
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-family: 'Newsreader', serif;
+            font-weight: 600;
+        }
+
+        .serif-italic {
+            font-family: 'Newsreader', serif;
+            font-style: italic;
+        }
+
+        /* Language Toggle */
+        .lang-toggle {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .lang-btn {
+            background: none;
+            border: none;
+            font-family: 'Newsreader', serif;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            color: var(--charcoal);
+            opacity: 0.4;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .lang-btn.active {
+            opacity: 1;
+        }
+
+        .lang-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--terracotta);
+            transition: width 0.3s ease;
+        }
+
+        .lang-btn.active::after {
+            width: 80%;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 5rem;
+            right: 2rem;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--charcoal);
+            opacity: 0.3;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-dot::before {
+            content: attr(data-label);
+            position: absolute;
+            right: 1.5rem;
+            top: -4px;
+            white-space: nowrap;
+            font-family: 'Newsreader', serif;
+            font-size: 0.85rem;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .nav-dot:hover {
+            opacity: 1;
+        }
+
+        .nav-dot:hover::before {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+        }
+
+        /* The Weaver's Knot Logo */
+        .logo-container {
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .weaver-knot {
+            width: 120px;
+            height: 120px;
+            position: relative;
+        }
+
+        .knot-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Scribble effect for logo */
+        .scribble-line {
+            fill: none;
+            stroke: var(--terracotta);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: url(#scribble-filter);
+        }
+
+        h1.hero-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--charcoal);
+            opacity: 0.7;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.5;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: var(--charcoal);
+        }
+
+        /* Sections */
+        section {
+            min-height: 100vh;
+            padding: 6rem 2rem;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-label {
+            font-family: 'Newsreader', serif;
+            font-size: 0.85rem;
+            color: var(--terracotta);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--terracotta);
+            opacity: 0.3;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            margin-bottom: 2rem;
+            max-width: 800px;
+        }
+
+        /* Vision Section */
+        .vision-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .vision-card {
+            padding: 2.5rem;
+            background: white;
+            border: 2px solid var(--charcoal);
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        /* Scribble border effect */
+        .vision-card::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border: 2px solid var(--charcoal);
+            opacity: 0.1;
+            transform: translate(4px, 4px);
+        }
+
+        .vision-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 8px 8px 0 var(--terracotta);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Hand-drawn circle decoration */
+        .hand-circle {
+            fill: none;
+            stroke: var(--charcoal);
+            stroke-width: 2;
+            opacity: 0.2;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Philosophy Section - The Field Journal */
+        .philosophy-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .philosophy-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .color-palette-display {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .color-swatch {
+            width: 80px;
+            height: 100px;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 0.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+        }
+
+        .swatch-label {
+            background: rgba(255,255,255,0.9);
+            padding: 4px 8px;
+            border-radius: 2px;
+        }
+
+        /* Design Section */
+        .design-showcase {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .design-showcase {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .showcase-item {
+            background: var(--alabaster, #F0EFEA);
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        /* Typography showcase */
+        .type-showcase {
+            margin-bottom: 3rem;
+        }
+
+        .serif-preview {
+            font-family: 'Times New Roman', serif;
+            font-size: 2.5rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .sans-preview {
+            font-family: system-ui, -apple-system, sans-serif;
+            font-size: 1rem;
+            line-height: 1.6;
+            opacity: 0.7;
+        }
+
+        /* Button styles */
+        .btn-row {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .hand-btn {
+            padding: 1rem 2rem;
+            border: 2px solid var(--charcoal);
+            background: transparent;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .hand-btn:hover {
+            background: var(--terracotta);
+            color: white;
+            border-color: var(--terracotta);
+        }
+
+        /* Team/Join Section */
+        .join-content {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .contact-cards {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-card {
+            padding: 2rem;
+            border: 1px solid var(--charcoal);
+            min-width: 200px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover {
+            background: var(--terracotta);
+            color: white;
+            border-color: var(--terracotta);
+        }
+
+        /* Language Toggle */
+        .lang-toggle {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 1000;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .lang-btn.active {
+            opacity: 1;
+            border-bottom: 2px solid var(--terracotta);
+        }
+
+        /* Translation content */
+        .de-content {
+            display: none;
+        }
+
+        body.lang-de .en-content {
+            display: none;
+        }
+
+        body.lang-de .de-content {
+            display: block;
+        }
+
+        /* Background texture */
+        .bg-texture {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitching='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Interactive elements */
+        .ar-preview {
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 9/19;
+            margin: 2rem auto;
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+            border: 3px solid var(--charcoal);
+        }
+
+        .ar-screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #f5f0e8 0%, #ebe5da 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .ar-note {
+            width: 80%;
+            padding: 1rem;
+            background: white;
+            border-radius: 2px;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+            transform: rotate(-2deg);
+        }
+
+        .ar-note-text {
+            font-family: 'Georgia', serif;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+
+# CANVS - Digital Humanism Vision Website
+
+I'll create a beautiful, interactive bilingual website that captures the essence of your vision while showcasing the unique "Digital Humanism" design philosophy. The site will be an immersive presentation that makes stakeholders excited about the project.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CANVS - The Field Journal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap');
+
+        :root {
+            --alabaster: #F0EFEA;
+            --terracotta: #D97757;
+            --charcoal: #2C2C2C;
+            --sand: #E8E4DC;
+            --clay: #C4A68E;
+            --ink: #1A1A1A;
+            --highlighter: #F7E45E;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--alabaster);
+            color: var(--charcoal);
+            overflow-x: hidden;
+            transition: all 0.5s ease;
+        }
+
+        body.lang-de {
+            font-family: 'Inter', serif;
+        }
+
+        .bg-texture {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitching='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Language Toggle */
+        .lang-toggle {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 1000;
+            display: flex;
+            gap: 0.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .lang-btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            cursor: pointer;
+            opacity: 0.4;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        .lang-btn.active {
+            opacity: 1;
+            border-bottom: 2px solid var(--terracotta);
+        }
+
+        .lang-btn:hover {
+            opacity: 0.8;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 100;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--charcoal);
+            font-size: 0.85rem;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--terracotta);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 4rem 2rem;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .logo-container {
+            margin-bottom: 3rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .logo-svg {
+            width: 120px;
+            height: 120px;
+        }
+
+        .hero h1 {
+            font-family: 'Newsreader', serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            color: var(--charcoal);
+            opacity: 0.7;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.5;
+        }
+
+        .scroll-indicator span {
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: var(--charcoal);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; height: 40px; }
+            50% { opacity: 1; height: 60px; }
+        }
+
+        /* Sections */
+        section {
+            padding: 8rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--terracotta);
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-family: 'Newsreader', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 400;
+            line-height: 1.2;
+        }
+
+        /* Philosophy Section */
+        .philosophy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .philosophy-card {
+            padding: 2.5rem;
+            background: white;
+            border-radius: 2px;
+            box-shadow: 4px 4px 0 rgba(44, 44, 44, 0.08);
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .philosophy-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 8px 8px 0 rgba(44, 44, 44, 0.12);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 1.5rem;
+        }
+
+        .philosophy-card h3 {
+            font-family: 'Newsreader', serif;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .philosophy-card p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            opacity: 0.8;
+        }
+
+        /* AR Preview Section */
+        .ar-showcase {
+            background: linear-gradient(135deg, var(--sand) 0%, var(--alabaster) 100%);
+            border-radius: 4px;
+            padding: 4rem;
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ar-showcase::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(217, 119, 87, 0.03) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        .ar-preview-container {
+            display: flex;
+            gap: 4rem;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .phone-mockup {
+            width: 280px;
+            height: 560px;
+            background: var(--charcoal);
+            border-radius: 40px;
+            padding: 12px;
+            box-shadow: 20px 20px 60px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: var(--alabaster);
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .ar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .floating-note {
+            position: absolute;
+            background: white;
+            padding: 1.2rem;
+            border-radius: 2px;
+            box-shadow: 3px 3px 15px rgba(0,0,0,0.1);
+            transform: rotate(-3deg) translateY(20px);
+            animation: floatNote 4s ease-in-out infinite;
+        }
+
+        .floating-note:nth-child(2) {
+            top: 25%;
+            right: 10%;
+            transform: rotate(2deg);
+            animation-delay: -1s;
+        }
+
+        .floating-note:nth-child(3) {
+            bottom: 20%;
+            left: 5%;
+            transform: rotate(-1deg);
+            animation-delay: -2s;
+        }
+
+        @keyframes floatNote {
+            0%, 100% { transform: translateY(0) rotate(var(--r, -3deg)); }
+            50% { transform: translateY(-10px) rotate(var(--r, -3deg)); }
+        }
+
+        .note-content {
+            font-family: 'Newsreader', serif;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .ar-description {
+            max-width: 400px;
+        }
+
+        .ar-description h3 {
+            font-family: 'Newsreader', serif;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .ar-description p {
+            line-height: 1.7;
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Features Section */
+        .features-list {
+            display: grid;
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .feature-item {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 3rem;
+            padding: 2rem 0;
+            border-bottom: 1px solid rgba(44, 44, 44, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            padding-left: 1rem;
+            background: rgba(217, 119, 87, 0.03);
+        }
+
+        .feature-number {
+            font-family: 'Newsreader', serif;
+            font-size: 2.5rem;
+            color: var(--terracotta);
+            opacity: 0.3;
+        }
+
+        .feature-content h3 {
+            font-family: 'Newsreader', serif;
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-content p {
+            line-height: 1.6;
+            opacity: 0.7;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            padding: 6rem 2rem;
+            background: var(--charcoal);
+            color: white;
+            margin: 4rem 0;
+        }
+
+        .cta-section h2 {
+            font-size: clamp(2rem, 3vw, 2.5rem);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section p {
+            opacity: 0.7;
+            max-width: 500px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 3rem;
+            background: var(--terracotta);
+            color: white;
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: #c06548;
+            transform: translateY(-2px);
+        }
+
+        /* Language Toggle */
+        .language-toggle {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 100;
+            display: flex;
+            gap: 0.5rem;
+            background: white;
+            padding: 0.5rem;
+            border-radius: 2px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn.active {
+            background: var(--charcoal);
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 2rem;
+            text-align: center;
+            opacity: 0.6;
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            section {
+                padding: 4rem 1.5rem;
+            }
+
+            .ar-preview-container {
+                flex-direction: column;
+            }
+
+            .feature-item {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .language-toggle, .scroll-indicator {
+                display: none;
+            }
+        }
+
+I need to create a website that presents this project in an engaging way. The user wants:
+- Extremely beautiful design
+- No classical standard look - unique and distinct
+- No "AI slop" (avoid generic AI-generated aesthetics)
+- Interactive elements
+- Bilingual (German and English)
+- Contains all relevant information from the vision paper
+- Should be a great advertisement/hook for the project
+
+Looking at the provided specifications, I need to understand:
+1. The project CANVS - which seems to be an AR-based memory/memory palace application with a "Digital Humanism" aesthetic
+2. The design specs emphasize:
+   - Warm Minimalism / Earth & Skin tones (terracotta, beige, charcoal)
+   - Hand-drawn/scribble aesthetic
+   - Paper-like textures
+   - Typography: Serif headlines (Tiempos Headline/Newsreader), Sans-serif body (Inter/Geist)
+   - The "Weaver's Knot" logo concept
+   - Sketchbook interface feel
+
+I'll craft a design that embodies Digital Humanism, focusing on creating an immersive, tactile experience. The website will prioritize storytelling and visual narrative, using interactive elements to bring the CANVS memory platform to life. By blending warm color palettes with hand-drawn aesthetics, I'll create a unique digital environment that feels personal and inviting.
+
+The design approach centers on translating the core principles of Digital Humanism into a responsive web interface. Typography plays a crucial role, with carefully selected fonts that evoke a sense of scholarly authenticity. Interactive components will guide visitors through the project's vision, making complex AR memory concepts accessible and engaging.
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CANVS — The Living Memory Platform</title>
+
+    <!-- Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS for layout -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* Custom Design System based on Digital Humanism specs */
+        :root {
+            --terracotta: #D97757;
+            --alabaster: #F0EFEA;
+            --charcoal: #2C2C2C;
+            --sand: #E8E4DC;
+            --clay: #C9A68C;
+            --ink: #1A1A1A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--alabaster);
+            color: var(--charcoal);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+        }
+
+        /* Paper Texture Background */
+        .paper-texture {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitching='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+        }
+
+        /* Scribble Animation */
+        .scribble-line {
+            stroke-dasharray: 200;
+            stroke-dashoffset: 200;
+            animation: drawLine 2s ease-out forwards;
+        }
+
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* Floating Animation */
+        .float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Hand-drawn border effect */
+        .hand-drawn {
+            border-radius: 2px 255px 3px 195px / 255px 15px 225px 15px;
+        }
+
+        /* Note card style */
+        .note-card {
+            background: linear-gradient(135deg, #fffbf5 0%, var(--sand) 100%);
+            box-shadow:
+                2px 4px 20px rgba(44, 44, 44, 0.08),
+                inset 0 0 0 1px rgba(44, 44, 44, 0.05);
+        }
+
+        /* Ink blot effect */
+        .ink-blot {
+            position: relative;
+        }
+
+        .ink-blot::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, var(--terracotta) 0%, transparent 70%);
+            opacity: 0.1;
+            filter: blur(20px);
+        }
+
+        /* Interactive hover effects */
+        .hover-lift {
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-8px) rotate(1deg);
+            box-shadow:
+                8px 20px 40px rgba(44, 44, 44, 0.15),
+                inset 0 0 0 1px rgba(217, 119, 87, 0.2);
+        }
+
+        /* Section transitions */
+        section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Scribble underline */
+        .scribble-underline {
+            position: relative;
+            display: inline-block;
+        }
+
+        .scribble-underline::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--terracotta);
+            border-radius: 2px;
+            transform: scaleX(0);
+            transition: transform 0.5s ease;
+        }
+
+        .scribble-underline:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* Language content */
+        .lang-de { display: none; }
+        .lang-en { display: block; }
+
+        body.lang-de .lang-de { display: block; }
+        body.lang-de .lang-en { display: none; }
+
+        /* Cursor follower */
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--terracotta);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+        }
+
+        /* Loading screen */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--alabaster);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-scribble {
+            width: 120px;
+            height: 120px;
+        }
+    </style>
+</head>
+<body class="paper-texture">
+    <!-- Custom Cursor -->
+    <div class="cursor-dot" id="cursorDot"></div>
+
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <svg class="loader-scribble" viewBox="0 0 120 120">
+            <path d="M20,60 Q40,20 60,60 T100,60" stroke="#D97757" fill="none" stroke-width="3" stroke-linecap="round"/>
+            <path d="M30,80 Q50,90 70,75 T110,85" stroke="#2C2C2C" fill="none" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+    </div>
+
+    <!-- Language Toggle -->
+    <button id="langToggle" class="fixed top-6 right-6 z-50 flex items-center gap-3 px-4 py-2 rounded-full border border-[#2C2C2C] hover:bg-[#D97757] hover:border-[#D97757] transition-all duration-300 group">
+        <span class="text-xs font-medium tracking-wider uppercase">EN</span>
+        <div class="w-1 h-1 bg-[#2C2C2C] rounded-full"></div>
+        <span class="text-xs font-medium tracking-wider opacity-50">DE</span>
+    </button>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-40 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <!-- Logo SVG -->
+                <svg width="40" height="40" viewBox="0 0 60 60" class="float">
+                    <path d="M15,30 Q20,10 35,25 T50,35 M10,40 Q25,45 40,30 T55,20"
+                          stroke="#D97757" fill="none" stroke-width="3" stroke-linecap="round"/>
+                    <circle cx="32" cy="28" r="4" fill="#2C2C2C"/>
+                </svg>
+                <span class="serif text-xl tracking-wide font-medium">CANVS</span>
+            </div>
+            <div class="hidden md:flex gap-8">
+                <a href="#vision" class="text-sm hover:text-[#D97757] transition-colors duration-300">Vision</a>
+                <a href="#technology" class="text-sm hover:text-[#D97757] transition-colors duration-300">Technology</a>
+                <a href="#experience" class="text-sm hover:text-[#D97757] transition-colors duration-300">Experience</a>
+                <a href="#join" class="text-sm hover:text-[#D97757] transition-colors duration-300">Join Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-screen flex items-center justify-center px-6 pt-20">
+        <div class="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center">
+            <div class="space-y-8">
+                <!-- Decorative elements -->
+                <div class="flex items-center gap-4 text-[#D97757] opacity-60">
+                    <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12,2 L14,8 L20,9 L15,14 L16,20 L12,17 L8,20 L9,14 L4,9 L10,8 Z" fill="#D97757"/></svg>
+                    <span class="text-xs tracking-widest uppercase">The Living Memory Platform</span>
+                </div>
+
+                <h1 class="serif text-6xl md:text-7xl lg:text-8xl leading-[0.95]">
+                    <span class="lang-en">Where moments become</span>
+                    <span class="lang-de">Wo Momente zu</span>
+                    <br>
+                    <span class="text-[#D97757]" id="heroHighlight">
+                        <span class="lang-en">living stories</span>
+                        <span class="lang-de">lebenden Geschichten</span>
+                    </span>
+                </h1>
+
+                <p class="text-lg md:text-xl max-w-md leading-relaxed opacity-80">
+                    <span class="lang-en">CANVS transforms your world into a living canvas. Every place holds a story—now you can see, share, and weave them together.</span>
+                    <span class="lang-de">CANVS verwandelt Ihre Welt in eine lebende Leinwand. Jeder Ort birgt eine Geschichte—jetzt können Sie diese sehen, teilen und miteinander verbinden.</span>
+                </p>
+
+                <div class="flex gap-4 pt-4">
+                    <a href="#join" class="group relative px-8 py-3 border border-[#2C2C2C] hover:border-[#D97757] transition-all duration-300 overflow-hidden rounded-full">
+                        <span class="relative z-10 text-sm font-medium group-hover:text-white transition-colors duration-300 lang-en">Join the Vision</span>
+                        <span class="relative z-10 text-sm font-medium group-hover:text-white transition-colors duration-300 lang-de">Vision beitreten</span>
+                        <div class="absolute inset-0 bg-[#D97757] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Visual Element -->
+            <div class="relative">
+                <!-- Floating cards effect -->
+                <div class="relative z-10 bg-[#F0EFEA] p-6 rounded-lg shadow-xl transform rotate-2 hover:rotate-0 transition-transform duration-500" style="box-shadow: 20px 20px 60px rgba(0,0,0,0.1);">
+                    <div class="w-full aspect-video bg-[#E8E6E1] rounded flex items-center justify-center mb-4 relative overflow-hidden">
+                        <svg width="80" height="80" viewBox="0 0 60 60" style="opacity: 0.3;">
+                            <path d="M15,30 Q20,10 35,25 T50,35 M10,40 Q25,45 40,30 T55,20" stroke="#2C2C2C" fill="none" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="h-3 bg-[#D97757] rounded w-1/3"></div>
+                        <div class="h-2 bg-[#2C2C2C]/20 rounded w-full"></div>
+                        <div class="h-2 bg-[#2C2C2C]/20 rounded w-2/3"></div>
+                    </div>
+                </div>
+
+                <!-- Background decorative elements -->
+                <div class="absolute -top-12 right-0 w-48 h-48 border border-[#D97757]/30 rounded-full"></div>
+                <div class="absolute bottom-0 left-[-2rem] w-32 h-32 border border-[#2C2C2C]/10 rounded-full"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vision Section -->
+    <section id="vision" class="min-h-screen flex items-center px-6 py-20 bg-[#F0EFEA]">
+        <div class="max-w-7xl mx-auto w-full">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <span class="text-xs tracking-widest uppercase text-[#D97757] mb-4 block">01 — The Vision</span>
+                    <h2 class="serif text-4xl md:text-5xl leading-tight mb-6">
+                        <span class="lang-en">A new way to remember</span>
+                        <span class="lang-de">Eine neue Art zu erinnern</span>
+                    </h2>
+
+                    <div class="space-y-6 text-lg leading-relaxed opacity-80">
+                        <p>
+                            <span class="lang-en">We capture moments, but we lose their essence. Photos sit in folders, memories fade into numbers. CANVS reimagines how we preserve our most precious experiences.</span>
+                            <span class="lang-de">Wir halten Momente fest, aber verlieren ihre Essenz. Fotos landen in Ordnern, Erinnerungen verblassen zu Zahlen. CANVS neuartig wie wir unsere wertvollsten Erfahrungen bewahren.</span>
+                        </p>
+                        <p>
+                            <span class="lang-en">By layering digital memories onto physical locations, we create a living tapestry of human experience. Each note becomes part of a larger story—yours, theirs, ours together.</span>
+                            <span class="lang-de">Durch das Überlagern digitaler Erinnerungen an physischen Orten schaffen wir einen lebendigen Teppich menschlicher Erfahrung. Jede Notiz wird Teil einer größeren Geschichte—deiner, ihrer, unserer gemeinsamen.</span>
+                        </p>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="grid grid-cols-3 gap-8 mt-12 pt-8 border-t border-[#2C2C2C]/10">
+                        <div>
+                            <div class="serif text-3xl">∞</div>
+                            <div class="text-xs opacity-60 tracking-wider lang-en">Stories per place</div>
+                            <div class="text-xs opacity-60 tracking-wider lang-de">Geschichten pro Ort</div>
+                        </div>
+                        <div>
+                            <div class="serif text-3xl">1</div>
+                            <div class="text-xs opacity-60 tracking-wider lang-en">Shared reality</div>
+                            <div class="text-xs opacity-60 tracking-wider lang-de">Geteilte Realität</div>
+                        </div>
+                        <div>
+                            <div class="serif text-3xl">100%</div>
+                            <div class="text-xs opacity-60 tracking-wider lang-en">Human made</div>
+                            <div class="text-xs opacity-60 tracking-wider lang-de">Von Menschen gemacht</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vision Card -->
+                <div class="relative">
+                    <div class="bg-[#D97757] p-8 rounded-lg transform rotate-1 relative z-10" style="box-shadow: 20px 20px 60px rgba(0,0,0,0.15);">
+                        <svg width="40" height="40" viewBox="0 0 60 60" class="mb-6">
+                            <path d="M30,5 L50,25 L30,55 L10,25 Z" fill="#F0EFEA"/>
+                        </svg>
+                        <h3 class="serif text-xl mb-4 text-[#F0EFEA] lang-en">The Memory Layer</h3>
+                        <h3 class="serif text-xl mb-4 text-[#F0EFEA] lang-de">Die Erinnerungsschicht</h3>
+                        <p class="text-[#F0EFEA]/80 leading-relaxed">
+                            <span class="lang-en">Imagine walking through a city where every corner holds a story. A first kiss. A life-changing conversation. A moment of solitude. CANVS makes the invisible visible.</span>
+                            <span class="lang-de">Stell dir vor, du gehst durch eine Stadt, in der jede Ecke eine Geschichte birgt. Ein erster Kuss. Ein lebensveränderndes Gespräch. Ein Moment der Solitude. CANVS macht das Unsichtbare sichtbar.</span>
+                        </p>
+                    </div>
+
+                    <!-- Decorative elements -->
+                    <div class="absolute -bottom-6 -right-6 w-full h-full border border-[#2C2C2C]/20 rounded-lg"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section id="technology" class="min-h-screen flex items-center px-6 py-20">
+        <div class="max-w-7xl mx-auto w-full">
+            <span class="text-xs tracking-widest uppercase text-[#D97757] mb-4 block">02 — Technology</span>
+
+            <h2 class="serif text-4xl md:text-5xl leading-tight mb-16 max-w-3xl">
+                <span class="lang-en">Built for human connection, not just technical achievement</span>
+                <span class="lang-de">Gebaut für menschliche Verbindung, nicht nur technische Leistung</span>
+            </h2>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="group bg-[#F0EFEA] p-8 rounded hover:bg-[#E8E6E1] transition-all duration-300">
+                    <div class="w-12 h-12 border-2 border-[#2C2C2C] rounded mb-6 flex items-center justify-center group-hover:border-[#D97757] transition-colors duration-300">
+                        <svg width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    </div>
+                    <h3 class="serif text-xl mb-3 lang-en">Spatial Memory</h3>
+                    <h3 class="serif text-xl mb-3 lang-de">Räumliche Erinnerung</h3>
+                    <p class="opacity-70 leading-relaxed">
+                        <span class="lang-en">Memories are tied to places. Our AR mapping technology anchors your notes to real-world coordinates, creating a persistent layer of human stories.</span>
+                        <span class="lang-de">Erinnerungen sind an Orte gebunden. Unsere AR-Mapping-Technologie verankert deine Notizen an reale Koordinaten und schafft eine beständige Schicht menschlicher Geschichten.</span>
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="group bg-[#F0EFEA] p-8 rounded hover:bg-[#E8E6E1] transition-all duration-300">
+                    <div class="w-12 h-12 border-2 border-[#2C2C2C] rounded mb-6 flex items-center justify-center group-hover:border-[#D97757] transition-colors duration-300">
+                        <svg width="24" height="24" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    </div>
+                    <h3 class="serif text-xl mb-3 lang-en">Collaborative Canvas</h3>
+                    <h3 class="serif text-xl mb-3 lang-de">Gemeinsame Leinwand</h3>
+                    <p class="opacity-70 leading-relaxed">
+                        <span class="lang-en">Multiple users can contribute to the same location. A city becomes a collective diary, written by everyone who calls it home.</span>
+                        <span class="lang-de">Mehrere Nutzer können zum selben Ort beitragen. Eine Stadt wird ein kollektives Tagebuch, geschrieben von allen, die sie ihr Zuhause nennen.</span>
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="group bg-[#F0EFEA] p-8 rounded hover:bg-[#E8E6E1] transition-all duration-300">
+                    <div class="w-12 h-12 border-2 border-[#2C2C2C] rounded mb-6 flex items-center justify-center group-hover:border-[#D97757] transition-colors duration-300">
+                        <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    </div>
+                    <h3 class="serif text-xl mb-3 lang-en">Privacy First</h3>
+                    <h3 class="serif text-xl mb-3 lang-de">Privatsphäre zuerst</h3>
+                    <p class="opacity-70 leading-relaxed">
+                        <span class="lang-en">Your memories are yours. End-to-end encryption and local-first architecture ensure your stories stay yours until you choose to share.</span>
+                        <span class="lang-de">Deine Erinnerungen gehören dir. Ende-zu-Ende-Verschlüsselung und lokale-first-Architektur stellen sicher, dass deine Geschichten dir gehören, bis du dich entscheidest zu teilen.</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Interactive Demo Placeholder -->
+            <div class="mt-16 bg-[#F0EFEA] rounded p-8 md:p-12 relative overflow-hidden">
+                <div class="absolute top-4 right-6 text-sm opacity-50 font-mono">AR PREVIEW</div>
+                <div class="aspect-video bg-white rounded border-2 border-[#2C2C2C] flex items-center justify-center relative">
+                    <!-- Simulated AR view -->
+                    <div class="text-center">
+                        <p class="serif text-lg mb-2 opacity-50 lang-en">Your memories appear here</p>
+                        <p class="serif text-lg mb-2 opacity-50 lang-de">Hier erscheinen deine Erinnerungen</p>
+                        <div class="inline-block w-64 h-1 bg-[#D97757] mt-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases Section -->
+    <section id="usecases" class="min-h-screen flex items-center px-6 py-20 bg-[#2C2C2C] text-[#F0EFEA]">
+        <div class="max-w-7xl mx-auto w-full">
+            <span class="text-xs tracking-widest uppercase text-[#D97757] mb-4 block">03 — Use Cases</span>
+
+            <h2 class="serif text-4xl md:text-5xl leading-tight mb-16 max-w-3xl">
+                <span class="lang-en">Stories waiting to be discovered</span>
+                <span class="lang-de">Geschichten warten darauf, entdeckt zu werden</span>
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Use Case 1 -->
+                <div class="border border-[#F0EFEA]/30 p-8 rounded relative overflow-hidden group hover:bg-[#3a3a3a] transition-all duration-300">
+                    <h3 class="serif text-xl mb-4 lang-en">The Traveler</h3>
+                    <h3 class="serif text-xl mb-4 lang-de">Der Reisende</h3>
+                    <p class="opacity-70 leading-relaxed mb-6">
+                        <span class="lang-en">Document your journey. Leave notes at hidden gems, recommend routes to future travelers, and discover the stories locals share.</span>
+                        <span class="lang-de">Dokumentiere deine Reise. Hinterlasse Notizen an versteckten Juwelen, empfehle Routen für zukünftige Reisende und entdecke die Geschichten, die Einheimische teilen.</span>
+                    </p>
+                    <div class="text-[#D97757] font-mono text-sm">→ Explore more</div>
+                </div>
+
+                <!-- Use Case 2 -->
+                <div class="border border-[#F0EFEA]/30 p-8 rounded relative overflow-hidden group hover:bg-[#3a3a3a] transition-all duration-300">
+                    <h3 class="serif text-xl mb-4 lang-en">The Urban Historian</h3>
+                    <h3 class="serif text-xl mb-4 lang-de">Der urbane Historiker</h3>
+                    <p class="opacity-70 leading-relaxed mb-6">
+                        <span class="lang-en">Map the history of your neighborhood. Document forgotten stories, architectural details, and community memories.</span>
+                        <span class="lang-de">Kartiere die Geschichte deiner Nachbarschaft. Dokumentiere vergessene Geschichten, architektonische Details und Gemeinschaftserinnerungen.</span>
+                    </p>
+                    <div class="text-[#D97757] font-mono text-sm">→ Explore more</div>
+                AR/MR/VR, Open Source, Community-Driven</h3>
+                    <p class="opacity-70 leading-relaxed">
+                        <span class="lang-en">Open source project with a focus on community contributions. Built with modern web technologies and designed for extensibility.</span>
+                        <span class="lang-de">Open-Source-Projekt mit Fokus auf Community-Beiträge. Gebaut mit modernen Web-Technologien und auf Erweiterbarkeit ausgelegt.</span>
+                    </p>
+                </div>
+
+                <!-- CTA -->
+                <div class="mt-12 text-center">
+                    <a href="#contact" class="inline-block px-8 py-4 bg-[#D97757] text-[#F0EFEA] rounded hover:bg-[#c06647] transition-colors duration-300 font-serif text-lg">
+                        <span class="lang-en">Join the Journey</span>
+                        <span class="lang-de">Begib dich auf die Reise</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Contact Section -->
+            <section id="contact" class="min-h-[60vh] flex items-center px-6 py-20">
+                <div class="max-w-4xl mx-auto w-full text-center">
+                    <h2 class="serif text-3xl md:text-4xl mb-8">
+                        <span class="lang-en">Let's build something meaningful together</span>
+                        <span class="lang-de">Lasst uns gemeinsam etwas Bedeutungsvolles bauen</span>
+            </section>
+
+            <!-- Footer -->
+            <footer class="py-12 text-center opacity-60 font-mono text-sm">
+                <p>CANVS — Digital Humanism</p>
+                <p class="mt-2">© 2024 Open Source Project</p>
+            </footer>
+        </div>
+    </section>

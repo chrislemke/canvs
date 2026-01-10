@@ -1,0 +1,29 @@
+name: 67_launch_readiness_checklist
+path: planning/67_launch_readiness_checklist
+purpose: Pre-launch readiness verification checklist
+
+contains:
+  - launch checklist documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - launch
+  - readiness
+  - checklist
+  - go-live
+
+related:
+  - planning/18_go_to_market_strategy
+  - planning/50_release_plan
+
+category: planning
+
+ai_guidance: >
+  Comprehensive checklist before launch. Must be complete
+  before going live. Critical gate for releases.
+
+priority: high
+
+updated: 2026-01-10

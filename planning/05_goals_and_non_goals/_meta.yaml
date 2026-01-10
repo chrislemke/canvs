@@ -1,0 +1,30 @@
+name: 05_goals_and_non_goals
+path: planning/05_goals_and_non_goals
+purpose: Explicit goals and intentional non-goals for the product
+
+contains:
+  - goals documentation
+  - non-goals documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - goals
+  - non-goals
+  - scope
+  - boundaries
+
+related:
+  - planning/04_product_principles
+  - planning/21_scope_definition
+
+category: planning
+
+ai_guidance: >
+  Clearly defines what the product will and won't do.
+  Critical for scope management and avoiding feature creep.
+
+priority: high
+
+updated: 2026-01-10

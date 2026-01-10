@@ -1,0 +1,108 @@
+# =============================================================================
+# specs/design Index - Design Specifications
+# =============================================================================
+# Index of all files in the specs/design/ folder.
+# Visual design specifications, style guides, and design assets.
+# =============================================================================
+
+metadata:
+  name: specs_design_index
+  folder: specs/design
+  purpose: Visual design specifications, style guides, and design assets
+  updated: "2026-01-10"
+
+# =============================================================================
+# FILES
+# =============================================================================
+
+files:
+
+  # ---------------------------------------------------------------------------
+  # DESIGN VISION DOCUMENTS (Read in order)
+  # ---------------------------------------------------------------------------
+
+  - path: specs/design/specs.md
+    summary: Design specifications document
+    keywords: [design, specs, visual, style]
+    type: document
+    priority: high
+    updated: 2026-01-10
+
+  - path: specs/design/design_vision_v1.html
+    summary: Design vision v1 - Initial visual direction
+    keywords: [design, vision, visual, html, preview]
+    type: document
+    priority: medium
+    updated: 2026-01-10
+
+  - path: specs/design/design_vision_v2.html
+    summary: Design vision v2 - Refined visual direction
+    keywords: [design, vision, visual, html, preview]
+    type: document
+    priority: medium
+    updated: 2026-01-10
+
+  - path: specs/design/design_vision_v3.html
+    summary: Design vision v3 - Further refinements
+    keywords: [design, vision, visual, html, preview]
+    type: document
+    priority: medium
+    updated: 2026-01-10
+
+  - path: specs/design/design_vision_v4.html
+    summary: Design vision v4 - Latest visual direction
+    keywords: [design, vision, visual, html, preview]
+    type: document
+    priority: high
+    updated: 2026-01-10
+
+  # ---------------------------------------------------------------------------
+  # DESIGN SYSTEM
+  # ---------------------------------------------------------------------------
+
+  - path: specs/design/design_system.yaml
+    summary: Comprehensive design system with tokens, components, and guidelines
+    keywords: [design-system, tokens, components, colors, typography, ui-kit]
+    type: config
+    priority: high
+    updated: 2026-01-10
+
+  # ---------------------------------------------------------------------------
+  # FOLDER METADATA
+  # ---------------------------------------------------------------------------
+
+  - path: specs/design/_meta.yaml
+    summary: Metadata file describing the specs/design folder
+    keywords: [meta, folder-info]
+    type: config
+    priority: low
+    updated: 2026-01-10
+
+# =============================================================================
+# SUBFOLDERS
+# =============================================================================
+
+subfolders:
+  - path: specs/design/app_icon
+    purpose: App icon variations and specifications
+    contains:
+      - specs.md - App icon specification document
+      - v1-v8.png/jpeg - Icon variations (8 versions)
+
+# =============================================================================
+# READING ORDER
+# =============================================================================
+
+recommended_reading_order:
+  1: specs/design/specs.md
+  2: specs/design/design_vision_v4.html
+  3: specs/design/app_icon/specs.md
+
+# =============================================================================
+# RELATED
+# =============================================================================
+
+related:
+  - _indices/master.yaml
+  - _indices/specs_index.yaml
+  - planning/30_design_system_ui_kit/

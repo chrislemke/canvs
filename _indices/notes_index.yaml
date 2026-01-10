@@ -1,0 +1,48 @@
+# =============================================================================
+# notes Index - Project Notes
+# =============================================================================
+# Index of all files in the notes/ folder.
+# Daily notes, meeting notes, and informal documentation.
+# =============================================================================
+
+metadata:
+  name: notes_index
+  folder: notes
+  purpose: Daily notes, meeting notes, and informal documentation
+  updated: "2026-01-10"
+
+# =============================================================================
+# FILES
+# =============================================================================
+
+files:
+
+  # ---------------------------------------------------------------------------
+  # DAILY NOTES
+  # ---------------------------------------------------------------------------
+
+  - path: notes/2025-01-10_notes.md
+    summary: Daily notes for January 10, 2025
+    keywords: [daily, notes, meeting, brainstorm]
+    type: document
+    priority: medium
+    updated: 2026-01-10
+
+  # ---------------------------------------------------------------------------
+  # FOLDER METADATA
+  # ---------------------------------------------------------------------------
+
+  - path: notes/_meta.yaml
+    summary: Metadata file describing the notes folder
+    keywords: [meta, folder-info]
+    type: config
+    priority: low
+    updated: 2026-01-10
+
+# =============================================================================
+# RELATED
+# =============================================================================
+
+related:
+  - _indices/master.yaml
+  - planning/43_decision_log/

@@ -1,0 +1,30 @@
+name: 01_problem_statement
+path: planning/01_problem_statement
+purpose: Defines the core user problems and challenges the product addresses
+
+contains:
+  - problem statement documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - problem
+  - challenge
+  - user-needs
+  - pain-points
+
+related:
+  - planning/02_opportunity_market_context_brief
+  - planning/07_target_customer_personas
+
+category: planning
+
+ai_guidance: >
+  Foundation document defining what problem the product solves.
+  Start here to understand the core user challenges and why
+  this product exists.
+
+priority: high
+
+updated: 2026-01-10

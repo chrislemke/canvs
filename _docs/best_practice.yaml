@@ -1,0 +1,185 @@
+# =============================================================================
+# Best Practices for Working with This Project
+# =============================================================================
+# Guidelines for LLM agents and humans working with the CANVS project.
+# Follow these conventions to maintain consistency and organization.
+# =============================================================================
+
+metadata:
+  name: best_practice
+  purpose: Guidelines for LLM agents and humans working with this project
+  version: "1.0"
+  updated: "2026-01-10"
+
+# =============================================================================
+# 1. INFORMATION STORAGE
+# =============================================================================
+
+storage_guidelines:
+  description: >
+    When storing information, always find the most suitable location before
+    creating new files or folders.
+
+  rules:
+    - rule: Check indices first
+      details: >
+        Access _indices/master.yaml and relevant folder indices to find where
+        information should be stored. Don't create new locations without checking.
+
+    - rule: Use fallback storage when needed
+      details: >
+        If no suitable location exists in the project structure, store information
+        in _bucket/storage/. This folder is designed for LLM agent data and
+        miscellaneous content.
+
+    - rule: Never save to project root
+      details: >
+        Working files, test files, notes, and documentation should never be
+        saved to the root folder. Always use appropriate subdirectories.
+
+# =============================================================================
+# 2. TEMPLATE USAGE
+# =============================================================================
+
+template_guidelines:
+  description: >
+    Templates provide consistent structure for common file types.
+    Always prefer templates over creating files from scratch.
+
+  rules:
+    - rule: Check _templates/ folder first
+      details: >
+        Before creating any new file, check if a relevant template exists
+        in the _templates/ folder. Use existing templates when available.
+
+    - rule: Ask before creating new templates
+      details: >
+        If no template exists for your task, ask the user if a new template
+        should be created. The task should still work without a new template,
+        but templates improve future consistency.
+
+  available_templates:
+    - file: _templates/_meta.template.yaml
+      purpose: Folder metadata files
+
+# =============================================================================
+# 3. INDEX MAINTENANCE
+# =============================================================================
+
+index_guidelines:
+  description: >
+    The _indices/ folder provides quick content discovery. Indices must
+    stay up-to-date to remain useful.
+
+  rules:
+    - rule: Update indices on file changes
+      details: >
+        When a file is created, moved, renamed, or deleted, update the
+        appropriate index entry. Find the entry and create, edit, or remove it.
+
+    - rule: Follow two-tier system
+      details: >
+        Master index (_indices/master.yaml) contains folder-level entries.
+        Folder indices (_indices/<folder>_index.yaml) contain file-level entries.
+
+    - rule: Keep summaries concise
+      details: >
+        Index summaries should be under 100 characters. Use 3-6 keywords per entry.
+
+  reference: _docs/index_maintenance.yaml
+
+# =============================================================================
+# 4. FOLDER CREATION
+# =============================================================================
+
+folder_guidelines:
+  description: >
+    New folders require metadata files to be navigable.
+
+  rules:
+    - rule: Create _meta.yaml for new folders
+      details: >
+        When creating a new folder, also create a _meta.yaml file using
+        the template at _templates/_meta.template.yaml.
+
+    - rule: Update master index
+      details: >
+        Add new folders to _indices/master.yaml so they appear in the
+        project overview.
+
+# =============================================================================
+# 5. GIT INTEGRATION
+# =============================================================================
+
+git_guidelines:
+  description: >
+    This project uses git for version control. Suggest commits at appropriate times.
+
+  rules:
+    - rule: Suggest commits when appropriate
+      details: >
+        When a task is complete or significant work has been done, ask the
+        user if they would like to commit the changes.
+
+    - rule: Use descriptive commit messages
+      details: >
+        Commit messages should clearly describe what changed and why.
+
+# =============================================================================
+# 6. CLAUDE FLOW USAGE
+# =============================================================================
+
+claude_flow:
+  description: >
+    Claude Flow provides multi-agent orchestration for complex tasks.
+    Refer to the instruction files for guidance.
+
+  instruction_files:
+    planning: _docs/claude_flow_planning_instructions.yaml
+    development: _docs/claude_flow_software_dev_and_research_instructions.yaml
+
+  when_to_use:
+    planning_instructions: >
+      Use for strategic planning, market research, competitive analysis,
+      marketing, finance, and operations tasks.
+    development_instructions: >
+      Use for software development, coding, testing, and technical research tasks.
+
+# =============================================================================
+# 7. DESIGN CONSISTENCY
+# =============================================================================
+
+design_guidelines:
+  description: >
+    Maintain consistency with existing project patterns.
+
+  rules:
+    - rule: Stick to existing design
+      details: >
+        When making changes, follow the patterns already established in the
+        project. Don't introduce new structures or conventions unless necessary.
+
+    - rule: Review before changing
+      details: >
+        Before modifying project organization or conventions, review existing
+        files to understand the current approach.
+
+    - rule: Ask if unsure
+      details: >
+        If the correct approach is unclear, ask the user rather than guessing.
+
+# =============================================================================
+# QUICK REFERENCE
+# =============================================================================
+
+quick_reference:
+  storage_fallback: _bucket/storage/
+  template_folder: _templates/
+  index_folder: _indices/
+  meta_template: _templates/_meta.template.yaml
+
+related_docs:
+  - _docs/index_maintenance.yaml
+  - _docs/understanding_meta_files.yaml
+  - _docs/claude_flow_planning_instructions.yaml
+  - _docs/claude_flow_software_dev_and_research_instructions.yaml

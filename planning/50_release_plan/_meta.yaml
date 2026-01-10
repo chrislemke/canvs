@@ -1,0 +1,29 @@
+name: 50_release_plan
+path: planning/50_release_plan
+purpose: Release planning and versioning strategy
+
+contains:
+  - release plan documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - release
+  - versioning
+  - deployment
+  - schedule
+
+related:
+  - planning/51_deployment_plan
+  - planning/52_rollback_plan
+
+category: planning
+
+ai_guidance: >
+  Release strategy including versioning, release schedule,
+  and release criteria.
+
+priority: high
+
+updated: 2026-01-10

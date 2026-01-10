@@ -1,0 +1,60 @@
+# =============================================================================
+# Index Template
+# =============================================================================
+# Place index files in _indices/ to catalog folder contents for navigation.
+# Copy this template and fill in the values for your specific folder.
+# Naming convention: <folder_name>_index.yaml (e.g., docs_index.yaml)
+# =============================================================================
+
+metadata:
+  name: folder_name_index               # Name of this index (e.g., docs_index)
+  folder: folder_name                   # The folder being indexed
+  purpose: Brief description            # What this index catalogs
+  updated: "YYYY-MM-DD"                 # Last update date (ISO format, quoted)
+
+# =============================================================================
+# FILES
+# =============================================================================
+
+files:
+
+  # ---------------------------------------------------------------------------
+  # SECTION NAME (Group related files)
+  # ---------------------------------------------------------------------------
+
+  - path: folder/file.yaml              # Path from project root
+    summary: Brief description          # What this file contains
+    keywords: [keyword1, keyword2]      # Terms for searching
+    type: document                      # document | config | code | data
+    priority: high                      # high | medium | low
+    updated: YYYY-MM-DD                 # Last update date
+
+  # ---------------------------------------------------------------------------
+  # ANOTHER SECTION
+  # ---------------------------------------------------------------------------
+
+  # Add more file entries as needed...
+  # - path: folder/another_file.yaml
+  #   summary: Description
+  #   keywords: [keywords]
+  #   type: document
+  #   priority: medium
+  #   updated: YYYY-MM-DD
+
+# =============================================================================
+# READING ORDER (OPTIONAL)
+# =============================================================================
+# Include this section if there's a recommended reading order for the files.
+
+# recommended_reading_order:
+#   1: folder/start_here.yaml
+#   2: folder/next_file.yaml
+#   3: folder/another_file.yaml
+
+# =============================================================================
+# RELATED
+# =============================================================================
+
+related:
+  - _indices/master.yaml                # Always link to master index
+  # - other/related/path                # Add other related paths

@@ -1,0 +1,65 @@
+# =============================================================================
+# Understanding _meta.yaml Files
+# =============================================================================
+# This document explains the _meta.yaml system for LLM agents.
+# Read this ONCE to understand how to navigate this project efficiently.
+# =============================================================================
+
+# WHAT ARE META FILES?
+# -----------------------------------------------------------------------------
+definition: >
+  A _meta.yaml file is a quick-reference manifest placed in a folder that
+  describes the folder's contents, purpose, and how to work with it.
+
+location: >
+  Look for _meta.yaml at the root of any folder. If present, read it FIRST
+  before exploring other files in that folder.
+
+# WHY DO THEY EXIST?
+# -----------------------------------------------------------------------------
+problem_solved: >
+  Instead of scanning every file to understand a folder, read _meta.yaml
+  to instantly know: what's here, what's important, and where to go next.
+
+benefit_for_llms: >
+  Reduces token usage and speeds up navigation. One small file tells you
+  everything about a folder without reading its entire contents.
+
+# HOW TO READ A _meta.yaml FILE
+# -----------------------------------------------------------------------------
+field_reference:
+  # IDENTIFICATION - Know what this folder is
+  name: Folder name (no path)
+  path: Relative path from project root
+  purpose: One-line description of what this folder is for
+
+  # CONTENT - Know what's inside
+  contains: List of content types in this folder
+  primary_files: Most important files to read first
+
+  # NAVIGATION - Find related content
+  keywords: Search terms for discovering this folder
+  related: Paths to related folders
+  category: One of planning | docs | code | coordination | templates | research | notes
+
+  # AI GUIDANCE - Special instructions for you
+  ai_guidance: How to approach this folder as an AI agent
+  priority: low | medium | high - how important is this folder
+
+  # METADATA
+  updated: Last update date (YYYY-MM-DD)
+
+# HOW TO USE THIS SYSTEM
+# -----------------------------------------------------------------------------
+usage_instructions:
+  - When entering a new folder, check if _meta.yaml exists
+  - If yes, read it first to understand context
+  - Focus on primary_files for the most important content
+  - Use keywords to verify you're in the right place
+  - Check related for connected folders
+  - Follow ai_guidance for folder-specific instructions
+
+# REFERENCE
+# -----------------------------------------------------------------------------
+template_location: _templates/_meta.template.yaml
+example_location: _docs/_meta.yaml

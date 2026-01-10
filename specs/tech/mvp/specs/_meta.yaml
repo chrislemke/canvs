@@ -1,0 +1,33 @@
+name: specs
+path: specs/tech/mvp/specs
+purpose: MVP technical specifications and requirements
+
+contains:
+  - software requirements specification
+  - technical specifications
+
+primary_files:
+  - tech_specs.md
+  - srs.md
+
+keywords:
+  - mvp
+  - technical
+  - specifications
+  - requirements
+  - srs
+
+related:
+  - specs/tech/mvp
+  - planning/22_product_requirements_document
+
+category: docs
+
+ai_guidance: >
+  Contains MVP-specific technical specifications. tech_specs.md
+  has detailed technical requirements. srs.md is the software
+  requirements specification.
+
+priority: high
+
+updated: 2026-01-10

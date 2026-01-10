@@ -1,0 +1,56 @@
+# =============================================================================
+# _templates Index - Reusable Templates
+# =============================================================================
+# Index of all files in the _templates/ folder.
+# Templates for creating standardized files across the project.
+# =============================================================================
+
+metadata:
+  name: templates_index
+  folder: _templates
+  purpose: Reusable templates for project documentation and metadata files
+  updated: "2026-01-10"
+
+# =============================================================================
+# FILES
+# =============================================================================
+
+files:
+
+  # ---------------------------------------------------------------------------
+  # META TEMPLATES
+  # ---------------------------------------------------------------------------
+
+  - path: _templates/_meta.template.yaml
+    summary: Template for creating _meta.yaml folder metadata files
+    keywords: [meta, metadata, template, folder, boilerplate]
+    type: config
+    priority: high
+    updated: 2026-01-10
+
+  - path: _templates/index.template.yaml
+    summary: Template for creating folder index files in _indices/
+    keywords: [index, template, catalog, navigation]
+    type: config
+    priority: high
+    updated: 2026-01-10
+
+  # ---------------------------------------------------------------------------
+  # FOLDER METADATA
+  # ---------------------------------------------------------------------------
+
+  - path: _templates/_meta.yaml
+    summary: Metadata file describing the _templates folder
+    keywords: [meta, folder-info]
+    type: config
+    priority: low
+    updated: 2026-01-10
+
+# =============================================================================
+# RELATED
+# =============================================================================
+
+related:
+  - _indices/master.yaml
+  - _docs/understanding_meta_files.yaml
+  - _docs/index_maintenance.yaml

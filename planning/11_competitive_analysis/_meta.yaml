@@ -1,0 +1,29 @@
+name: 11_competitive_analysis
+path: planning/11_competitive_analysis
+purpose: Analysis of competitive landscape and alternatives
+
+contains:
+  - competitive analysis documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - competition
+  - competitors
+  - alternatives
+  - market
+
+related:
+  - planning/09_value_proposition_differentiators
+  - planning/12_market_sizing
+
+category: planning
+
+ai_guidance: >
+  Analyzes competitors, alternatives, and market positioning.
+  Reference for strategic decisions and differentiation.
+
+priority: medium
+
+updated: 2026-01-10

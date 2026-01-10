@@ -1,0 +1,29 @@
+name: 44_build_plan_sprint_plan
+path: planning/44_build_plan_sprint_plan
+purpose: Sprint planning and build schedule
+
+contains:
+  - sprint plan documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - sprint
+  - build
+  - schedule
+  - agile
+
+related:
+  - planning/20_milestone_plan
+  - planning/45_backlog
+
+category: planning
+
+ai_guidance: >
+  Sprint-level planning and build schedule.
+  Operational planning for development execution.
+
+priority: medium
+
+updated: 2026-01-10

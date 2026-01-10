@@ -1,0 +1,29 @@
+name: 09_value_proposition_differentiators
+path: planning/09_value_proposition_differentiators
+purpose: Core value proposition and competitive differentiators
+
+contains:
+  - value proposition documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - value
+  - differentiators
+  - competitive-advantage
+  - benefits
+
+related:
+  - planning/06_elevator_pitch
+  - planning/11_competitive_analysis
+
+category: planning
+
+ai_guidance: >
+  Defines the unique value the product provides and what
+  differentiates it from alternatives. Key for positioning.
+
+priority: high
+
+updated: 2026-01-10

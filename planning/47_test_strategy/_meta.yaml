@@ -1,0 +1,29 @@
+name: 47_test_strategy
+path: planning/47_test_strategy
+purpose: Overall testing strategy and approach
+
+contains:
+  - test strategy documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - testing
+  - strategy
+  - qa
+  - quality
+
+related:
+  - planning/48_test_plan
+  - planning/49_qa_checklist
+
+category: planning
+
+ai_guidance: >
+  High-level testing strategy including test types,
+  coverage targets, and testing approach.
+
+priority: high
+
+updated: 2026-01-10

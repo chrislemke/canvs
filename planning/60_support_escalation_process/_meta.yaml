@@ -1,0 +1,29 @@
+name: 60_support_escalation_process
+path: planning/60_support_escalation_process
+purpose: Customer support and escalation procedures
+
+contains:
+  - support process documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - support
+  - escalation
+  - customer-service
+  - help
+
+related:
+  - planning/55_incident_response_playbook
+  - planning/61_customer_feedback_collection_plan
+
+category: planning
+
+ai_guidance: >
+  Customer support procedures and escalation paths.
+  Reference for handling customer issues.
+
+priority: medium
+
+updated: 2026-01-10

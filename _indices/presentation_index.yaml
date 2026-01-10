@@ -1,0 +1,75 @@
+# =============================================================================
+# presentation Index - Presentation Materials
+# =============================================================================
+# Index of all files in the presentation/ folder.
+# Presentation materials, demos, and marketing assets.
+# =============================================================================
+
+metadata:
+  name: presentation_index
+  folder: presentation
+  purpose: Presentation materials, demos, and marketing assets
+  updated: "2026-01-10"
+
+# =============================================================================
+# FILES
+# =============================================================================
+
+files:
+
+  # ---------------------------------------------------------------------------
+  # FOLDER METADATA
+  # ---------------------------------------------------------------------------
+
+  - path: presentation/_meta.yaml
+    summary: Metadata file describing the presentation folder
+    keywords: [meta, folder-info]
+    type: config
+    priority: low
+    updated: 2026-01-10
+
+# =============================================================================
+# SUBFOLDERS
+# =============================================================================
+
+subfolders:
+  - path: presentation/website
+    purpose: Website-related presentation materials
+    contains:
+      - presentation/website/drafts/ - Draft HTML pages
+      - presentation/website/splash_page/ - Splash page assets
+
+# =============================================================================
+# WEBSITE DRAFTS
+# =============================================================================
+
+website_drafts:
+  - path: presentation/website/drafts/chat_gpt.html
+    summary: ChatGPT-generated website draft
+    type: document
+
+  - path: presentation/website/drafts/claude.html
+    summary: Claude-generated website draft
+    type: document
+
+  - path: presentation/website/drafts/gemini.html
+    summary: Gemini-generated website draft
+    type: document
+
+  - path: presentation/website/drafts/minimax.html
+    summary: MiniMax-generated website draft
+    type: document
+
+splash_page_specs:
+  - path: presentation/website/splash_page/specs/technical_specification.md
+    summary: Technical specification for splash page implementation
+    type: document
+
+# =============================================================================
+# RELATED
+# =============================================================================
+
+related:
+  - _indices/master.yaml
+  - planning/68_press_pr_brief/
+  - planning/71_website_landing_page_brief/

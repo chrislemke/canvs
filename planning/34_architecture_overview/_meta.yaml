@@ -1,0 +1,29 @@
+name: 34_architecture_overview
+path: planning/34_architecture_overview
+purpose: System architecture overview and design
+
+contains:
+  - architecture documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - architecture
+  - system-design
+  - infrastructure
+  - components
+
+related:
+  - planning/33_technical_discovery_feasibility
+  - specs/tech
+
+category: planning
+
+ai_guidance: >
+  High-level system architecture and component design.
+  Foundation for technical implementation decisions.
+
+priority: high
+
+updated: 2026-01-10

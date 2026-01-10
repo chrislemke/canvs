@@ -1,0 +1,29 @@
+name: 73_legal_docs
+path: planning/73_legal_docs
+purpose: Legal documentation and policies
+
+contains:
+  - legal documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - legal
+  - terms
+  - privacy
+  - policies
+
+related:
+  - planning/41_compliance_assessment
+  - planning/74_vendor_third_party_contracts
+
+category: planning
+
+ai_guidance: >
+  Legal documents including terms of service, privacy policy,
+  and other required legal content.
+
+priority: medium
+
+updated: 2026-01-10

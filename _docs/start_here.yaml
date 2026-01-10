@@ -1,0 +1,52 @@
+# =============================================================================
+# START HERE - Entry Point for LLMs and Contributors
+# =============================================================================
+# Read this file first when entering the CANVS project.
+# =============================================================================
+
+project: CANVS
+summary: >
+  AR-native social layer anchored to physical places. This repository contains
+  planning documents, design specs, and coordination files for the 2026-2030 vision.
+
+# =============================================================================
+# REQUIRED READING (in order)
+# =============================================================================
+
+reading_order:
+  - file: _docs/understanding_meta_files.yaml
+    purpose: Learn how _meta.yaml files describe folder contents
+    when: always
+
+  - file: _docs/index_lookup.yaml
+    purpose: Understand the _indices/ navigation system
+    when: always
+
+  - file: _docs/best_practice.yaml
+    purpose: Guidelines for file storage, naming, and consistency
+    when: always
+
+  - file: _docs/about_this_project.yaml
+    purpose: What CANVS is and its core concepts
+    when: always
+
+  - file: _docs/claude_flow_planning_instructions.yaml
+    purpose: Claude Flow guidance for planning and management tasks
+    when: planning, strategy, or coordination work
+
+  - file: _docs/claude_flow_software_dev_and_research_instructions.yaml
+    purpose: Claude Flow guidance for code and research tasks
+    when: software development or research only
+
+  - file: _docs/use_gemini_cli.yaml
+    purpose: Quick reference for Gemini CLI commands
+    when: using Gemini CLI
+
+# =============================================================================
+# NAVIGATION
+# =============================================================================
+
+next_steps:
+  - Browse project structure: _indices/master.yaml
+  - See all docs: _indices/docs_index.yaml
+  - Main vision document: vision/product_vision_paper.md

@@ -1,0 +1,29 @@
+name: 02_opportunity_market_context_brief
+path: planning/02_opportunity_market_context_brief
+purpose: Market opportunity analysis and context for the product
+
+contains:
+  - market context documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - market
+  - opportunity
+  - context
+  - analysis
+
+related:
+  - planning/01_problem_statement
+  - planning/12_market_sizing
+
+category: planning
+
+ai_guidance: >
+  Provides market context and opportunity analysis. Read to
+  understand the market landscape and why this opportunity exists.
+
+priority: high
+
+updated: 2026-01-10

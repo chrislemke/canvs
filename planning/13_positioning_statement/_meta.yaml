@@ -1,0 +1,29 @@
+name: 13_positioning_statement
+path: planning/13_positioning_statement
+purpose: Market positioning and brand positioning statement
+
+contains:
+  - positioning statement documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - positioning
+  - brand
+  - market
+  - messaging
+
+related:
+  - planning/06_elevator_pitch
+  - planning/14_messaging_framework
+
+category: planning
+
+ai_guidance: >
+  Defines how the product is positioned in the market.
+  Foundation for all marketing and communication efforts.
+
+priority: medium
+
+updated: 2026-01-10

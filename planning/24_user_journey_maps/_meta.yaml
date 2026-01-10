@@ -1,0 +1,29 @@
+name: 24_user_journey_maps
+path: planning/24_user_journey_maps
+purpose: User journey maps and experience flows
+
+contains:
+  - journey map documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - journey-map
+  - user-experience
+  - flows
+  - touchpoints
+
+related:
+  - planning/07_target_customer_personas
+  - planning/25_information_architecture
+
+category: planning
+
+ai_guidance: >
+  Maps user journeys through the product experience.
+  Shows touchpoints, emotions, and opportunities for improvement.
+
+priority: medium
+
+updated: 2026-01-10

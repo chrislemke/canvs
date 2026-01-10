@@ -1,0 +1,35 @@
+name: vision
+path: vision
+purpose: Product vision documents and high-level project direction
+
+contains:
+  - product vision papers
+  - project ideas
+  - strategic direction
+
+primary_files:
+  - product_vision_paper.md
+  - project_idea.md
+
+keywords:
+  - vision
+  - strategy
+  - direction
+  - product
+  - goals
+
+related:
+  - planning/03_vision_statement
+  - planning/04_product_principles
+  - planning
+
+category: planning
+
+ai_guidance: >
+  Contains high-level product vision documents. Start with
+  product_vision_paper.md for comprehensive product direction.
+  project_idea.md has initial concept notes.
+
+priority: high
+
+updated: 2026-01-10

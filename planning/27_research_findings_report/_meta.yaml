@@ -1,0 +1,29 @@
+name: 27_research_findings_report
+path: planning/27_research_findings_report
+purpose: User research findings and insights
+
+contains:
+  - research findings documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - research
+  - findings
+  - insights
+  - user-feedback
+
+related:
+  - planning/26_ux_research_plan
+  - planning/10_assumptions_hypotheses_log
+
+category: planning
+
+ai_guidance: >
+  Documents findings from user research activities.
+  Contains insights that should inform product decisions.
+
+priority: medium
+
+updated: 2026-01-10

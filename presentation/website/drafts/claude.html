@@ -1,0 +1,2319 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CANVS — The World is a Blank Page</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --alabaster: #f0efea;
+        --ink: #1a1a18;
+        --terracotta: #d97757;
+        --sage: #8da399;
+        --highlighter: #eedc5b;
+        --ink-light: rgba(26, 26, 24, 0.6);
+        --ink-lighter: rgba(26, 26, 24, 0.15);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* Paper texture */
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--alabaster);
+        color: var(--ink);
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 9999;
+      }
+
+      .serif {
+        font-family: "Newsreader", Georgia, serif;
+      }
+
+      /* Language toggle */
+      .lang-toggle {
+        position: fixed;
+        top: 24px;
+        right: 24px;
+        z-index: 1000;
+        display: flex;
+        gap: 4px;
+        background: rgba(240, 239, 234, 0.95);
+        padding: 6px;
+        border-radius: 30px;
+        border: 1.5px solid var(--ink-lighter);
+        backdrop-filter: blur(10px);
+      }
+
+      .lang-btn {
+        padding: 8px 16px;
+        border: none;
+        background: transparent;
+        font-family: "Inter", sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+        color: var(--ink-light);
+      }
+
+      .lang-btn.active {
+        background: var(--ink);
+        color: var(--alabaster);
+      }
+
+      .lang-btn:hover:not(.active) {
+        color: var(--terracotta);
+      }
+
+      /* Content switching */
+      [data-lang="de"] {
+        display: none;
+      }
+      body.lang-de [data-lang="en"] {
+        display: none;
+      }
+      body.lang-de [data-lang="de"] {
+        display: block;
+      }
+
+      /* Navigation */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 20px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+        background: linear-gradient(
+          to bottom,
+          var(--alabaster) 60%,
+          transparent
+        );
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+      }
+
+      .logo-icon {
+        width: 42px;
+        height: 42px;
+      }
+
+      .logo-icon svg {
+        fill: none;
+        stroke: var(--terracotta);
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        filter: drop-shadow(0 0 1px rgba(217, 119, 87, 0.3));
+      }
+
+      .logo-text {
+        font-family: "Newsreader", serif;
+        font-size: 26px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 32px;
+      }
+
+      .nav-links a {
+        color: var(--ink-light);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 1.5px;
+        background: var(--terracotta);
+        transition: width 0.3s ease;
+      }
+
+      .nav-links a:hover {
+        color: var(--terracotta);
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      /* Scribble button */
+      .btn-scribble {
+        background: transparent;
+        border: 2px solid var(--ink);
+        border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+        padding: 14px 32px;
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        font-size: 13px;
+        letter-spacing: 0.04em;
+        color: var(--ink);
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-scribble:hover {
+        background: var(--terracotta);
+        color: var(--alabaster);
+        border-color: var(--terracotta);
+        transform: translateY(-3px) rotate(-1deg);
+        box-shadow: 4px 4px 0 var(--ink);
+      }
+
+      .btn-scribble.secondary {
+        border-color: var(--terracotta);
+        color: var(--terracotta);
+      }
+
+      .btn-scribble.secondary:hover {
+        background: var(--terracotta);
+        color: var(--alabaster);
+      }
+
+      /* Hero Section */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 120px 80px 80px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-content {
+        max-width: 900px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .hero-tagline {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--terracotta);
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .hero-tagline::before {
+        content: "";
+        width: 40px;
+        height: 2px;
+        background: var(--terracotta);
+      }
+
+      .hero h1 {
+        font-family: "Newsreader", serif;
+        font-size: clamp(3.5rem, 8vw, 7rem);
+        font-weight: 300;
+        line-height: 1.05;
+        margin-bottom: 32px;
+        letter-spacing: -0.02em;
+      }
+
+      .hero h1 em {
+        font-style: italic;
+        color: var(--terracotta);
+      }
+
+      .hero-description {
+        font-size: 1.25rem;
+        color: var(--ink-light);
+        max-width: 600px;
+        margin-bottom: 48px;
+        font-weight: 300;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      /* Decorative elements */
+      .hero-decoration {
+        position: absolute;
+        right: 5%;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 500px;
+        height: 500px;
+        opacity: 0.15;
+        z-index: 1;
+      }
+
+      .hero-decoration svg {
+        width: 100%;
+        height: 100%;
+        stroke: var(--terracotta);
+        stroke-width: 1;
+        fill: none;
+      }
+
+      .floating-card {
+        position: absolute;
+        background: white;
+        padding: 24px;
+        border-radius: 4px;
+        box-shadow: 0 8px 40px rgba(26, 26, 24, 0.08);
+        border: 1px solid rgba(26, 26, 24, 0.05);
+        max-width: 280px;
+        z-index: 3;
+      }
+
+      .floating-card.card-1 {
+        right: 10%;
+        top: 25%;
+        transform: rotate(3deg);
+        animation: float1 6s ease-in-out infinite;
+      }
+
+      .floating-card.card-2 {
+        right: 25%;
+        bottom: 20%;
+        transform: rotate(-2deg);
+        animation: float2 7s ease-in-out infinite;
+      }
+
+      @keyframes float1 {
+        0%,
+        100% {
+          transform: rotate(3deg) translateY(0);
+        }
+        50% {
+          transform: rotate(3deg) translateY(-15px);
+        }
+      }
+
+      @keyframes float2 {
+        0%,
+        100% {
+          transform: rotate(-2deg) translateY(0);
+        }
+        50% {
+          transform: rotate(-2deg) translateY(-20px);
+        }
+      }
+
+      .floating-card .card-label {
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--terracotta);
+        margin-bottom: 8px;
+      }
+
+      .floating-card .card-text {
+        font-family: "Newsreader", serif;
+        font-size: 1.1rem;
+        font-style: italic;
+        line-height: 1.5;
+        color: var(--ink);
+      }
+
+      .floating-card .card-meta {
+        margin-top: 12px;
+        font-size: 10px;
+        color: var(--ink-light);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .floating-card .card-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--sage);
+        border-radius: 50%;
+      }
+
+      /* Section styling */
+      section {
+        padding: 120px 80px;
+        position: relative;
+      }
+
+      .section-header {
+        max-width: 800px;
+        margin-bottom: 80px;
+      }
+
+      .section-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--terracotta);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .section-label::before {
+        content: "";
+        width: 24px;
+        height: 2px;
+        background: var(--terracotta);
+      }
+
+      .section-title {
+        font-family: "Newsreader", serif;
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 400;
+        line-height: 1.15;
+        margin-bottom: 24px;
+        letter-spacing: -0.01em;
+      }
+
+      .section-description {
+        font-size: 1.15rem;
+        color: var(--ink-light);
+        max-width: 600px;
+        font-weight: 300;
+      }
+
+      /* Problem Section */
+      .problem-section {
+        background: linear-gradient(
+          180deg,
+          var(--alabaster) 0%,
+          rgba(141, 163, 153, 0.08) 100%
+        );
+      }
+
+      .problem-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+      }
+
+      .problem-visual {
+        position: relative;
+        height: 500px;
+      }
+
+      .ghost-illustration {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .ghost-illustration svg {
+        width: 80%;
+        max-width: 400px;
+        stroke: var(--ink-lighter);
+        fill: none;
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-dasharray: 8 4;
+      }
+
+      .problem-content {
+        padding-left: 40px;
+      }
+
+      .problem-quote {
+        font-family: "Newsreader", serif;
+        font-size: 1.8rem;
+        font-style: italic;
+        line-height: 1.4;
+        margin-bottom: 32px;
+        position: relative;
+        padding-left: 24px;
+        border-left: 3px solid var(--terracotta);
+      }
+
+      .problem-text {
+        font-size: 1.05rem;
+        color: var(--ink-light);
+        margin-bottom: 20px;
+        font-weight: 300;
+      }
+
+      /* Solution Section */
+      .solution-section {
+        background: var(--ink);
+        color: var(--alabaster);
+      }
+
+      .solution-section .section-label {
+        color: var(--sage);
+      }
+
+      .solution-section .section-label::before {
+        background: var(--sage);
+      }
+
+      .solution-section .section-description {
+        color: rgba(240, 239, 234, 0.7);
+      }
+
+      .solution-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+        margin-top: 60px;
+      }
+
+      .solution-card {
+        background: rgba(240, 239, 234, 0.03);
+        border: 1px solid rgba(240, 239, 234, 0.08);
+        border-radius: 8px;
+        padding: 40px 32px;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .solution-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, var(--terracotta), var(--sage));
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+
+      .solution-card:hover {
+        background: rgba(240, 239, 234, 0.06);
+        transform: translateY(-8px);
+      }
+
+      .solution-card:hover::before {
+        opacity: 1;
+      }
+
+      .solution-icon {
+        width: 56px;
+        height: 56px;
+        margin-bottom: 24px;
+      }
+
+      .solution-icon svg {
+        width: 100%;
+        height: 100%;
+        stroke: var(--terracotta);
+        stroke-width: 1.5;
+        fill: none;
+      }
+
+      .solution-card h3 {
+        font-family: "Newsreader", serif;
+        font-size: 1.5rem;
+        font-weight: 500;
+        margin-bottom: 16px;
+      }
+
+      .solution-card p {
+        font-size: 0.95rem;
+        color: rgba(240, 239, 234, 0.6);
+        line-height: 1.7;
+      }
+
+      /* Experience Section */
+      .experience-section {
+        overflow: hidden;
+      }
+
+      .experience-modes {
+        display: flex;
+        gap: 0;
+        margin-top: 80px;
+      }
+
+      .mode-card {
+        flex: 1;
+        padding: 60px 48px;
+        border: 1px solid var(--ink-lighter);
+        border-right: none;
+        transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        position: relative;
+        cursor: pointer;
+      }
+
+      .mode-card:last-child {
+        border-right: 1px solid var(--ink-lighter);
+      }
+
+      .mode-card:hover {
+        flex: 1.5;
+        background: white;
+        box-shadow: 0 20px 60px rgba(26, 26, 24, 0.08);
+        z-index: 2;
+      }
+
+      .mode-number {
+        font-family: "Newsreader", serif;
+        font-size: 4rem;
+        font-weight: 300;
+        color: var(--ink-lighter);
+        line-height: 1;
+        margin-bottom: 24px;
+        transition: color 0.4s ease;
+      }
+
+      .mode-card:hover .mode-number {
+        color: var(--terracotta);
+      }
+
+      .mode-title {
+        font-family: "Newsreader", serif;
+        font-size: 1.6rem;
+        font-weight: 500;
+        margin-bottom: 12px;
+      }
+
+      .mode-subtitle {
+        font-size: 0.85rem;
+        color: var(--terracotta);
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        margin-bottom: 20px;
+      }
+
+      .mode-description {
+        font-size: 0.95rem;
+        color: var(--ink-light);
+        line-height: 1.7;
+        opacity: 0.7;
+        transition: opacity 0.4s ease;
+      }
+
+      .mode-card:hover .mode-description {
+        opacity: 1;
+      }
+
+      /* Primitives Section */
+      .primitives-section {
+        background: linear-gradient(
+          135deg,
+          rgba(217, 119, 87, 0.04) 0%,
+          var(--alabaster) 50%,
+          rgba(141, 163, 153, 0.06) 100%
+        );
+      }
+
+      .primitives-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        margin-top: 60px;
+      }
+
+      .primitive-card {
+        background: white;
+        border: 1px solid rgba(26, 26, 24, 0.06);
+        border-radius: 6px;
+        padding: 36px 28px;
+        transition: all 0.4s ease;
+        position: relative;
+      }
+
+      .primitive-card:hover {
+        transform: translateY(-6px) rotate(-0.5deg);
+        box-shadow: 8px 12px 40px rgba(26, 26, 24, 0.08);
+        border-color: var(--terracotta);
+      }
+
+      .primitive-icon {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 20px;
+      }
+
+      .primitive-icon svg {
+        width: 100%;
+        height: 100%;
+        stroke: var(--ink);
+        stroke-width: 1.5;
+        fill: none;
+      }
+
+      .primitive-card h3 {
+        font-family: "Newsreader", serif;
+        font-size: 1.3rem;
+        font-weight: 500;
+        margin-bottom: 10px;
+      }
+
+      .primitive-card p {
+        font-size: 0.9rem;
+        color: var(--ink-light);
+        line-height: 1.6;
+      }
+
+      .primitive-example {
+        margin-top: 16px;
+        padding: 12px;
+        background: rgba(238, 220, 91, 0.15);
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-style: italic;
+        color: var(--ink);
+      }
+
+      /* Use Cases Section */
+      .usecases-section {
+        background: white;
+      }
+
+      .usecase-categories {
+        display: flex;
+        flex-direction: column;
+        gap: 80px;
+        margin-top: 60px;
+      }
+
+      .usecase-category {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 60px;
+        align-items: start;
+      }
+
+      .category-header {
+        position: sticky;
+        top: 120px;
+      }
+
+      .category-icon {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 20px;
+        background: var(--alabaster);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .category-icon svg {
+        width: 32px;
+        height: 32px;
+        stroke: var(--terracotta);
+        stroke-width: 1.5;
+        fill: none;
+      }
+
+      .category-title {
+        font-family: "Newsreader", serif;
+        font-size: 1.8rem;
+        font-weight: 500;
+        margin-bottom: 12px;
+      }
+
+      .category-description {
+        font-size: 0.95rem;
+        color: var(--ink-light);
+        line-height: 1.6;
+      }
+
+      .usecase-items {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+
+      .usecase-item {
+        padding: 28px;
+        border: 1px solid var(--ink-lighter);
+        border-radius: 4px;
+        transition: all 0.3s ease;
+      }
+
+      .usecase-item:hover {
+        background: var(--alabaster);
+        border-color: var(--sage);
+      }
+
+      .usecase-item h4 {
+        font-family: "Newsreader", serif;
+        font-size: 1.15rem;
+        font-weight: 500;
+        margin-bottom: 10px;
+      }
+
+      .usecase-item p {
+        font-size: 0.9rem;
+        color: var(--ink-light);
+        line-height: 1.6;
+      }
+
+      /* Roadmap Section */
+      .roadmap-section {
+        background: var(--ink);
+        color: var(--alabaster);
+        overflow: hidden;
+      }
+
+      .roadmap-section .section-label {
+        color: var(--highlighter);
+      }
+
+      .roadmap-section .section-label::before {
+        background: var(--highlighter);
+      }
+
+      .roadmap-section .section-description {
+        color: rgba(240, 239, 234, 0.6);
+      }
+
+      .roadmap-timeline {
+        display: flex;
+        gap: 0;
+        margin-top: 80px;
+        position: relative;
+      }
+
+      .roadmap-timeline::before {
+        content: "";
+        position: absolute;
+        top: 40px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--terracotta),
+          var(--sage),
+          var(--highlighter)
+        );
+      }
+
+      .roadmap-year {
+        flex: 1;
+        padding: 80px 32px 40px;
+        position: relative;
+      }
+
+      .roadmap-year::before {
+        content: "";
+        position: absolute;
+        top: 32px;
+        left: 32px;
+        width: 16px;
+        height: 16px;
+        background: var(--alabaster);
+        border-radius: 50%;
+        border: 3px solid var(--terracotta);
+      }
+
+      .year-label {
+        font-family: "Newsreader", serif;
+        font-size: 2.5rem;
+        font-weight: 300;
+        color: var(--terracotta);
+        margin-bottom: 16px;
+      }
+
+      .year-title {
+        font-family: "Newsreader", serif;
+        font-size: 1.3rem;
+        font-weight: 500;
+        margin-bottom: 16px;
+      }
+
+      .year-items {
+        list-style: none;
+      }
+
+      .year-items li {
+        font-size: 0.9rem;
+        color: rgba(240, 239, 234, 0.6);
+        margin-bottom: 10px;
+        padding-left: 16px;
+        position: relative;
+      }
+
+      .year-items li::before {
+        content: "—";
+        position: absolute;
+        left: 0;
+        color: var(--sage);
+      }
+
+      /* Impact Section */
+      .impact-section {
+        background: linear-gradient(
+          180deg,
+          var(--alabaster) 0%,
+          rgba(141, 163, 153, 0.1) 100%
+        );
+      }
+
+      .impact-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 48px;
+        margin-top: 60px;
+      }
+
+      .impact-card {
+        text-align: center;
+        padding: 48px 32px;
+      }
+
+      .impact-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 24px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 30px rgba(26, 26, 24, 0.06);
+      }
+
+      .impact-icon svg {
+        width: 40px;
+        height: 40px;
+        stroke: var(--terracotta);
+        stroke-width: 1.5;
+        fill: none;
+      }
+
+      .impact-card h3 {
+        font-family: "Newsreader", serif;
+        font-size: 1.4rem;
+        font-weight: 500;
+        margin-bottom: 12px;
+      }
+
+      .impact-card p {
+        font-size: 0.95rem;
+        color: var(--ink-light);
+        line-height: 1.6;
+      }
+
+      /* CTA Section */
+      .cta-section {
+        padding: 160px 80px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .cta-decoration {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 800px;
+        height: 800px;
+        opacity: 0.05;
+        z-index: 0;
+      }
+
+      .cta-decoration svg {
+        width: 100%;
+        height: 100%;
+        stroke: var(--ink);
+        stroke-width: 0.5;
+        fill: none;
+      }
+
+      .cta-content {
+        position: relative;
+        z-index: 1;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      .cta-title {
+        font-family: "Newsreader", serif;
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 400;
+        line-height: 1.2;
+        margin-bottom: 24px;
+      }
+
+      .cta-title em {
+        font-style: italic;
+        color: var(--terracotta);
+      }
+
+      .cta-description {
+        font-size: 1.15rem;
+        color: var(--ink-light);
+        margin-bottom: 48px;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .cta-actions {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      /* Footer */
+      footer {
+        padding: 60px 80px;
+        border-top: 1px solid var(--ink-lighter);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .footer-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .footer-logo svg {
+        width: 32px;
+        height: 32px;
+        stroke: var(--terracotta);
+        stroke-width: 2.5;
+        fill: none;
+      }
+
+      .footer-text {
+        font-size: 0.85rem;
+        color: var(--ink-light);
+      }
+
+      .footer-meta {
+        font-size: 0.8rem;
+        color: var(--ink-lighter);
+      }
+
+      /* Animations */
+      @keyframes draw {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      .draw-animation {
+        stroke-dasharray: 300;
+        stroke-dashoffset: 300;
+        animation: draw 2s ease forwards;
+      }
+
+      /* Scroll animations */
+      .fade-up {
+        opacity: 0;
+        transform: translateY(40px);
+        transition:
+          opacity 0.8s ease,
+          transform 0.8s ease;
+      }
+
+      .fade-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Responsive */
+      @media (max-width: 1200px) {
+        .solution-cards {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .primitives-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 900px) {
+        section {
+          padding: 80px 40px;
+        }
+
+        .hero {
+          padding: 100px 40px 60px;
+        }
+
+        .problem-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .problem-visual {
+          display: none;
+        }
+
+        .problem-content {
+          padding-left: 0;
+        }
+
+        .solution-cards {
+          grid-template-columns: 1fr;
+        }
+
+        .experience-modes {
+          flex-direction: column;
+        }
+
+        .mode-card {
+          border-right: 1px solid var(--ink-lighter);
+          border-bottom: none;
+        }
+
+        .mode-card:last-child {
+          border-bottom: 1px solid var(--ink-lighter);
+        }
+
+        .primitives-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .usecase-category {
+          grid-template-columns: 1fr;
+        }
+
+        .usecase-items {
+          grid-template-columns: 1fr;
+        }
+
+        .roadmap-timeline {
+          flex-direction: column;
+        }
+
+        .roadmap-timeline::before {
+          display: none;
+        }
+
+        .impact-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .floating-card {
+          display: none;
+        }
+
+        nav {
+          padding: 16px 24px;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        footer {
+          flex-direction: column;
+          gap: 24px;
+          text-align: center;
+        }
+      }
+
+      /* Highlight effect */
+      .highlight {
+        background: linear-gradient(
+          180deg,
+          transparent 60%,
+          var(--highlighter) 60%
+        );
+        padding: 0 4px;
+      }
+
+      /* Manifesto styling */
+      .manifesto-block {
+        background: white;
+        border-left: 4px solid var(--terracotta);
+        padding: 40px;
+        margin: 60px 0;
+        box-shadow: 0 8px 40px rgba(26, 26, 24, 0.06);
+      }
+
+      .manifesto-block p {
+        font-family: "Newsreader", serif;
+        font-size: 1.4rem;
+        font-style: italic;
+        line-height: 1.6;
+        color: var(--ink);
+      }
+
+      .manifesto-block p + p {
+        margin-top: 16px;
+      }
+
+      .manifesto-block strong {
+        color: var(--terracotta);
+        font-style: normal;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Language Toggle -->
+    <div class="lang-toggle">
+      <button class="lang-btn active" data-lang-switch="en">EN</button>
+      <button class="lang-btn" data-lang-switch="de">DE</button>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 100 100">
+            <path
+              class="draw-animation"
+              d="M50,90 C42,78 20,55 20,38 C20,20 38,15 50,32 C62,15 80,20 80,38 C80,55 58,78 50,90 Z M50,32 C50,32 50,45 50,45"
+            />
+          </svg>
+        </div>
+        <span class="logo-text">CANVS</span>
+      </div>
+
+      <div class="nav-links" data-lang="en">
+        <a href="#manifesto">Manifesto</a>
+        <a href="#experience">Experience</a>
+        <a href="#impact">Impact</a>
+        <a href="#roadmap">Roadmap</a>
+      </div>
+      <div class="nav-links" data-lang="de">
+        <a href="#manifesto">Manifest</a>
+        <a href="#experience">Erlebnis</a>
+        <a href="#impact">Wirkung</a>
+        <a href="#roadmap">Fahrplan</a>
+      </div>
+
+      <button class="btn-scribble" data-lang="en">Join the Vision</button>
+      <button class="btn-scribble" data-lang="de">Vision mitgestalten</button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-decoration">
+        <svg viewBox="0 0 400 400">
+          <circle cx="200" cy="200" r="150" stroke-dasharray="4 8" />
+          <circle cx="200" cy="200" r="100" stroke-dasharray="2 6" />
+          <path
+            d="M50,200 Q200,50 350,200 Q200,350 50,200"
+            stroke-dasharray="8 4"
+          />
+        </svg>
+      </div>
+
+      <div class="floating-card card-1" data-lang="en">
+        <div class="card-label">● Memory</div>
+        <p class="card-text">"The light hits this wall perfectly at 5pm."</p>
+        <div class="card-meta">
+          <span class="card-dot"></span>
+          <span>Placed 2 hours ago</span>
+        </div>
+      </div>
+
+      <div class="floating-card card-2" data-lang="en">
+        <div class="card-label">● Trail</div>
+        <p class="card-text">
+          "My favorite route through the old town—every corner has a story."
+        </p>
+        <div class="card-meta">
+          <span class="card-dot" style="background: var(--terracotta)"></span>
+          <span>12 stops · 45 min</span>
+        </div>
+      </div>
+
+      <div class="floating-card card-1" data-lang="de">
+        <div class="card-label">● Erinnerung</div>
+        <p class="card-text">
+          "Um 17 Uhr trifft das Licht diese Wand perfekt."
+        </p>
+        <div class="card-meta">
+          <span class="card-dot"></span>
+          <span>Vor 2 Stunden platziert</span>
+        </div>
+      </div>
+
+      <div class="floating-card card-2" data-lang="de">
+        <div class="card-label">● Pfad</div>
+        <p class="card-text">
+          "Meine Lieblingsroute durch die Altstadt—jede Ecke erzählt eine
+          Geschichte."
+        </p>
+        <div class="card-meta">
+          <span class="card-dot" style="background: var(--terracotta)"></span>
+          <span>12 Stationen · 45 Min</span>
+        </div>
+      </div>
+
+      <div class="hero-content">
+        <div class="hero-tagline" data-lang="en">
+          Spatial Social Layer · 2026–2030
+        </div>
+        <div class="hero-tagline" data-lang="de">
+          Räumliche Soziale Schicht · 2026–2030
+        </div>
+
+        <h1 data-lang="en">The world is<br /><em>a blank page.</em></h1>
+        <h1 data-lang="de">Die Welt ist<br /><em>eine leere Seite.</em></h1>
+
+        <p class="hero-description" data-lang="en">
+          We are building the Internet of Places. Not a feed that scrolls
+          forever, but a layer of meaning that stays where you leave it.
+        </p>
+        <p class="hero-description" data-lang="de">
+          Wir bauen das Internet der Orte. Kein endloser Feed, sondern eine
+          Bedeutungsschicht, die dort bleibt, wo du sie hinterlässt.
+        </p>
+
+        <div class="hero-actions">
+          <button class="btn-scribble" data-lang="en">
+            Explore the Vision
+          </button>
+          <button class="btn-scribble secondary" data-lang="en">
+            Read the Paper
+          </button>
+          <button class="btn-scribble" data-lang="de">Vision entdecken</button>
+          <button class="btn-scribble secondary" data-lang="de">
+            Konzeptpapier lesen
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Manifesto Section -->
+    <section id="manifesto" class="problem-section">
+      <div class="section-header">
+        <div class="section-label" data-lang="en">The Problem</div>
+        <div class="section-label" data-lang="de">Das Problem</div>
+
+        <h2 class="section-title" data-lang="en">
+          We walk through a world full of
+          <span class="highlight">invisible meaning</span>
+        </h2>
+        <h2 class="section-title" data-lang="de">
+          Wir laufen durch eine Welt voller
+          <span class="highlight">unsichtbarer Bedeutung</span>
+        </h2>
+      </div>
+
+      <div class="problem-grid">
+        <div class="problem-visual">
+          <div class="ghost-illustration">
+            <svg viewBox="0 0 300 300">
+              <path
+                d="M150,50 C80,50 50,120 50,180 C50,240 100,270 150,270 C200,270 250,240 250,180 C250,120 220,50 150,50"
+              />
+              <circle cx="120" cy="140" r="15" />
+              <circle cx="180" cy="140" r="15" />
+              <path d="M120,200 Q150,230 180,200" />
+              <path
+                d="M50,280 L100,260 L150,290 L200,250 L250,280"
+                stroke-dasharray="4 4"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <div class="problem-content">
+          <blockquote class="problem-quote" data-lang="en">
+            "Things happen at places. But digital memory is detached from the
+            physical world."
+          </blockquote>
+          <blockquote class="problem-quote" data-lang="de">
+            „Dinge passieren an Orten. Aber digitale Erinnerung ist von der
+            physischen Welt entkoppelt."
+          </blockquote>
+
+          <p class="problem-text" data-lang="en">
+            A first kiss. A perfect skate trick. A protest that changed
+            someone's life. A conversation that flipped a career. A hidden café
+            that felt like finding oxygen.
+          </p>
+          <p class="problem-text" data-lang="de">
+            Ein erster Kuss. Ein perfekter Skateboard-Trick. Ein Protest, der
+            jemandes Leben verändert hat. Ein Gespräch, das eine Karriere
+            wendete. Ein verstecktes Café, das sich anfühlte wie Sauerstoff zu
+            finden.
+          </p>
+
+          <p class="problem-text" data-lang="en">
+            Then the moment ends—and the meaning becomes
+            <strong>invisible</strong>. Someone stands at that place two weeks
+            later and sees… concrete. The emotion is gone. The story exists
+            somewhere in a cloud account, if at all.
+          </p>
+          <p class="problem-text" data-lang="de">
+            Dann endet der Moment—und die Bedeutung wird
+            <strong>unsichtbar</strong>. Jemand steht zwei Wochen später an
+            diesem Ort und sieht... Beton. Die Emotion ist verschwunden. Die
+            Geschichte existiert irgendwo in einem Cloud-Konto, wenn überhaupt.
+          </p>
+
+          <p
+            class="problem-text"
+            data-lang="en"
+            style="font-weight: 500; color: var(--ink)"
+          >
+            It's not "there." It's nowhere.
+          </p>
+          <p
+            class="problem-text"
+            data-lang="de"
+            style="font-weight: 500; color: var(--ink)"
+          >
+            Es ist nicht „dort". Es ist nirgendwo.
+          </p>
+        </div>
+      </div>
+
+      <div class="manifesto-block" data-lang="en">
+        <p><strong>The feed is not the home screen.</strong> The world is.</p>
+        <p>
+          <strong>Content is not something you "go find."</strong> It's
+          something you encounter, because you are there.
+        </p>
+        <p>
+          <strong>Meaning is not manufactured by engagement hacks.</strong>
+          Meaning is in context.
+        </p>
+      </div>
+      <div class="manifesto-block" data-lang="de">
+        <p>
+          <strong>Der Feed ist nicht der Startbildschirm.</strong> Die Welt ist
+          es.
+        </p>
+        <p>
+          <strong>Inhalte sind nichts, das man „suchen geht".</strong> Es ist
+          etwas, dem man begegnet, weil man dort ist.
+        </p>
+        <p>
+          <strong>Bedeutung wird nicht durch Engagement-Tricks erzeugt.</strong>
+          Bedeutung liegt im Kontext.
+        </p>
+      </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section class="solution-section">
+      <div class="section-header">
+        <div class="section-label" data-lang="en">The Solution</div>
+        <div class="section-label" data-lang="de">Die Lösung</div>
+
+        <h2 class="section-title" data-lang="en">
+          Persistent Emotional Anchoring
+        </h2>
+        <h2 class="section-title" data-lang="de">
+          Persistente emotionale Verankerung
+        </h2>
+
+        <p class="section-description" data-lang="en">
+          CANVS makes moments spatially persistent. Not as a gimmick, but as a
+          new medium: <em class="serif">Place becomes the index.</em>
+        </p>
+        <p class="section-description" data-lang="de">
+          CANVS macht Momente räumlich persistent. Nicht als Spielerei, sondern
+          als neues Medium: <em class="serif">Der Ort wird zum Index.</em>
+        </p>
+      </div>
+
+      <div class="solution-cards">
+        <div class="solution-card">
+          <div class="solution-icon">
+            <svg viewBox="0 0 50 50">
+              <circle cx="25" cy="20" r="12" />
+              <path d="M25,32 L25,45" />
+              <path d="M15,45 L35,45" />
+            </svg>
+          </div>
+          <h3 data-lang="en">Reality Time Capsules</h3>
+          <h3 data-lang="de">Realitäts-Zeitkapseln</h3>
+          <p data-lang="en">
+            Content—text, audio, video, 3D captures, sketches—pinned to
+            real-world locations so future visitors can "open" the moment where
+            it happened.
+          </p>
+          <p data-lang="de">
+            Inhalte—Text, Audio, Video, 3D-Aufnahmen, Skizzen—an realen Orten
+            verankert, damit zukünftige Besucher den Moment „öffnen" können, wo
+            er passiert ist.
+          </p>
+        </div>
+
+        <div class="solution-card">
+          <div class="solution-icon">
+            <svg viewBox="0 0 50 50">
+              <path d="M10,25 Q25,10 40,25 Q25,40 10,25" />
+              <circle cx="25" cy="25" r="5" />
+            </svg>
+          </div>
+          <h3 data-lang="en">Asynchronous Presence</h3>
+          <h3 data-lang="de">Asynchrone Präsenz</h3>
+          <p data-lang="en">
+            Experience a moment later, not by "watching a video," but by seeing
+            the memory <em>in situ</em>, aligned to the geometry of the world.
+          </p>
+          <p data-lang="de">
+            Erlebe einen Moment später—nicht durch „ein Video ansehen", sondern
+            indem du die Erinnerung <em>in situ</em> siehst, ausgerichtet an der
+            Geometrie der Welt.
+          </p>
+        </div>
+
+        <div class="solution-card">
+          <div class="solution-icon">
+            <svg viewBox="0 0 50 50">
+              <rect
+                x="8"
+                y="8"
+                width="14"
+                height="14"
+                rx="2"
+                transform="rotate(15 15 15)"
+              />
+              <rect
+                x="28"
+                y="28"
+                width="14"
+                height="14"
+                rx="2"
+                transform="rotate(-10 35 35)"
+              />
+              <path d="M20,20 L30,30" stroke-dasharray="2 2" />
+            </svg>
+          </div>
+          <h3 data-lang="en">World-Locked Anchoring</h3>
+          <h3 data-lang="de">Weltgebundene Verankerung</h3>
+          <p data-lang="en">
+            Modern AR stacks combine GPS with vision-based localization for
+            stable, multi-tier anchoring that persists across time and devices.
+          </p>
+          <p data-lang="de">
+            Moderne AR-Systeme kombinieren GPS mit visueller Lokalisierung für
+            stabile, mehrstufige Verankerung, die über Zeit und Geräte hinweg
+            besteht.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="experience-section">
+      <div class="section-header">
+        <div class="section-label" data-lang="en">The Experience</div>
+        <div class="section-label" data-lang="de">Das Erlebnis</div>
+
+        <h2 class="section-title" data-lang="en">The Spatial Browser</h2>
+        <h2 class="section-title" data-lang="de">Der Räumliche Browser</h2>
+
+        <p class="section-description" data-lang="en">
+          A browser that lets you "read" places the way you read websites. Three
+          modes, one mental model.
+        </p>
+        <p class="section-description" data-lang="de">
+          Ein Browser, mit dem du Orte „lesen" kannst, wie du Websites liest.
+          Drei Modi, ein mentales Modell.
+        </p>
+      </div>
+
+      <div class="experience-modes">
+        <div class="mode-card">
+          <div class="mode-number">01</div>
+          <h3 class="mode-title" data-lang="en">AR Mode</h3>
+          <h3 class="mode-title" data-lang="de">AR-Modus</h3>
+          <div class="mode-subtitle" data-lang="en">"Magic Window"</div>
+          <div class="mode-subtitle" data-lang="de">„Magisches Fenster"</div>
+          <p class="mode-description" data-lang="en">
+            Look at the world and see location-anchored content where it
+            belongs. Stories float exactly where they happened.
+          </p>
+          <p class="mode-description" data-lang="de">
+            Blicke auf die Welt und sieh ortsgebundene Inhalte, wo sie
+            hingehören. Geschichten schweben genau dort, wo sie passierten.
+          </p>
+        </div>
+
+        <div class="mode-card">
+          <div class="mode-number">02</div>
+          <h3 class="mode-title" data-lang="en">Map Mode</h3>
+          <h3 class="mode-title" data-lang="de">Karten-Modus</h3>
+          <div class="mode-subtitle" data-lang="en">"Spatial Radar"</div>
+          <div class="mode-subtitle" data-lang="de">„Räumliches Radar"</div>
+          <p class="mode-description" data-lang="en">
+            See nearby layers, hotspots, and trails. The map is not the
+            product—it's the minimap for the real world.
+          </p>
+          <p class="mode-description" data-lang="de">
+            Sieh nahegelegene Ebenen, Hotspots und Pfade. Die Karte ist nicht
+            das Produkt—sie ist die Minikarte für die echte Welt.
+          </p>
+        </div>
+
+        <div class="mode-card">
+          <div class="mode-number">03</div>
+          <h3 class="mode-title" data-lang="en">Time Mode</h3>
+          <h3 class="mode-title" data-lang="de">Zeit-Modus</h3>
+          <div class="mode-subtitle" data-lang="en">"Temporal Scrub"</div>
+          <div class="mode-subtitle" data-lang="de">„Zeitlicher Durchlauf"</div>
+          <p class="mode-description" data-lang="en">
+            Slide through time to see what happened here: yesterday, last
+            summer, 10 years ago. Places remember.
+          </p>
+          <p class="mode-description" data-lang="de">
+            Gleite durch die Zeit, um zu sehen, was hier passiert ist: gestern,
+            letzten Sommer, vor 10 Jahren. Orte erinnern sich.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Primitives Section -->
+    <section class="primitives-section">
+      <div class="section-header">
+        <div class="section-label" data-lang="en">Building Blocks</div>
+        <div class="section-label" data-lang="de">Bausteine</div>
+
+        <h2 class="section-title" data-lang="en">Spatial Primitives</h2>
+        <h2 class="section-title" data-lang="de">Räumliche Primitive</h2>
+
+        <p class="section-description" data-lang="en">
+          The fundamental objects that make up the meaning layer. Each one
+          anchored to the world.
+        </p>
+        <p class="section-description" data-lang="de">
+          Die grundlegenden Objekte, die die Bedeutungsschicht bilden. Jedes an
+          der Welt verankert.
+        </p>
+      </div>
+
+      <div class="primitives-grid">
+        <div class="primitive-card">
+          <div class="primitive-icon">
+            <svg viewBox="0 0 50 50">
+              <circle cx="25" cy="18" r="10" />
+              <path d="M25,28 L25,42" />
+              <circle cx="25" cy="42" r="3" />
+            </svg>
+          </div>
+          <h3 data-lang="en">Pins</h3>
+          <h3 data-lang="de">Pins</h3>
+          <p data-lang="en">
+            Simple anchors: notes, photos, audio, links, tips, warnings,
+            micro-stories.
+          </p>
+          <p data-lang="de">
+            Einfache Anker: Notizen, Fotos, Audio, Links, Tipps, Warnungen,
+            Mikrogeschichten.
+          </p>
+          <div class="primitive-example" data-lang="en">
+            "Best espresso in the city—trust me."
+          </div>
+          <div class="primitive-example" data-lang="de">
+            „Bester Espresso der Stadt—vertrau mir."
+          </div>
+        </div>
+
+        <div class="primitive-card">
+          <div class="primitive-icon">
+            <svg viewBox="0 0 50 50">
+              <circle cx="25" cy="25" r="18" stroke-dasharray="4 2" />
+              <circle cx="18" cy="22" r="4" />
+              <circle cx="32" cy="22" r="4" />
+              <circle cx="25" cy="32" r="4" />
+            </svg>
+          </div>
+          <h3 data-lang="en">Bubbles</h3>
+          <h3 data-lang="de">Blasen</h3>
+          <p data-lang="en">
+            Shared containers anchored to places—group memories, collective
+            stories.
+          </p>
+          <p data-lang="de">
+            Geteilte Container an Orten verankert—Gruppenerinnerungen,
+            kollektive Geschichten.
+          </p>
+          <div class="primitive-example" data-lang="en">
+            "We used to meet here every Friday."
+          </div>
+          <div class="primitive-example" data-lang="de">
+            „Wir haben uns hier jeden Freitag getroffen."
+          </div>
+        </div>
+
+        <div class="primitive-card">
+          <div class="primitive-icon">
+            <svg viewBox="0 0 50 50">
+              <rect x="10" y="15" width="30" height="25" rx="3" />
+              <path d="M10,22 L25,32 L40,22" />
+              <circle cx="25" cy="10" r="5" />
+            </svg>
+          </div>
+          <h3 data-lang="en">Time Capsules</h3>
+          <h3 data-lang="de">Zeitkapseln</h3>
+          <p data-lang="en">
+            Rich artifacts: multi-media + 3D capture + timeline. Walkable memory
+            fragments.
+          </p>
+          <p data-lang="de">
+            Reichhaltige Artefakte: Multimedia + 3D-Aufnahme + Zeitachse.
+            Begehbare Erinnerungsfragmente.
+          </p>
+          <div class="primitive-example" data-lang="en">
+            "Open in 5 years, at this exact spot."
+          </div>
+          <div class="primitive-example" data-lang="de">
+            „In 5 Jahren öffnen, an genau diesem Ort."
+          </div>
+        </div>
+
+        <div class="primitive-card">
+          <div class="primitive-icon">
+            <svg viewBox="0 0 50 50">
+              <path d="M10,40 Q15,20 25,25 Q35,30 40,10" />
+              <circle cx="10" cy="40" r="4" />
+              <circle cx="25" cy="25" r="4" />
+              <circle cx="40" cy="10" r="4" />
+            </svg>
+          </div>
+          <h3 data-lang="en">Trails</h3>
+          <h3 data-lang="de">Pfade</h3>
+          <p data-lang="en">
+            A sequence of anchors forming a narrative route—curated walks,
+            emotional journeys.
+          </p>
+          <p data-lang="de">
+            Eine Sequenz von Ankern, die eine narrative Route bildet—kuratierte
+            Spaziergänge, emotionale Reisen.
+          </p>
+          <div class="primitive-example" data-lang="en">
+            "The city through immigrant food."
+          </div>
+          <div class="primitive-example" data-lang="de">
+            „Die Stadt durch Einwandererküche."
+          </div>
+        </div>
+
+        <div class="primitive-card">
+          <div class="primitive-icon">
+            <svg viewBox="0 0 50 50">
+              <path d="M25,10 L25,20" />
+              <circle cx="25" cy="30" r="12" />
+              <path d="M20,28 L25,33 L30,28" />
+            </svg>
+          </div>
+          <h3 data-lang="en">Drops</h3>
+          <h3 data-lang="de">Drops</h3>
+          <p data-lang="en">
+            Geo-fenced releases: music, artwork, collectibles that only unlock
+            at a location and time.
+          </p>
+          <p data-lang="de">
+            Geo-begrenzte Veröffentlichungen: Musik, Kunst, Sammlerstücke, die
+            nur an einem Ort und zu einer Zeit freigeschaltet werden.
+          </p>
+          <div class="primitive-example" data-lang="en">
+            "Available here, tonight only."
+          </div>
+          <div class="primitive-example" data-lang="de">
+            „Nur hier verfügbar, nur heute Nacht."
+          </div>
+        </div>
+
+        <div class="primitive-card">
+          <div class="primitive-icon">
+            <svg viewBox="0 0 50 50">
+              <ellipse cx="15" cy="25" rx="10" ry="15" />
+              <ellipse cx="35" cy="25" rx="10" ry="15" />
+              <path d="M25,15 L25,35" stroke-dasharray="3 3" />
+            </svg>
+          </div>
+          <h3 data-lang="en">Portals</h3>
+          <h3 data-lang="de">Portale</h3>
+          <p data-lang="en">
+            Places anchored to other places via story logic—connections across
+            geography.
+          </p>
+          <p data-lang="de">
+            Orte, die über Geschichtenlogik mit anderen Orten verbunden
+            sind—Verbindungen über Geographie hinweg.
+          </p>
+          <div class="primitive-example" data-lang="en">
+            "This spot is the sibling of that spot."
+          </div>
+          <div class="primitive-example" data-lang="de">
+            „Dieser Ort ist das Geschwister jenes Ortes."
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Use Cases Section -->
+    <section class="usecases-section">
+      <div class="section-header">
+        <div class="section-label" data-lang="en">Use Cases</div>
+        <div class="section-label" data-lang="de">Anwendungsfälle</div>
+
+        <h2 class="section-title" data-lang="en">Re-enchanting Reality</h2>
+        <h2 class="section-title" data-lang="de">Realität neu verzaubern</h2>
+      </div>
+
+      <div class="usecase-categories">
+        <!-- Emotional Layer -->
+        <div class="usecase-category">
+          <div class="category-header">
+            <div class="category-icon">
+              <svg viewBox="0 0 50 50">
+                <path
+                  d="M25,45 C18,35 8,25 8,16 C8,8 16,4 25,14 C34,4 42,8 42,16 C42,25 32,35 25,45"
+                />
+              </svg>
+            </div>
+            <h3 class="category-title" data-lang="en">Emotional Layer</h3>
+            <h3 class="category-title" data-lang="de">Emotionale Schicht</h3>
+            <p class="category-description" data-lang="en">
+              Shared memories, personal stories, moments that matter.
+            </p>
+            <p class="category-description" data-lang="de">
+              Geteilte Erinnerungen, persönliche Geschichten, Momente, die
+              zählen.
+            </p>
+          </div>
+
+          <div class="usecase-items">
+            <div class="usecase-item">
+              <h4 data-lang="en">The Skating Bubble</h4>
+              <h4 data-lang="de">Die Skating-Blase</h4>
+              <p data-lang="en">
+                Friends leave a group bubble at the rink. Years later, someone
+                returns alone and opens it—hearing laughter and seeing spatial
+                clips aligned to the ice.
+              </p>
+              <p data-lang="de">
+                Freunde hinterlassen eine Gruppenblase an der Eisbahn. Jahre
+                später kehrt jemand allein zurück und öffnet sie—hört Lachen und
+                sieht räumliche Clips, die auf das Eis ausgerichtet sind.
+              </p>
+            </div>
+            <div class="usecase-item">
+              <h4 data-lang="en">Sunset Stories</h4>
+              <h4 data-lang="de">Sonnenuntergangs-Geschichten</h4>
+              <p data-lang="en">
+                A global atlas of romance: "Sit here at 19:42. Perfect angle."
+                The world becomes a map of beautiful moments.
+              </p>
+              <p data-lang="de">
+                Ein globaler Atlas der Romantik: „Setz dich hier um 19:42 hin.
+                Perfekter Winkel." Die Welt wird zur Karte schöner Momente.
+              </p>
+            </div>
+            <div class="usecase-item">
+              <h4 data-lang="en">Grief & Remembrance</h4>
+              <h4 data-lang="de">Trauer & Gedenken</h4>
+              <p data-lang="en">
+                Digital candles and memories anchored to meaningful
+                places—lasting, revisitable, shareable with chosen people.
+              </p>
+              <p data-lang="de">
+                Digitale Kerzen und Erinnerungen an bedeutungsvollen Orten
+                verankert—dauerhaft, wieder besuchbar, teilbar mit ausgewählten
+                Menschen.
+              </p>
+            </div>
+            <div class="usecase-item">
+              <h4 data-lang="en">Letters to Future Me</h4>
+              <h4 data-lang="de">Briefe an mein zukünftiges Ich</h4>
+              <p data-lang="en">
+                A capsule you can only open when you physically return. Time +
+                place as the key.
+              </p>
+              <p data-lang="de">
+                Eine Kapsel, die du nur öffnen kannst, wenn du physisch
+                zurückkehrst. Zeit + Ort als Schlüssel.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Utility Layer -->
+        <div class="usecase-category">
+          <div class="category-header">
+            <div class="category-icon">
+              <svg viewBox="0 0 50 50">
+                <circle cx="25" cy="25" r="18" />
+                <path d="M25,12 L25,25 L35,25" />
+              </svg>
+            </div>
+            <h3 class="category-title" data-lang="en">Utility Layer</h3>
+            <h3 class="category-title" data-lang="de">Nützlichkeits-Schicht</h3>
+            <p class="category-description" data-lang="en">
+              Hyper-local knowledge, practical wisdom, community intelligence.
+            </p>
+            <p class="category-description" data-lang="de">
+              Hyperlocales Wissen, praktische Weisheit,
+              Gemeinschaftsintelligenz.
+            </p>
+          </div>
+
+          <div class="usecase-items">
+            <div class="usecase-item">
+              <h4 data-lang="en">Hidden Menu Layer</h4>
+              <h4 data-lang="de">Geheimmenü-Schicht</h4>
+              <p data-lang="en">
+                Recommendations pinned to a specific table or counter: "Order it
+                this way." Local secrets, openly shared.
+              </p>
+              <p data-lang="de">
+                Empfehlungen an einem bestimmten Tisch oder Tresen angeheftet:
+                „Bestell es so." Lokale Geheimnisse, offen geteilt.
+              </p>
+            </div>
+            <div class="usecase-item">
+              <h4 data-lang="en">Accessibility Layer</h4>
+              <h4 data-lang="de">Barrierefreiheits-Schicht</h4>
+              <p data-lang="en">
+                User-generated accessibility notes anchored precisely: step-free
+                entrances, quiet hours, safe seating, lighting warnings.
+              </p>
+              <p data-lang="de">
+                Nutzergenerierte Barrierefreiheitshinweise präzise verankert:
+                stufenlose Eingänge, ruhige Stunden, sichere Sitzplätze,
+                Beleuchtungswarnungen.
+              </p>
+            </div>
+            <div class="usecase-item">
+              <h4 data-lang="en">Surf Intelligence</h4>
+              <h4 data-lang="de">Surf-Intelligenz</h4>
+              <p data-lang="en">
+                AR markers at beaches: hazards, entry points, wind advice. Local
+                knowledge made visible.
+              </p>
+              <p data-lang="de">
+                AR-Marker an Stränden: Gefahren, Einstiegspunkte,
+                Windratschläge. Lokales Wissen sichtbar gemacht.
+              </p>
+            </div>
+            <div class="usecase-item">
+              <h4 data-lang="en">Civic Signals</h4>
+              <h4 data-lang="de">Bürger-Signale</h4>
+              <p data-lang="en">
+                Hazards, unsafe corners, mutual aid requests, neighborhood
+                alerts. Community looking out for community.
+              </p>
+              <p data-lang="de">
+                Gefahren, unsichere Ecken, gegenseitige Hilfsanfragen,
+                Nachbarschaftswarnungen. Gemeinschaft achtet auf Gemeinschaft.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Creative Layer -->
+        <div class="usecase-category">
+          <div class="category-header">
+            <div class="category-icon">
+              <svg viewBox="0 0 50 50">
+                <polygon
+                  points="25,5 30,20 45,20 33,30 38,45 25,35 12,45 17,30 5,20 20,20"
+                />
+              </svg>
+            </div>
+            <h3 class="category-title" data-lang="en">Creative Layer</h3>
+            <h3 class="category-title" data-lang="de">Kreative Schicht</h3>
+            <p class="category-description" data-lang="en">
+              Urban culture, play, art that lives where it belongs.
+            </p>
+            <p class="category-description" data-lang="de">
+              Stadtkultur, Spiel, Kunst, die dort lebt, wo sie hingehört.
+            </p>
+          </div>
+
+          <div class="usecase-items">
+            <div class="usecase-item">
+              <h4 data-lang="en">Street Art Threads</h4>
+              <h4 data-lang="de">Street-Art-Diskussionen</h4>
+              <p data-lang="en">
+                Discussions float in front of murals—timelines, artist credits,
+                community response—without touching the wall.
+              </p>
+              <p data-lang="de">
+                Diskussionen schweben vor Wandbildern—Zeitleisten,
+                Künstlercredits, Community-Reaktionen—ohne die Wand zu berühren.
+              </p>
+            </div>
+            <div class="usecase-item">
+              <h4 data-lang="en">Location Drops</h4>
+              <h4 data-lang="de">Orts-Drops</h4>
+              <p data-lang="en">
+                Exclusive content appears when a place "activates" at a time.
+                Artists release where their art lives.
+              </p>
+              <p data-lang="de">
+                Exklusive Inhalte erscheinen, wenn ein Ort zu einer bestimmten
+                Zeit „aktiviert" wird. Künstler veröffentlichen, wo ihre Kunst
+                lebt.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section id="impact" class="impact-section">
+      <div class="section-header">
+        <div class="section-label" data-lang="en">Societal Impact</div>
+        <div class="section-label" data-lang="de">
+          Gesellschaftliche Wirkung
+        </div>
+
+        <h2 class="section-title" data-lang="en">Why the World Needs This</h2>
+        <h2 class="section-title" data-lang="de">Warum die Welt das braucht</h2>
+      </div>
+
+      <div class="impact-grid">
+        <div class="impact-card">
+          <div class="impact-icon">
+            <svg viewBox="0 0 50 50">
+              <path d="M10,40 L20,30 L30,35 L40,20" />
+              <circle cx="40" cy="20" r="5" />
+              <path d="M5,45 L45,45" />
+            </svg>
+          </div>
+          <h3 data-lang="en">Movement & Presence</h3>
+          <h3 data-lang="de">Bewegung & Präsenz</h3>
+          <p data-lang="en">
+            Content requires presence. Presence requires movement. Movement
+            increases serendipity and real human contact.
+          </p>
+          <p data-lang="de">
+            Inhalte erfordern Präsenz. Präsenz erfordert Bewegung. Bewegung
+            erhöht Zufallsbegegnungen und echten menschlichen Kontakt.
+          </p>
+        </div>
+
+        <div class="impact-card">
+          <div class="impact-icon">
+            <svg viewBox="0 0 50 50">
+              <rect x="12" y="20" width="10" height="20" />
+              <rect x="28" y="10" width="10" height="30" />
+              <path d="M5,42 L45,42" />
+            </svg>
+          </div>
+          <h3 data-lang="en">Local Revival</h3>
+          <h3 data-lang="de">Lokale Wiederbelebung</h3>
+          <p data-lang="en">
+            Location-anchored layers drive discovery and attention to local
+            businesses. Emotional, not transactional.
+          </p>
+          <p data-lang="de">
+            Ortsgebundene Schichten fördern Entdeckung und Aufmerksamkeit für
+            lokale Geschäfte. Emotional, nicht transaktional.
+          </p>
+        </div>
+
+        <div class="impact-card">
+          <div class="impact-icon">
+            <svg viewBox="0 0 50 50">
+              <circle cx="25" cy="25" r="18" />
+              <path d="M25,10 L25,25" />
+              <path d="M25,25 L35,30" />
+              <circle cx="15" cy="20" r="3" />
+              <circle cx="35" cy="20" r="3" />
+              <circle cx="20" cy="35" r="3" />
+            </svg>
+          </div>
+          <h3 data-lang="en">Human Meaning Graph</h3>
+          <h3 data-lang="de">Menschlicher Bedeutungsgraph</h3>
+          <p data-lang="en">
+            Planet-scale spatial mapping becomes strategic. CANVS specializes in
+            the human layer—stories, not just coordinates.
+          </p>
+          <p data-lang="de">
+            Planetenweite räumliche Kartierung wird strategisch. CANVS
+            spezialisiert sich auf die menschliche Schicht—Geschichten, nicht
+            nur Koordinaten.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section id="roadmap" class="roadmap-section">
+      <div class="section-header">
+        <div class="section-label" data-lang="en">Strategic Roadmap</div>
+        <div class="section-label" data-lang="de">Strategischer Fahrplan</div>
+
+        <h2 class="section-title" data-lang="en">2026 — 2030</h2>
+        <h2 class="section-title" data-lang="de">2026 — 2030</h2>
+
+        <p class="section-description" data-lang="en">
+          From phone-first MVP to the spatial social operating system.
+        </p>
+        <p class="section-description" data-lang="de">
+          Vom phone-first MVP zum räumlichen sozialen Betriebssystem.
+        </p>
+      </div>
+
+      <div class="roadmap-timeline">
+        <div class="roadmap-year">
+          <div class="year-label">2026</div>
+          <h4 class="year-title" data-lang="en">Build the Core Loop</h4>
+          <h4 class="year-title" data-lang="de">Kernschleife bauen</h4>
+          <ul class="year-items">
+            <li data-lang="en">MVP Spatial Browser (AR + map + time)</li>
+            <li data-lang="de">MVP Räumlicher Browser (AR + Karte + Zeit)</li>
+            <li data-lang="en">Core primitives: pins, bubbles, capsules</li>
+            <li data-lang="de">Kern-Primitive: Pins, Blasen, Kapseln</li>
+            <li data-lang="en">Anchor runtime v1</li>
+            <li data-lang="de">Anker-Runtime v1</li>
+            <li data-lang="en">Safety foundations</li>
+            <li data-lang="de">Sicherheitsgrundlagen</li>
+          </ul>
+        </div>
+
+        <div class="roadmap-year">
+          <div class="year-label">2027</div>
+          <h4 class="year-title" data-lang="en">Scale the Meaning Graph</h4>
+          <h4 class="year-title" data-lang="de">Bedeutungsgraph skalieren</h4>
+          <ul class="year-items">
+            <li data-lang="en">AI "Reality Filter" v1</li>
+            <li data-lang="de">KI „Reality Filter" v1</li>
+            <li data-lang="en">Trails, drops, portals</li>
+            <li data-lang="de">Pfade, Drops, Portale</li>
+            <li data-lang="en">Local business tools</li>
+            <li data-lang="de">Lokale Geschäftstools</li>
+            <li data-lang="en">Web-native sharing</li>
+            <li data-lang="de">Web-natives Teilen</li>
+          </ul>
+        </div>
+
+        <div class="roadmap-year">
+          <div class="year-label">2028</div>
+          <h4 class="year-title" data-lang="en">Glass-Native Transition</h4>
+          <h4 class="year-title" data-lang="de">Glass-Native Übergang</h4>
+          <ul class="year-items">
+            <li data-lang="en">Spatial computing integrations</li>
+            <li data-lang="de">Spatial-Computing-Integrationen</li>
+            <li data-lang="en">Always-on lightweight layer</li>
+            <li data-lang="de">Always-on leichte Schicht</li>
+            <li data-lang="en">Spatial audio cues</li>
+            <li data-lang="de">Räumliche Audio-Hinweise</li>
+            <li data-lang="en">Shared co-located sessions</li>
+            <li data-lang="de">Geteilte ko-lokalisierte Sessions</li>
+          </ul>
+        </div>
+
+        <div class="roadmap-year">
+          <div class="year-label">2029</div>
+          <h4 class="year-title" data-lang="en">Platformization</h4>
+          <h4 class="year-title" data-lang="de">Plattformisierung</h4>
+          <ul class="year-items">
+            <li data-lang="en">Public SDK for "place apps"</li>
+            <li data-lang="de">Öffentliches SDK für „Orts-Apps"</li>
+            <li data-lang="en">Verified civic layers</li>
+            <li data-lang="de">Verifizierte Bürger-Schichten</li>
+            <li data-lang="en">Standards alignment</li>
+            <li data-lang="de">Standards-Ausrichtung</li>
+          </ul>
+        </div>
+
+        <div class="roadmap-year">
+          <div class="year-label">2030</div>
+          <h4 class="year-title" data-lang="en">The Spatial Social OS</h4>
+          <h4 class="year-title" data-lang="de">Das räumliche soziale OS</h4>
+          <ul class="year-items">
+            <li data-lang="en">Default meaning layer across devices</li>
+            <li data-lang="de">Standard-Bedeutungsschicht über Geräte</li>
+            <li data-lang="en">Places become queryable</li>
+            <li data-lang="de">Orte werden abfragbar</li>
+            <li data-lang="en">The feed is obsolete</li>
+            <li data-lang="de">Der Feed ist obsolet</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <div class="cta-decoration">
+        <svg viewBox="0 0 400 400">
+          <circle cx="200" cy="200" r="180" stroke-dasharray="2 8" />
+          <circle cx="200" cy="200" r="140" stroke-dasharray="4 6" />
+          <circle cx="200" cy="200" r="100" stroke-dasharray="6 4" />
+          <circle cx="200" cy="200" r="60" stroke-dasharray="8 2" />
+        </svg>
+      </div>
+
+      <div class="cta-content">
+        <h2 class="cta-title" data-lang="en">
+          Build the <em>layer</em> with us
+        </h2>
+        <h2 class="cta-title" data-lang="de">
+          Bau die <em>Schicht</em> mit uns
+        </h2>
+
+        <p class="cta-description" data-lang="en">
+          CANVS is not "another app." It's a bet that the next interface is not
+          a rectangle, not a feed, not a timeline. It's the world.
+        </p>
+        <p class="cta-description" data-lang="de">
+          CANVS ist nicht „noch eine App". Es ist eine Wette, dass das nächste
+          Interface kein Rechteck ist, kein Feed, keine Timeline. Es ist die
+          Welt.
+        </p>
+
+        <div class="cta-actions">
+          <button class="btn-scribble" data-lang="en">Get in Touch</button>
+          <button class="btn-scribble secondary" data-lang="en">
+            Download Vision Paper
+          </button>
+          <button class="btn-scribble" data-lang="de">Kontakt aufnehmen</button>
+          <button class="btn-scribble secondary" data-lang="de">
+            Visionspapier herunterladen
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-logo">
+        <svg viewBox="0 0 100 100">
+          <path
+            d="M50,90 C42,78 20,55 20,38 C20,20 38,15 50,32 C62,15 80,20 80,38 C80,55 58,78 50,90 Z M50,32 C50,32 50,45 50,45"
+          />
+        </svg>
+        <span class="serif" style="font-size: 20px">CANVS</span>
+      </div>
+
+      <p class="footer-text" data-lang="en">
+        The end of the feed. The beginning of the world.
+      </p>
+      <p class="footer-text" data-lang="de">
+        Das Ende des Feeds. Der Anfang der Welt.
+      </p>
+
+      <p class="footer-meta">© 2026 CANVS</p>
+    </footer>
+
+    <script>
+      // Language switching
+      const langBtns = document.querySelectorAll("[data-lang-switch]");
+
+      langBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const lang = btn.dataset.langSwitch;
+
+          // Update active button
+          langBtns.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          // Update body class
+          if (lang === "de") {
+            document.body.classList.add("lang-de");
+          } else {
+            document.body.classList.remove("lang-de");
+          }
+        });
+      });
+
+      // Scroll animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      }, observerOptions);
+
+      // Add fade-up class to elements
+      document
+        .querySelectorAll(
+          ".section-header, .solution-card, .primitive-card, .impact-card, .usecase-item, .mode-card",
+        )
+        .forEach((el) => {
+          el.classList.add("fade-up");
+          observer.observe(el);
+        });
+
+      // Smooth scroll for nav links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+
+      // Parallax effect on floating cards
+      document.addEventListener("mousemove", (e) => {
+        const cards = document.querySelectorAll(".floating-card");
+        const x = (e.clientX / window.innerWidth - 0.5) * 20;
+        const y = (e.clientY / window.innerHeight - 0.5) * 20;
+
+        cards.forEach((card, index) => {
+          const factor = (index + 1) * 0.5;
+          card.style.transform = `translate(${x * factor}px, ${y * factor}px) rotate(${index === 0 ? 3 : -2}deg)`;
+        });
+      });
+    </script>
+  </body>
+</html>

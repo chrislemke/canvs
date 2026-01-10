@@ -1,0 +1,29 @@
+name: 03_vision_statement
+path: planning/03_vision_statement
+purpose: High-level product vision and long-term direction
+
+contains:
+  - vision statement documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - vision
+  - direction
+  - future
+  - goals
+
+related:
+  - planning/04_product_principles
+  - vision
+
+category: planning
+
+ai_guidance: >
+  Articulates the product vision and long-term direction.
+  Essential for understanding strategic goals and aspirations.
+
+priority: high
+
+updated: 2026-01-10

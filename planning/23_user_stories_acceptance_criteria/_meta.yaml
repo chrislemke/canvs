@@ -1,0 +1,29 @@
+name: 23_user_stories_acceptance_criteria
+path: planning/23_user_stories_acceptance_criteria
+purpose: User stories with acceptance criteria
+
+contains:
+  - user stories documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - user-stories
+  - acceptance-criteria
+  - requirements
+  - agile
+
+related:
+  - planning/22_product_requirements_document
+  - planning/08_jobs_to_be_done
+
+category: planning
+
+ai_guidance: >
+  User stories in agile format with acceptance criteria.
+  Reference for development and testing requirements.
+
+priority: high
+
+updated: 2026-01-10

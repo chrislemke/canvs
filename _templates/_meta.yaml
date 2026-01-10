@@ -1,0 +1,32 @@
+name: _templates
+path: _templates
+purpose: Contains reusable templates for project documentation and metadata files
+
+contains:
+  - yaml templates
+  - meta file schemas
+
+primary_files:
+  - _meta.template.yaml
+
+keywords:
+  - templates
+  - boilerplate
+  - meta
+  - schema
+  - yaml
+
+related:
+  - planning
+  - docs
+
+category: templates
+
+ai_guidance: >
+  This folder contains templates for creating standardized files across the project.
+  Use _meta.template.yaml as a starting point when adding _meta.yaml to other folders.
+  Templates here define structure, not content - adapt them to each folder's specific needs.
+
+priority: medium
+
+updated: 2025-01-10

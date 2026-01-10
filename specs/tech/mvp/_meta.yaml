@@ -1,0 +1,29 @@
+name: mvp
+path: specs/tech/mvp
+purpose: Minimum Viable Product technical specifications
+
+contains:
+  - MVP requirements
+  - technical specifications
+
+primary_files: []
+
+keywords:
+  - mvp
+  - minimum-viable-product
+  - requirements
+  - specifications
+
+related:
+  - specs/tech/mvp/specs
+  - planning/22_product_requirements_document
+
+category: docs
+
+ai_guidance: >
+  Contains MVP-specific technical documentation. See the specs/
+  subfolder for detailed technical specifications and requirements.
+
+priority: high
+
+updated: 2026-01-10

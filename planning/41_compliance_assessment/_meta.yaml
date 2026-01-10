@@ -1,0 +1,29 @@
+name: 41_compliance_assessment
+path: planning/41_compliance_assessment
+purpose: Regulatory compliance assessment and requirements
+
+contains:
+  - compliance documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - compliance
+  - regulatory
+  - gdpr
+  - legal
+
+related:
+  - planning/39_security_privacy_requirements
+  - planning/73_legal_docs
+
+category: planning
+
+ai_guidance: >
+  Assesses regulatory compliance requirements (GDPR, CCPA, etc.).
+  Reference for compliance-related development decisions.
+
+priority: medium
+
+updated: 2026-01-10

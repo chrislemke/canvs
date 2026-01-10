@@ -1,0 +1,29 @@
+name: 15_brand_naming_brief
+path: planning/15_brand_naming_brief
+purpose: Brand naming strategy and guidelines
+
+contains:
+  - brand naming documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - brand
+  - naming
+  - identity
+  - trademark
+
+related:
+  - planning/13_positioning_statement
+  - planning/14_messaging_framework
+
+category: planning
+
+ai_guidance: >
+  Documents brand naming decisions, alternatives considered,
+  and naming guidelines for features and products.
+
+priority: low
+
+updated: 2026-01-10

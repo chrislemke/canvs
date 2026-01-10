@@ -1,0 +1,29 @@
+name: 66_stakeholder_review_decks
+path: planning/66_stakeholder_review_decks
+purpose: Stakeholder presentation and review materials
+
+contains:
+  - stakeholder presentation documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - stakeholder
+  - presentation
+  - review
+  - decks
+
+related:
+  - planning/67_launch_readiness_checklist
+  - planning/77_post_launch_review_report
+
+category: planning
+
+ai_guidance: >
+  Materials for stakeholder reviews and presentations.
+  Templates and guidelines for executive communication.
+
+priority: low
+
+updated: 2026-01-10

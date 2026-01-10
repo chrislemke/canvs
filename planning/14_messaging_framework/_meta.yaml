@@ -1,0 +1,29 @@
+name: 14_messaging_framework
+path: planning/14_messaging_framework
+purpose: Key messages and communication framework
+
+contains:
+  - messaging framework documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - messaging
+  - communication
+  - marketing
+  - copy
+
+related:
+  - planning/13_positioning_statement
+  - planning/31_ux_copy_microcopy_guidelines
+
+category: planning
+
+ai_guidance: >
+  Provides consistent messaging guidelines for all communications.
+  Reference for marketing copy, product copy, and sales materials.
+
+priority: medium
+
+updated: 2026-01-10

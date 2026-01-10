@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CANVS: Design Concept & MVP Strategy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+    <!-- Chosen Palette: "Earth & Aether" -->
+    <!-- Application Structure Plan:
+         1. Hero Manifesto: Sets the philosophical stage ("End of the Feed").
+         2. Design System Deep Dive: Explains the "Why" behind Color (Stone/Indigo/Orange) and Logo (The Prism Pin) with interactive swatches.
+         3. MVP Interactive Simulator: A functional "Phone" interface allowing users to simulate the core mechanics (Distance Unlocking, GPS Accuracy) defined in the MVP document.
+         4. MVP Tech Specs: Visualizing the GPS vs. VPS stack transition.
+         5. Roadmap: Timeline of the evolution from v1 to v2.
+         This structure moves from Abstract Vision -> Concrete Design -> Functional Prototype -> Technical Execution.
+    -->
+
+    <!-- Visualization & Content Choices:
+         1. Design System (CSS Grid/Flex): Interactive color cards that reveal the "Why" on hover. CSS-constructed Logo.
+         2. MVP Simulator (Custom JS + CSS): A "Playable" phone UI. Users drag a slider to simulate walking closer to a memory. This directly proves the "Movement to Unlock" thesis.
+         3. Tech Stack (CSS Layers): Visualizing the "Anchor Stack" (GPS -> VPS).
+         4. Roadmap (Chart.js): A timeline chart showing the feature rollout.
+         5. Interaction: Clicking tabs, dragging sliders, hovering over tech layers.
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        :root {
+            --color-stone-50: #FAFAF9;
+            --color-stone-900: #1C1917;
+            --color-indigo-600: #4F46E5;
+            --color-orange-500: #EA580C;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-stone-50);
+            color: var(--color-stone-900);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4, .font-serif {
+            font-family: 'Lora', serif;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 300px; /* Base height */
+            max-height: 400px;
+            margin: 0 auto;
+        }
+
+        /* CSS-only Logo Construction */
+        .logo-container {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* The Pin Shape */
+        .logo-pin {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #1C1917 0%, #44403C 100%);
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+
+        /* The Aperture (Window) */
+        .logo-aperture {
+            position: absolute;
+            top: 25%;
+            left: 25%;
+            width: 50%;
+            height: 50%;
+            background: linear-gradient(135deg, #4F46E5, #EA580C);
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+            animation: pulse-glow 3s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); }
+            50% { box-shadow: inset 0 0 15px rgba(79, 70, 229, 0.8); }
+            100% { box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); }
+        }
+
+        .color-swatch {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .color-swatch:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        /* MVP Phone Simulation Styles */
+        .iphone-frame {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 12px solid #1C1917;
+            border-radius: 2.5rem;
+            overflow: hidden;
+            background: #FAFAF9;
+            position: relative;
+            height: 650px;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 24px;
+            background: #1C1917;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            z-index: 50;
+        }
+
+        .blur-reveal {
+            transition: filter 0.5s ease, opacity 0.5s ease;
+        }
+
+        .locked-state {
+            filter: blur(8px);
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .unlocked-state {
+            filter: blur(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #4F46E5;
+            cursor: pointer;
+            margin-top: -10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #E5E7EB;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Nav -->
+    <nav class="fixed top-0 w-full z-40 glass-panel border-b border-stone-200/50">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <!-- Mini CSS Logo -->
+                <div style="width: 24px; height: 24px; background: #1C1917; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center;">
+                    <div style="width: 8px; height: 8px; background: #4F46E5; border-radius: 50%;"></div>
+                </div>
+                <span class="font-bold tracking-tight text-lg">CANVS</span>
+            </div>
+            <div class="hidden md:flex space-x-6 text-sm font-medium text-stone-600">
+                <a href="#vision" class="hover:text-stone-900">Vision</a>
+                <a href="#design-language" class="hover:text-stone-900">Design System</a>
+                <a href="#mvp-sim" class="hover:text-indigo-600">MVP Simulator</a>
+                <a href="#tech-stack" class="hover:text-stone-900">Tech Stack</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section id="vision" class="pt-32 pb-16 px-6 max-w-4xl mx-auto text-center">
+        <div class="inline-block px-3 py-1 mb-6 text-xs font-bold tracking-widest text-indigo-600 uppercase bg-indigo-50 rounded-full">
+            Strategic Roadmap 2026
+        </div>
+        <h1 class="text-5xl md:text-7xl font-bold mb-6 text-stone-900 leading-[1.1]">
+            The End of the Feed. <br>
+            <span class="font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-orange-500">The Beginning of the World.</span>
+        </h1>
+        <p class="text-xl text-stone-600 leading-relaxed max-w-2xl mx-auto">
+            A comprehensive design concept and MVP definition for the spatial social layer. Turning the planet into an addressable surface for human meaning.
+        </p>
+    </section>
+
+    <!-- SECTION 1: DESIGN SYSTEM DEEP DIVE -->
+    <section id="design-language" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold mb-4">1. Design Language: "Earth & Aether"</h2>
+                <p class="text-stone-600 max-w-3xl">
+                    The design must mediate between two worlds: the permanent physical environment (Earth) and the ephemeral digital layer (Aether). The aesthetic is "Glass-Native"—understated, organic, and subservient to reality.
+                </p>
+            </div>
+
+            <!-- Color Palette -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+                <!-- Color 1 -->
+                <div class="color-swatch group relative h-64 rounded-2xl p-6 flex flex-col justify-between border border-stone-100 bg-[#FAFAF9]">
+                    <div class="absolute inset-0 border-2 border-dashed border-stone-300 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div>
+                        <span class="text-xs font-mono text-stone-400">Base Canvas</span>
+                        <h3 class="text-2xl font-serif font-bold text-stone-900 mt-1">Stone 50</h3>
+                        <p class="text-xs font-mono mt-1 opacity-60">#FAFAF9</p>
+                    </div>
+                    <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="text-sm text-stone-600 font-medium">Why this color?</p>
+                        <p class="text-xs text-stone-500 mt-1">Stark white feels like a "SaaS App." Stone feels like paper, limestone, and concrete. It grounds the UI in the physical world.</p>
+                    </div>
+                </div>
+
+                <!-- Color 2 -->
+                <div class="color-swatch group relative h-64 rounded-2xl p-6 flex flex-col justify-between bg-[#1C1917] text-white">
+                    <div>
+                        <span class="text-xs font-mono text-stone-400">Ink / Contrast</span>
+                        <h3 class="text-2xl font-serif font-bold mt-1">Charcoal</h3>
+                        <p class="text-xs font-mono mt-1 opacity-60">#1C1917</p>
+                    </div>
+                    <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="text-sm font-medium">Why this color?</p>
+                        <p class="text-xs text-stone-400 mt-1">Classic legibility. Reminiscent of printed text. It provides maximum contrast without the harshness of pure #000000.</p>
+                    </div>
+                </div>
+
+                <!-- Color 3 -->
+                <div class="color-swatch group relative h-64 rounded-2xl p-6 flex flex-col justify-between bg-[#4F46E5] text-white shadow-xl shadow-indigo-200">
+                    <div>
+                        <span class="text-xs font-mono text-indigo-200">The Digital Layer</span>
+                        <h3 class="text-2xl font-serif font-bold mt-1">Electric Indigo</h3>
+                        <p class="text-xs font-mono mt-1 opacity-60">#4F46E5</p>
+                    </div>
+                    <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="text-sm font-medium">Why this color?</p>
+                        <p class="text-xs text-indigo-200 mt-1">It represents the "Aether"—the invisible data layer. Used for active states, AR overlays, and the "magic" of technology.</p>
+                    </div>
+                </div>
+
+                <!-- Color 4 -->
+                <div class="color-swatch group relative h-64 rounded-2xl p-6 flex flex-col justify-between bg-[#EA580C] text-white shadow-xl shadow-orange-200">
+                    <div>
+                        <span class="text-xs font-mono text-orange-200">Human Pulse</span>
+                        <h3 class="text-2xl font-serif font-bold mt-1">Warm Clay</h3>
+                        <p class="text-xs font-mono mt-1 opacity-60">#EA580C</p>
+                    </div>
+                    <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="text-sm font-medium">Why this color?</p>
+                        <p class="text-xs text-orange-200 mt-1">The color of emotion, warmth, and biological life. Used for user memories, likes, and moments of connection. "Touching grass."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logo Concept -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="bg-stone-100 rounded-3xl p-12 flex items-center justify-center min-h-[300px]">
+                    <div class="logo-container transform scale-150">
+                        <div class="logo-pin"></div>
+                        <div class="logo-aperture"></div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">Logo Concept: "The Prism Pin"</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="bg-stone-900 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs mr-3 mt-1">1</span>
+                            <div>
+                                <strong class="text-stone-900">The Form:</strong> A modified map pin. Standard pins point <em>at</em> a location. The CANVS pin is an <em>aperture</em>.
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="bg-stone-900 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs mr-3 mt-1">2</span>
+                            <div>
+                                <strong class="text-stone-900">The Window:</strong> The center is not empty; it contains the gradient of the "Aether" (Indigo/Orange). It symbolizes looking <em>through</em> the glass to see the hidden layer.
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="bg-stone-900 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs mr-3 mt-1">3</span>
+                            <div>
+                                <strong class="text-stone-900">The Softness:</strong> No sharp angles. The shape is organic, like a polished stone or a drop of water, fitting the "Earth" theme.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: MVP SIMULATOR -->
+    <section id="mvp-sim" class="py-20 bg-stone-100 border-t border-stone-200">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+                <!-- Left: Description -->
+                <div>
+                    <div class="inline-block px-3 py-1 mb-4 text-xs font-bold tracking-widest text-orange-600 uppercase bg-orange-100 rounded-full">
+                        MVP v1 Definition
+                    </div>
+                    <h2 class="text-3xl font-bold mb-6">Proving the "Place Pull"</h2>
+                    <p class="text-stone-600 mb-6 text-lg">
+                        The MVP is not about AR glasses (yet). It is about <strong>intent</strong> and <strong>movement</strong>. The core loop requires users to physically travel to a location to "unlock" content.
+                    </p>
+
+                    <div class="space-y-6">
+                        <div class="p-4 bg-white rounded-xl border border-stone-200 shadow-sm">
+                            <h4 class="font-bold text-stone-900">GPS-Only (v1)</h4>
+                            <p class="text-sm text-stone-500 mt-1">We use browser Geolocation API. Accuracy is ~10-20m. We visualize this uncertainty with "Accuracy Circles" rather than precise pins.</p>
+                        </div>
+                        <div class="p-4 bg-white rounded-xl border border-stone-200 shadow-sm">
+                            <h4 class="font-bold text-stone-900">The Unlock Mechanic</h4>
+                            <p class="text-sm text-stone-500 mt-1">Content is "Blurred" until the user enters the Geofence (e.g., 50m radius). This gamifies the journey.</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 p-4 bg-indigo-50 rounded-xl border border-indigo-100">
+                        <p class="text-sm font-mono text-indigo-700"><strong>Instructions:</strong> Use the slider on the right to simulate walking closer to the target location. Watch how the UI reacts.</p>
+                    </div>
+                </div>
+
+                <!-- Right: Interactive Simulator -->
+                <div class="flex justify-center">
+                    <div class="iphone-frame">
+                        <div class="notch"></div>
+
+                        <!-- Screen Content -->
+                        <div class="h-full flex flex-col bg-stone-50 overflow-hidden">
+
+                            <!-- Header -->
+                            <div class="pt-12 pb-4 px-6 bg-white border-b border-stone-100 flex justify-between items-center z-10">
+                                <div>
+                                    <h3 class="font-bold text-lg">Nearby</h3>
+                                    <div class="flex items-center gap-1">
+                                        <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                                        <span class="text-xs text-stone-500">GPS Accuracy: ±<span id="gps-acc-display">12</span>m</span>
+                                    </div>
+                                </div>
+                                <div class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center">👤</div>
+                            </div>
+
+                            <!-- Map Placeholder -->
+                            <div class="h-48 bg-stone-200 relative overflow-hidden group">
+                                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#444 1px, transparent 1px); background-size: 10px 10px;"></div>
+                                <!-- User Dot -->
+                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-blue-500 border-2 border-white rounded-full shadow-lg z-20"></div>
+                                <!-- Target Pin -->
+                                <div id="map-target" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center transition-all duration-300 z-10" style="margin-left: 80px; margin-top: -30px;">
+                                    <span class="text-2xl">📍</span>
+                                </div>
+                                <!-- Accuracy Circle -->
+                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-blue-500/10 border border-blue-500/30 rounded-full pointer-events-none"></div>
+                            </div>
+
+                            <!-- List Content -->
+                            <div class="flex-1 overflow-y-auto p-4 space-y-4 relative">
+
+                                <!-- Card 1: The Target Memory -->
+                                <div class="bg-white p-4 rounded-xl shadow-sm border border-stone-200 relative overflow-hidden">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs font-bold px-2 py-0.5 bg-orange-100 text-orange-600 rounded-md">Memory</span>
+                                            <span class="text-xs text-stone-400">2y ago</span>
+                                        </div>
+                                        <div id="lock-icon" class="text-stone-400">🔒</div>
+                                    </div>
+
+                                    <h4 class="font-serif font-bold text-lg text-stone-900 mb-1">First Coffee Date</h4>
+
+                                    <!-- The Content (Blurrable) -->
+                                    <div id="memory-content" class="locked-state mt-2">
+                                        <p class="text-sm text-stone-600 italic">"We sat at the corner table for 3 hours. It was raining. You wore that green scarf..."</p>
+                                        <div class="mt-3 w-full h-32 bg-stone-100 rounded-lg flex items-center justify-center text-stone-300">
+                                            [Photo Unlocked]
+                                        </div>
+                                    </div>
+
+                                    <!-- Overlay Message -->
+                                    <div id="lock-overlay" class="absolute inset-0 top-10 flex items-center justify-center bg-white/50 backdrop-blur-[1px]">
+                                        <div class="bg-stone-900 text-white text-xs px-3 py-1.5 rounded-full shadow-lg">
+                                            Get closer (<span id="distance-display">150</span>m)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Card 2: Utility (Always visible) -->
+                                <div class="bg-white p-4 rounded-xl shadow-sm border border-stone-200 opacity-60">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <span class="text-xs font-bold px-2 py-0.5 bg-indigo-100 text-indigo-600 rounded-md">Utility</span>
+                                    </div>
+                                    <h4 class="font-bold text-stone-900">Wifi Password</h4>
+                                    <p class="text-sm text-stone-500">Only visible inside.</p>
+                                </div>
+
+                            </div>
+
+                            <!-- Simulator Controls (Bottom) -->
+                            <div class="bg-stone-900 p-6 text-white pb-8">
+                                <label class="text-xs font-bold uppercase tracking-wider text-stone-400 mb-2 block">Simulator: Distance to Target</label>
+                                <input type="range" min="0" max="200" value="150" class="w-full" id="sim-slider">
+                                <div class="flex justify-between text-xs text-stone-500 mt-2">
+                                    <span>0m (Here)</span>
+                                    <span>50m (Unlock)</span>
+                                    <span>200m</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: TECH STACK & ROADMAP -->
+    <section id="tech-stack" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="mb-16 text-center">
+                <h2 class="text-3xl font-bold mb-4">The Evolution of Precision</h2>
+                <p class="text-stone-600 max-w-2xl mx-auto">
+                    We start with coarse GPS (MVP v1) to build the behavior, then upgrade to Vision Positioning System (MVP v2) for world-locked permanence.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Tech Stack Visual -->
+                <div class="space-y-4">
+                    <h3 class="font-bold text-xl mb-6">Anchor Stack Architecture</h3>
+
+                    <!-- Layer 3 -->
+                    <div class="p-6 border border-stone-200 rounded-xl bg-indigo-50 relative ml-8 hover:ml-12 transition-all duration-300 cursor-default">
+                        <div class="absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center text-sm font-bold z-10">3</div>
+                        <h4 class="font-bold text-indigo-900">Anchor Runtime (The Logic)</h4>
+                        <p class="text-sm text-indigo-700 mt-1">Confidence-aware rendering. Content fades in only when tracking is stable.</p>
+                    </div>
+
+                    <!-- Layer 2 -->
+                    <div class="p-6 border border-stone-200 rounded-xl bg-stone-50 relative ml-4 hover:ml-8 transition-all duration-300 cursor-default">
+                        <div class="absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-stone-700 text-white rounded-full flex items-center justify-center text-sm font-bold z-10">2</div>
+                        <h4 class="font-bold text-stone-900">VPS (The Eyes)</h4>
+                        <p class="text-sm text-stone-600 mt-1">Comparing camera feed to 3D point cloud maps (Google Geospatial / Lightship). Sub-meter accuracy.</p>
+                    </div>
+
+                    <!-- Layer 1 -->
+                    <div class="p-6 border border-stone-200 rounded-xl bg-stone-100 relative hover:ml-4 transition-all duration-300 cursor-default">
+                        <div class="absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-stone-400 text-white rounded-full flex items-center justify-center text-sm font-bold z-10">1</div>
+                        <h4 class="font-bold text-stone-900">Coarse GPS (The Map)</h4>
+                        <p class="text-sm text-stone-600 mt-1">Standard Lat/Lon/Alt. Used for broad discovery and the MVP v1. Accuracy ±15m.</p>
+                    </div>
+                </div>
+
+                <!-- Roadmap Chart -->
+                <div>
+                    <h3 class="font-bold text-xl mb-6">Strategic Rollout</h3>
+                    <div class="chart-container">
+                        <canvas id="roadmapChart"></canvas>
+                    </div>
+                    <div class="mt-6 grid grid-cols-2 gap-4">
+                        <div class="p-3 bg-stone-50 rounded border border-stone-100">
+                            <span class="text-xs font-bold text-stone-400 uppercase">2026</span>
+                            <p class="font-medium text-sm">MVP v1 (Phone Web)</p>
+                        </div>
+                        <div class="p-3 bg-stone-50 rounded border border-stone-100">
+                            <span class="text-xs font-bold text-stone-400 uppercase">2027</span>
+                            <p class="font-medium text-sm">MVP v2 (Vision Anchors)</p>
+                        </div>
+                        <div class="p-3 bg-stone-50 rounded border border-stone-100">
+                            <span class="text-xs font-bold text-stone-400 uppercase">2028</span>
+                            <p class="font-medium text-sm">Glass-Native Layers</p>
+                        </div>
+                        <div class="p-3 bg-stone-50 rounded border border-stone-100">
+                            <span class="text-xs font-bold text-stone-400 uppercase">2030</span>
+                            <p class="font-medium text-sm">Spatial OS</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-stone-400 py-12 px-6 mt-20">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0">
+                <span class="font-bold text-white text-lg">CANVS</span>
+                <p class="text-xs mt-2">Built on the premise that place is the ultimate context.</p>
+            </div>
+            <div class="flex gap-6 text-sm">
+                <a href="#" class="hover:text-white">Privacy Manifesto</a>
+                <a href="#" class="hover:text-white">Investor Deck</a>
+                <a href="#" class="hover:text-white">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- MVP Simulator Logic ---
+        const slider = document.getElementById('sim-slider');
+        const distDisplay = document.getElementById('distance-display');
+        const overlay = document.getElementById('lock-overlay');
+        const content = document.getElementById('memory-content');
+        const lockIcon = document.getElementById('lock-icon');
+        const mapTarget = document.getElementById('map-target');
+
+        // Threshold for unlocking
+        const UNLOCK_RADIUS = 50;
+
+        slider.addEventListener('input', (e) => {
+            const distance = parseInt(e.target.value);
+            distDisplay.innerText = distance;
+
+            // 1. Update Map Visuals (Simulate getting closer)
+            // 200m = 80px margin, 0m = 0px margin
+            const pixelMargin = (distance / 200) * 80;
+            mapTarget.style.marginLeft = `${pixelMargin}px`;
+
+            // 2. Update Lock State
+            if (distance <= UNLOCK_RADIUS) {
+                // Unlocked State
+                overlay.style.opacity = '0';
+                overlay.style.pointerEvents = 'none';
+
+                content.classList.remove('locked-state');
+                content.classList.add('unlocked-state');
+
+                lockIcon.innerText = '🔓';
+                lockIcon.classList.remove('text-stone-400');
+                lockIcon.classList.add('text-green-500');
+            } else {
+                // Locked State
+                overlay.style.opacity = '1';
+                overlay.style.pointerEvents = 'auto';
+                overlay.innerHTML = `<div class="bg-stone-900 text-white text-xs px-3 py-1.5 rounded-full shadow-lg">Get closer (${distance}m)</div>`;
+
+                content.classList.remove('unlocked-state');
+                content.classList.add('locked-state');
+
+                lockIcon.innerText = '🔒';
+                lockIcon.classList.remove('text-green-500');
+                lockIcon.classList.add('text-stone-400');
+            }
+        });
+
+        // --- Roadmap Chart ---
+        const ctx = document.getElementById('roadmapChart').getContext('2d');
+        const roadmapChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['2026', '2027', '2028', '2029', '2030'],
+                datasets: [
+                    {
+                        label: 'Interaction Depth (MPI)',
+                        data: [20, 45, 70, 85, 100],
+                        borderColor: '#4F46E5', // Indigo
+                        backgroundColor: 'rgba(79, 70, 229, 0.05)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#4F46E5',
+                        pointRadius: 6
+                    },
+                    {
+                        label: 'Hardware Immersion',
+                        data: [10, 30, 60, 80, 95], // Phone -> Glass
+                        borderColor: '#EA580C', // Orange
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        tension: 0.2,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#EA580C'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: { family: 'Inter', size: 12 },
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#1C1917',
+                        titleFont: { family: 'Lora' },
+                        padding: 12,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.y + '% Capability';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        display: false,
+                        min: 0,
+                        max: 110
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { weight: '600' } }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

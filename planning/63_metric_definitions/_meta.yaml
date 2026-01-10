@@ -1,0 +1,29 @@
+name: 63_metric_definitions
+path: planning/63_metric_definitions
+purpose: Key metric definitions and calculations
+
+contains:
+  - metric definitions documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - metrics
+  - kpi
+  - definitions
+  - measurement
+
+related:
+  - planning/62_analytics_telemetry_plan
+  - planning/54_slo_sli_definition
+
+category: planning
+
+ai_guidance: >
+  Defines key metrics and how they are calculated.
+  Single source of truth for metric definitions.
+
+priority: medium
+
+updated: 2026-01-10

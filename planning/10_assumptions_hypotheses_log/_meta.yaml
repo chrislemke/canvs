@@ -1,0 +1,30 @@
+name: 10_assumptions_hypotheses_log
+path: planning/10_assumptions_hypotheses_log
+purpose: Track assumptions and hypotheses to validate
+
+contains:
+  - assumptions log
+  - hypotheses documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - assumptions
+  - hypotheses
+  - validation
+  - risks
+
+related:
+  - planning/42_risk_register
+  - planning/26_ux_research_plan
+
+category: planning
+
+ai_guidance: >
+  Living document tracking assumptions that need validation.
+  Update as hypotheses are tested and validated or invalidated.
+
+priority: medium
+
+updated: 2026-01-10

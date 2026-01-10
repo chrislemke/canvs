@@ -1,0 +1,36 @@
+name: planning
+path: planning
+purpose: Comprehensive product planning documents organized by workflow phase
+
+contains:
+  - product planning documents
+  - 77 numbered planning phases
+  - strategy documents
+  - requirements documents
+
+primary_files: []
+
+keywords:
+  - planning
+  - product
+  - strategy
+  - requirements
+  - roadmap
+  - specifications
+
+related:
+  - vision
+  - specs
+
+category: planning
+
+ai_guidance: >
+  This folder contains 77 subfolders covering the complete product
+  development lifecycle from problem statement to post-launch review.
+  Each subfolder is numbered and contains a _description.md file
+  explaining that planning phase. Navigate by number to find specific
+  planning documents.
+
+priority: high
+
+updated: 2026-01-10

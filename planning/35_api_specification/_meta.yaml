@@ -1,0 +1,29 @@
+name: 35_api_specification
+path: planning/35_api_specification
+purpose: API design and endpoint specifications
+
+contains:
+  - API specification documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - api
+  - endpoints
+  - rest
+  - specification
+
+related:
+  - planning/34_architecture_overview
+  - planning/37_integration_requirements
+
+category: planning
+
+ai_guidance: >
+  API design specifications including endpoints, payloads,
+  and authentication. Reference for API development.
+
+priority: high
+
+updated: 2026-01-10

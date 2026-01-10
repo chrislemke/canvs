@@ -1,0 +1,29 @@
+name: 12_market_sizing
+path: planning/12_market_sizing
+purpose: Total addressable market and market sizing analysis
+
+contains:
+  - market sizing documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - market-size
+  - tam
+  - sam
+  - som
+
+related:
+  - planning/02_opportunity_market_context_brief
+  - planning/11_competitive_analysis
+
+category: planning
+
+ai_guidance: >
+  Quantifies market opportunity with TAM/SAM/SOM analysis.
+  Essential for business planning and investor discussions.
+
+priority: medium
+
+updated: 2026-01-10

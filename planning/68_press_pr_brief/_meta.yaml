@@ -1,0 +1,29 @@
+name: 68_press_pr_brief
+path: planning/68_press_pr_brief
+purpose: Press release and PR communication brief
+
+contains:
+  - PR brief documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - press
+  - pr
+  - communications
+  - media
+
+related:
+  - planning/14_messaging_framework
+  - planning/71_website_landing_page_brief
+
+category: planning
+
+ai_guidance: >
+  Press and PR communication materials and guidelines.
+  Reference for external communications and media.
+
+priority: low
+
+updated: 2026-01-10

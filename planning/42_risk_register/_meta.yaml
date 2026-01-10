@@ -1,0 +1,29 @@
+name: 42_risk_register
+path: planning/42_risk_register
+purpose: Project risk register and mitigation plans
+
+contains:
+  - risk register documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - risks
+  - mitigation
+  - register
+  - issues
+
+related:
+  - planning/40_threat_model
+  - planning/10_assumptions_hypotheses_log
+
+category: planning
+
+ai_guidance: >
+  Tracks identified risks, likelihood, impact, and mitigation
+  strategies. Living document updated throughout project.
+
+priority: medium
+
+updated: 2026-01-10

@@ -1,0 +1,36 @@
+name: _indices
+path: _indices
+purpose: Contains YAML index files to help LLM agents navigate and retrieve information from this project
+
+contains:
+  - yaml index files
+  - navigation metadata
+  - content catalogs
+
+primary_files:
+  - master.yaml
+  - docs_index.yaml
+
+keywords:
+  - index
+  - navigation
+  - llm
+  - retrieval
+  - catalog
+  - search
+
+related:
+  - _templates
+  - _docs
+
+category: coordination
+
+ai_guidance: >
+  This folder contains index files designed to help you (the AI agent) navigate this project efficiently.
+  Start here when exploring the codebase. Each YAML file in this folder provides structured metadata
+  about different parts of the project - file locations, purposes, and relationships.
+  Use these indices to quickly find relevant content without scanning every directory.
+
+priority: high
+
+updated: 2025-01-10

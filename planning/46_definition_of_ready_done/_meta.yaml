@@ -1,0 +1,30 @@
+name: 46_definition_of_ready_done
+path: planning/46_definition_of_ready_done
+purpose: Definitions of ready and done for work items
+
+contains:
+  - DoR and DoD documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - dor
+  - dod
+  - ready
+  - done
+  - criteria
+
+related:
+  - planning/23_user_stories_acceptance_criteria
+  - planning/49_qa_checklist
+
+category: planning
+
+ai_guidance: >
+  Defines when work items are ready to start and when
+  they are considered complete. Quality gates for development.
+
+priority: medium
+
+updated: 2026-01-10

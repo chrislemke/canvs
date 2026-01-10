@@ -1,0 +1,29 @@
+name: 32_accessibility_requirements
+path: planning/32_accessibility_requirements
+purpose: Accessibility standards and requirements
+
+contains:
+  - accessibility documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - accessibility
+  - a11y
+  - wcag
+  - inclusive
+
+related:
+  - planning/38_non_functional_requirements
+  - planning/30_design_system_ui_kit
+
+category: planning
+
+ai_guidance: >
+  Accessibility requirements and WCAG compliance targets.
+  Reference for inclusive design and development.
+
+priority: medium
+
+updated: 2026-01-10

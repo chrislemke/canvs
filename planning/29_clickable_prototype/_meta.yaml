@@ -1,0 +1,29 @@
+name: 29_clickable_prototype
+path: planning/29_clickable_prototype
+purpose: Interactive prototype for user testing
+
+contains:
+  - prototype documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - prototype
+  - interactive
+  - clickable
+  - demo
+
+related:
+  - planning/28_wireframes
+  - planning/30_design_system_ui_kit
+
+category: planning
+
+ai_guidance: >
+  Interactive prototype for testing and demonstration.
+  May include links to external prototype tools.
+
+priority: medium
+
+updated: 2026-01-10

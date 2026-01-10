@@ -1,0 +1,33 @@
+name: specs
+path: specs
+purpose: Technical and design specifications for the project
+
+contains:
+  - design specifications
+  - technical specifications
+  - architecture documents
+
+primary_files: []
+
+keywords:
+  - specifications
+  - design
+  - technical
+  - architecture
+
+related:
+  - specs/design
+  - specs/tech
+  - planning
+
+category: docs
+
+ai_guidance: >
+  This folder contains all specifications organized into design
+  and technical categories. Check specs/design for visual and UX
+  specifications, specs/tech for technical architecture and implementation
+  specifications.
+
+priority: high
+
+updated: 2026-01-10

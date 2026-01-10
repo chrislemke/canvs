@@ -1,0 +1,45 @@
+# =============================================================================
+# scripts Index - Utility Scripts
+# =============================================================================
+# Index of all files in the scripts/ folder.
+# Utility scripts, automation, and development tools.
+# =============================================================================
+
+metadata:
+  name: scripts_index
+  folder: scripts
+  purpose: Utility scripts, automation, and development tools
+  updated: "2026-01-10"
+
+# =============================================================================
+# FILES
+# =============================================================================
+
+files:
+
+  # ---------------------------------------------------------------------------
+  # HOOKS
+  # ---------------------------------------------------------------------------
+
+  - path: scripts/hooks/claude-maintenance-hook.sh
+    summary: Pre-commit hook for Claude maintenance tasks (index updates, etc.)
+    keywords: [hook, pre-commit, automation, maintenance, git]
+    type: code
+    priority: medium
+    updated: 2026-01-10
+
+# =============================================================================
+# SUBFOLDERS
+# =============================================================================
+
+subfolders:
+  - path: scripts/hooks
+    purpose: Git hooks and automation scripts
+
+# =============================================================================
+# RELATED
+# =============================================================================
+
+related:
+  - _indices/master.yaml
+  - .pre-commit-config.yaml

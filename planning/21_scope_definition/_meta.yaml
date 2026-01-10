@@ -1,0 +1,29 @@
+name: 21_scope_definition
+path: planning/21_scope_definition
+purpose: Project scope definition and boundaries
+
+contains:
+  - scope documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - scope
+  - boundaries
+  - in-scope
+  - out-of-scope
+
+related:
+  - planning/05_goals_and_non_goals
+  - planning/22_product_requirements_document
+
+category: planning
+
+ai_guidance: >
+  Defines what is included and excluded from the project scope.
+  Critical reference for scope management decisions.
+
+priority: high
+
+updated: 2026-01-10

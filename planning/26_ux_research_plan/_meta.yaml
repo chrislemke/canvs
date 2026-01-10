@@ -1,0 +1,29 @@
+name: 26_ux_research_plan
+path: planning/26_ux_research_plan
+purpose: User research plan and methodology
+
+contains:
+  - research plan documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - ux-research
+  - user-research
+  - methodology
+  - testing
+
+related:
+  - planning/27_research_findings_report
+  - planning/10_assumptions_hypotheses_log
+
+category: planning
+
+ai_guidance: >
+  Outlines planned user research activities, methodology,
+  and participant criteria. Reference for research execution.
+
+priority: medium
+
+updated: 2026-01-10

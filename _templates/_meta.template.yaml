@@ -1,0 +1,46 @@
+# =============================================================================
+# _meta.yaml Template
+# =============================================================================
+# Place a _meta.yaml file in any folder to help LLMs and humans navigate.
+# Copy this template and fill in the values for your specific folder.
+# =============================================================================
+
+# IDENTIFICATION
+# -----------------------------------------------------------------------------
+name: folder_name                    # The folder's name (no path)
+path: relative/path/to/folder        # Path from project root
+purpose: Brief one-line description  # What this folder is for
+
+# CONTENT DESCRIPTION
+# -----------------------------------------------------------------------------
+contains:                            # What types of files/content are here
+  - type1
+  - type2
+
+primary_files:                       # Key files to look at first (most important)
+  - important_file.md
+  - another_key_file.yaml
+
+# NAVIGATION
+# -----------------------------------------------------------------------------
+keywords:                            # Terms for searching/discovering this folder
+  - keyword1
+  - keyword2
+
+related:                             # Paths to related folders
+  - other/folder
+  - another/related/folder
+
+category: planning                   # One of: planning | docs | code | coordination | templates | research | notes
+
+# FOR LLMs
+# -----------------------------------------------------------------------------
+ai_guidance: >                       # Instructions for how an AI agent should approach this folder
+  Describe what the agent should know, what to focus on,
+  and any special considerations for processing this folder.
+
+priority: medium                     # low | medium | high - processing priority for agents
+
+# METADATA
+# -----------------------------------------------------------------------------
+updated: YYYY-MM-DD                  # Last update date (ISO format)

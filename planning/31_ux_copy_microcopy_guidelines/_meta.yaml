@@ -1,0 +1,29 @@
+name: 31_ux_copy_microcopy_guidelines
+path: planning/31_ux_copy_microcopy_guidelines
+purpose: UX writing and microcopy guidelines
+
+contains:
+  - copy guidelines documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - ux-writing
+  - microcopy
+  - copy
+  - voice-tone
+
+related:
+  - planning/14_messaging_framework
+  - planning/30_design_system_ui_kit
+
+category: planning
+
+ai_guidance: >
+  Guidelines for in-product copy, error messages, buttons,
+  and other UI text. Ensures consistent voice and tone.
+
+priority: low
+
+updated: 2026-01-10

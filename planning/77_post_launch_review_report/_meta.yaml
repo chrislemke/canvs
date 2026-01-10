@@ -1,0 +1,29 @@
+name: 77_post_launch_review_report
+path: planning/77_post_launch_review_report
+purpose: Post-launch review and retrospective report
+
+contains:
+  - post-launch review documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - review
+  - retrospective
+  - lessons-learned
+  - report
+
+related:
+  - planning/75_post_launch_plan
+  - planning/76_postmortem_template
+
+category: planning
+
+ai_guidance: >
+  Final review document summarizing launch outcomes,
+  lessons learned, and recommendations for future.
+
+priority: medium
+
+updated: 2026-01-10

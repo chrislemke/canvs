@@ -1,0 +1,32 @@
+name: presentation
+path: presentation
+purpose: Presentation materials, demos, and marketing assets
+
+contains:
+  - website materials
+  - presentation decks
+  - demo content
+
+primary_files: []
+
+keywords:
+  - presentation
+  - marketing
+  - demos
+  - website
+  - decks
+
+related:
+  - planning/68_press_pr_brief
+  - planning/71_website_landing_page_brief
+
+category: docs
+
+ai_guidance: >
+  Contains presentation and marketing materials. website/ subfolder
+  is reserved for website-related content. Use for pitch decks,
+  demo materials, and external-facing content.
+
+priority: low
+
+updated: 2026-01-10

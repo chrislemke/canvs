@@ -1,0 +1,29 @@
+name: 61_customer_feedback_collection_plan
+path: planning/61_customer_feedback_collection_plan
+purpose: Customer feedback collection strategy
+
+contains:
+  - feedback collection plan documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - feedback
+  - customer
+  - surveys
+  - nps
+
+related:
+  - planning/60_support_escalation_process
+  - planning/27_research_findings_report
+
+category: planning
+
+ai_guidance: >
+  Strategy for collecting and processing customer feedback.
+  Includes channels, frequency, and analysis approach.
+
+priority: medium
+
+updated: 2026-01-10

@@ -1,0 +1,29 @@
+name: 48_test_plan
+path: planning/48_test_plan
+purpose: Detailed test plan and test cases
+
+contains:
+  - test plan documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - test-plan
+  - test-cases
+  - qa
+  - testing
+
+related:
+  - planning/47_test_strategy
+  - planning/49_qa_checklist
+
+category: planning
+
+ai_guidance: >
+  Detailed test plan with specific test cases and scenarios.
+  Reference for QA execution.
+
+priority: high
+
+updated: 2026-01-10

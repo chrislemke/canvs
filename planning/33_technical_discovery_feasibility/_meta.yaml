@@ -1,0 +1,29 @@
+name: 33_technical_discovery_feasibility
+path: planning/33_technical_discovery_feasibility
+purpose: Technical feasibility assessment and discovery
+
+contains:
+  - feasibility documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - feasibility
+  - discovery
+  - technical
+  - spike
+
+related:
+  - planning/34_architecture_overview
+  - planning/42_risk_register
+
+category: planning
+
+ai_guidance: >
+  Documents technical discovery and feasibility assessments.
+  Identifies technical risks and unknowns early.
+
+priority: medium
+
+updated: 2026-01-10

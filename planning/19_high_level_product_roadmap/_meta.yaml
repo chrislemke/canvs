@@ -1,0 +1,29 @@
+name: 19_high_level_product_roadmap
+path: planning/19_high_level_product_roadmap
+purpose: Strategic product roadmap and feature timeline
+
+contains:
+  - roadmap documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - roadmap
+  - timeline
+  - features
+  - releases
+
+related:
+  - planning/20_milestone_plan
+  - planning/45_backlog
+
+category: planning
+
+ai_guidance: >
+  High-level view of planned features and releases over time.
+  Strategic planning document for product direction.
+
+priority: high
+
+updated: 2026-01-10

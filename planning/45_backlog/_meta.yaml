@@ -1,0 +1,29 @@
+name: 45_backlog
+path: planning/45_backlog
+purpose: Product backlog and feature prioritization
+
+contains:
+  - backlog documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - backlog
+  - features
+  - priorities
+  - items
+
+related:
+  - planning/19_high_level_product_roadmap
+  - planning/44_build_plan_sprint_plan
+
+category: planning
+
+ai_guidance: >
+  Product backlog with prioritized features and items.
+  Reference for what to build and in what order.
+
+priority: high
+
+updated: 2026-01-10

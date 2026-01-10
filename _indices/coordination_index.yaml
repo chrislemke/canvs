@@ -1,0 +1,55 @@
+# =============================================================================
+# coordination Index - Agent Coordination Infrastructure
+# =============================================================================
+# Index of all files in the coordination/ folder.
+# Claude Flow agent coordination and orchestration infrastructure.
+# =============================================================================
+
+metadata:
+  name: coordination_index
+  folder: coordination
+  purpose: Claude Flow agent coordination and orchestration infrastructure
+  updated: "2026-01-10"
+
+# =============================================================================
+# FILES
+# =============================================================================
+
+files:
+
+  # ---------------------------------------------------------------------------
+  # FOLDER METADATA
+  # ---------------------------------------------------------------------------
+
+  - path: coordination/_meta.yaml
+    summary: Metadata file describing the coordination folder
+    keywords: [meta, folder-info]
+    type: config
+    priority: low
+    updated: 2026-01-10
+
+# =============================================================================
+# SUBFOLDERS
+# =============================================================================
+
+subfolders:
+  - path: coordination/memory_bank
+    purpose: Shared memory bank storage for agents
+    status: placeholder
+
+  - path: coordination/orchestration
+    purpose: Orchestration configurations and setup
+    status: placeholder
+
+  - path: coordination/subtasks
+    purpose: Subtask definitions and management
+    status: placeholder
+
+# =============================================================================
+# RELATED
+# =============================================================================
+
+related:
+  - _indices/master.yaml
+  - _indices/memory_index.yaml
+  - _docs/claude_flow_planning_instructions.yaml

@@ -1,0 +1,64 @@
+# =============================================================================
+# vision Index - Product Vision
+# =============================================================================
+# Index of all files in the vision/ folder.
+# Product vision documents and high-level project direction.
+# =============================================================================
+
+metadata:
+  name: vision_index
+  folder: vision
+  purpose: Product vision documents and high-level project direction
+  updated: "2026-01-10"
+
+# =============================================================================
+# FILES
+# =============================================================================
+
+files:
+
+  # ---------------------------------------------------------------------------
+  # VISION DOCUMENTS (Read in order)
+  # ---------------------------------------------------------------------------
+
+  - path: vision/product_vision_paper.md
+    summary: Comprehensive product vision paper with full direction
+    keywords: [vision, product, strategy, direction, goals]
+    type: document
+    priority: high
+    updated: 2026-01-10
+
+  - path: vision/project_idea.md
+    summary: Initial project concept notes
+    keywords: [idea, concept, initial, brainstorm]
+    type: document
+    priority: medium
+    updated: 2026-01-10
+
+  # ---------------------------------------------------------------------------
+  # FOLDER METADATA
+  # ---------------------------------------------------------------------------
+
+  - path: vision/_meta.yaml
+    summary: Metadata file describing the vision folder
+    keywords: [meta, folder-info]
+    type: config
+    priority: low
+    updated: 2026-01-10
+
+# =============================================================================
+# READING ORDER
+# =============================================================================
+
+recommended_reading_order:
+  1: vision/product_vision_paper.md
+  2: vision/project_idea.md
+
+# =============================================================================
+# RELATED
+# =============================================================================
+
+related:
+  - _indices/master.yaml
+  - planning/03_vision_statement/
+  - planning/04_product_principles/

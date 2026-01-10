@@ -1,0 +1,29 @@
+name: 57_internal_documentation
+path: planning/57_internal_documentation
+purpose: Internal team documentation and knowledge base
+
+contains:
+  - internal documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - internal
+  - documentation
+  - knowledge
+  - team
+
+related:
+  - planning/56_runbook_operations_manual
+  - planning/58_user_documentation
+
+category: planning
+
+ai_guidance: >
+  Internal documentation for the development team.
+  Includes processes, conventions, and tribal knowledge.
+
+priority: low
+
+updated: 2026-01-10

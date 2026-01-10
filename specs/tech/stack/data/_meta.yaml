@@ -1,0 +1,30 @@
+name: data
+path: specs/tech/stack/data
+purpose: Data layer specifications and database architecture
+
+contains:
+  - data architecture overview
+  - database specifications
+
+primary_files:
+  - overview.md
+
+keywords:
+  - data
+  - database
+  - storage
+  - architecture
+
+related:
+  - specs/tech/stack
+  - planning/36_data_model
+
+category: docs
+
+ai_guidance: >
+  Contains data layer specifications. overview.md describes
+  the data architecture, storage strategy, and database choices.
+
+priority: medium
+
+updated: 2026-01-10

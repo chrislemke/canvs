@@ -1,0 +1,29 @@
+name: 28_wireframes
+path: planning/28_wireframes
+purpose: Low-fidelity wireframes and layout designs
+
+contains:
+  - wireframe documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - wireframes
+  - layouts
+  - lo-fi
+  - sketches
+
+related:
+  - planning/25_information_architecture
+  - planning/29_clickable_prototype
+
+category: planning
+
+ai_guidance: >
+  Contains wireframe designs showing layout and structure.
+  Reference for UI development and design discussions.
+
+priority: medium
+
+updated: 2026-01-10

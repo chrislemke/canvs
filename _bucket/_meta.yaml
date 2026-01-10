@@ -1,0 +1,40 @@
+# =============================================================================
+# _meta.yaml - _bucket folder
+# =============================================================================
+
+# IDENTIFICATION
+name: _bucket
+path: _bucket
+purpose: Unstructured data storage for miscellaneous project resources
+
+# CONTENT DESCRIPTION
+contains:
+  - storage folder for LLM agent data
+  - miscellaneous project files
+
+primary_files: []
+
+# NAVIGATION
+keywords:
+  - storage
+  - bucket
+  - temporary
+  - misc
+  - unstructured
+  - fallback
+
+related:
+  - _bucket/storage
+
+category: notes
+
+# FOR LLMs
+ai_guidance: >
+  This folder contains unstructured storage. Use _bucket/storage/
+  for LLM-generated content when no suitable location exists elsewhere
+  in the project. Check indices first before storing here.
+
+priority: low
+
+# METADATA
+updated: 2026-01-10

@@ -1,0 +1,29 @@
+name: 70_customer_case_study_template
+path: planning/70_customer_case_study_template
+purpose: Customer case study template and examples
+
+contains:
+  - case study documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - case-study
+  - customer
+  - success
+  - testimonial
+
+related:
+  - planning/69_sales_enablement_pack
+  - planning/61_customer_feedback_collection_plan
+
+category: planning
+
+ai_guidance: >
+  Template and guidelines for customer case studies.
+  Reference for creating success stories.
+
+priority: low
+
+updated: 2026-01-10

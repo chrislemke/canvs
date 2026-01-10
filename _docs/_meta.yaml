@@ -1,0 +1,42 @@
+name: _docs
+path: _docs
+purpose: LLM and human guidance for working with this project (not project content docs)
+
+contains:
+  - ai-instructions
+  - project-workflows
+  - development-guides
+  - architecture-notes
+
+primary_files:
+  - start_here.yaml
+  - about_this_project.yaml
+  - best_practice.yaml
+  - claude_flow_planning_instructions.yaml
+  - claude_flow_software_dev_and_research_instructions.yaml
+  - index_maintenance.yaml
+  - understanding_meta_files.yaml
+  - use_gemini_cli.yaml
+
+keywords:
+  - llm-guidance
+  - ai-instructions
+  - project-navigation
+  - development-workflow
+  - getting-started
+
+related:
+  - _templates
+
+category: docs
+
+ai_guidance: >
+  This folder contains documentation for HOW to work with this project,
+  not documentation about the project's content. Read files here first
+  to understand workflows, conventions, and special instructions.
+  This is your primary reference for navigating and contributing to
+  the codebase effectively.
+
+priority: high
+
+updated: 2026-01-10

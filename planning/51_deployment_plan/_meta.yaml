@@ -1,0 +1,29 @@
+name: 51_deployment_plan
+path: planning/51_deployment_plan
+purpose: Deployment procedures and automation
+
+contains:
+  - deployment plan documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - deployment
+  - ci-cd
+  - automation
+  - infrastructure
+
+related:
+  - planning/50_release_plan
+  - planning/52_rollback_plan
+
+category: planning
+
+ai_guidance: >
+  Deployment procedures, CI/CD configuration, and
+  infrastructure automation plans.
+
+priority: high
+
+updated: 2026-01-10

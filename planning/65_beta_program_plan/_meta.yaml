@@ -1,0 +1,29 @@
+name: 65_beta_program_plan
+path: planning/65_beta_program_plan
+purpose: Beta program structure and management
+
+contains:
+  - beta program documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - beta
+  - early-access
+  - testing
+  - program
+
+related:
+  - planning/64_experimentation_plan
+  - planning/67_launch_readiness_checklist
+
+category: planning
+
+ai_guidance: >
+  Beta program structure including recruitment, feedback
+  collection, and graduation criteria.
+
+priority: medium
+
+updated: 2026-01-10

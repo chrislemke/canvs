@@ -1,0 +1,29 @@
+name: 69_sales_enablement_pack
+path: planning/69_sales_enablement_pack
+purpose: Sales enablement materials and training
+
+contains:
+  - sales enablement documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - sales
+  - enablement
+  - training
+  - collateral
+
+related:
+  - planning/14_messaging_framework
+  - planning/06_elevator_pitch
+
+category: planning
+
+ai_guidance: >
+  Sales team enablement materials including pitch decks,
+  battle cards, and objection handling guides.
+
+priority: low
+
+updated: 2026-01-10

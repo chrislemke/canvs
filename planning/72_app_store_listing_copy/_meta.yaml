@@ -1,0 +1,29 @@
+name: 72_app_store_listing_copy
+path: planning/72_app_store_listing_copy
+purpose: App store listing copy and assets
+
+contains:
+  - app store listing documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - app-store
+  - listing
+  - aso
+  - copy
+
+related:
+  - planning/14_messaging_framework
+  - planning/71_website_landing_page_brief
+
+category: planning
+
+ai_guidance: >
+  App store listing copy, screenshots, and ASO requirements.
+  Reference for app store presence.
+
+priority: low
+
+updated: 2026-01-10

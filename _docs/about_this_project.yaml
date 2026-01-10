@@ -1,0 +1,51 @@
+# =============================================================================
+# About This Project: CANVS
+# =============================================================================
+# Quick reference for LLMs and contributors entering this project.
+# =============================================================================
+
+name: CANVS
+tagline: "The end of the feed. The beginning of the world."
+
+description: >
+  CANVS is a persistent, AR-native social layer anchored to physical places.
+  Instead of consuming content through feeds, people experience it where it
+  belongs: at the location it refers to, at the scale it happened, with the
+  atmosphere that gave it meaning. The planet becomes an addressable surface.
+
+repo_purpose: >
+  This repository is the planning and collaboration workspace for the CANVS
+  product vision (2026-2030). It contains strategic documents, design specs,
+  and coordination files for building the spatial social layer.
+
+# CORE CONCEPTS
+# -----------------------------------------------------------------------------
+key_concepts:
+  spatial_browser: >
+    Three modes in one: AR Mode (see anchored content), Map Mode (spatial radar),
+    Time Mode (scrub through what happened here over time).
+
+  spatial_primitives:
+    - Pins: Simple anchors (notes, photos, audio, tips)
+    - Bubbles: Group memory objects shared at a place
+    - Time Capsules: Rich multimedia moments frozen in location
+    - Trails: Narrative routes connecting multiple anchors
+    - Drops: Geo-fenced releases that unlock at location+time
+    - Portals: Places linked to other places via story logic
+
+  reality_filter: >
+    LLM agents that personalize and filter spatial content based on your taste,
+    friends, values, and intent - turning raw data into felt relevance.
+
+  glass_native: >
+    Designed for AR glasses and spatial computing as the primary interface,
+    with phones as the bootstrapping device.
+
+# WHERE TO START
+# -----------------------------------------------------------------------------
+primary_document: vision/product_vision_paper.md
+roadmap: 2026-2030 strategic phases (see vision document section 13)
+
+# METADATA
+# -----------------------------------------------------------------------------
+updated: 2026-01-10

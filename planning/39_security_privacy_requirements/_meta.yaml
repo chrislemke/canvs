@@ -1,0 +1,29 @@
+name: 39_security_privacy_requirements
+path: planning/39_security_privacy_requirements
+purpose: Security and privacy requirements
+
+contains:
+  - security requirements documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - security
+  - privacy
+  - compliance
+  - data-protection
+
+related:
+  - planning/40_threat_model
+  - planning/41_compliance_assessment
+
+category: planning
+
+ai_guidance: >
+  Security and privacy requirements for the product.
+  Critical for compliance and data protection.
+
+priority: high
+
+updated: 2026-01-10

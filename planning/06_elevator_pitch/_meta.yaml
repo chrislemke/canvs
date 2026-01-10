@@ -1,0 +1,29 @@
+name: 06_elevator_pitch
+path: planning/06_elevator_pitch
+purpose: Concise product pitch for quick communication
+
+contains:
+  - elevator pitch documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - pitch
+  - summary
+  - communication
+  - messaging
+
+related:
+  - planning/09_value_proposition_differentiators
+  - planning/13_positioning_statement
+
+category: planning
+
+ai_guidance: >
+  Short, compelling product description. Use when you need
+  to quickly explain what the product does and why it matters.
+
+priority: medium
+
+updated: 2026-01-10

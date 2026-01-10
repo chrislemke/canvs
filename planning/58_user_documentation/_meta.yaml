@@ -1,0 +1,29 @@
+name: 58_user_documentation
+path: planning/58_user_documentation
+purpose: End-user documentation and help content
+
+contains:
+  - user documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - documentation
+  - help
+  - user-guide
+  - tutorials
+
+related:
+  - planning/57_internal_documentation
+  - planning/59_onboarding_flow_spec
+
+category: planning
+
+ai_guidance: >
+  Documentation for end users including help articles,
+  tutorials, and guides.
+
+priority: medium
+
+updated: 2026-01-10

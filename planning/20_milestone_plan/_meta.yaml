@@ -1,0 +1,29 @@
+name: 20_milestone_plan
+path: planning/20_milestone_plan
+purpose: Key milestones and deliverables schedule
+
+contains:
+  - milestone plan documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - milestones
+  - deliverables
+  - schedule
+  - timeline
+
+related:
+  - planning/19_high_level_product_roadmap
+  - planning/44_build_plan_sprint_plan
+
+category: planning
+
+ai_guidance: >
+  Defines key milestones and target deliverables.
+  Reference for tracking progress against major goals.
+
+priority: medium
+
+updated: 2026-01-10

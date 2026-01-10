@@ -1,0 +1,969 @@
+# CANVS Design System Specification
+# Extracted from existing HTML designs for Node.js splash website implementation
+# Version: 1.0.0
+# Last Updated: 2026-01-10
+
+metadata:
+  project: CANVS Splash Website
+  design_philosophy: "Digital Humanism - Tactile artifacts that feel like physical objects"
+  core_concept: "Paper texture over flat color, hand-drawn aesthetics, warmth over sterility"
+
+# =============================================================================
+# 1. COLOR PALETTE
+# =============================================================================
+
+colors:
+  # Primary Colors (CSS Variables)
+  primary:
+    alabaster:
+      hex: "#F0EFEA"
+      css_var: "--alabaster"
+      alt_name: "--bg-paper"
+      usage: "Main background color, mimics cold press paper"
+
+    ink:
+      hex: "#1A1A18"
+      css_var: "--ink"
+      usage: "Primary text color, deep warm black"
+
+    terracotta:
+      hex: "#D97757"
+      css_var: "--terracotta"
+      usage: "Primary accent, CTAs, brand highlight, links hover"
+
+    sage:
+      hex: "#8DA399"
+      css_var: "--sage"
+      usage: "Secondary accent, status indicators, subtle highlights"
+
+    highlighter:
+      hex: "#EEDC5B"
+      css_var: "--highlighter"
+      usage: "Highlight effect, marker-style emphasis"
+
+  # Derived Colors (with transparency)
+  derived:
+    ink_light:
+      value: "rgba(26, 26, 24, 0.6)"
+      css_var: "--ink-light"
+      usage: "Secondary text, descriptions, muted content"
+
+    ink_lighter:
+      value: "rgba(26, 26, 24, 0.15)"
+      css_var: "--ink-lighter"
+      usage: "Borders, dividers, subtle UI elements"
+
+    alabaster_translucent:
+      value: "rgba(240, 239, 234, 0.95)"
+      usage: "Backdrop blur overlays, sticky navigation"
+
+    white_translucent:
+      value: "rgba(240, 239, 234, 0.03)"
+      usage: "Dark mode cards, subtle backgrounds"
+
+  # Dark Mode Colors (used in solution-section, roadmap-section)
+  dark_mode:
+    background: "#1A1A18"
+    text_primary: "#F0EFEA"
+    text_secondary: "rgba(240, 239, 234, 0.7)"
+    text_muted: "rgba(240, 239, 234, 0.6)"
+    card_background: "rgba(240, 239, 234, 0.03)"
+    card_border: "rgba(240, 239, 234, 0.08)"
+    card_hover: "rgba(240, 239, 234, 0.06)"
+
+# =============================================================================
+# 2. TYPOGRAPHY
+# =============================================================================
+
+typography:
+  fonts:
+    # Google Fonts Import URL
+    import_url: "https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400&family=Inter:wght@300;400;500;600&display=swap"
+
+    primary:
+      family: "'Inter', sans-serif"
+      usage: "Body text, UI elements, navigation, buttons"
+      weights:
+        light: 300
+        regular: 400
+        medium: 500
+        semibold: 600
+
+    secondary:
+      family: "'Newsreader', Georgia, serif"
+      css_class: ".serif"
+      usage: "Headlines, display text, quotes, card titles, logo"
+      weights:
+        light: 300
+        regular: 400
+        medium: 500
+        semibold: 600
+      optical_size: "6..72"
+      italic: true
+
+  font_sizes:
+    # Using clamp() for fluid typography
+    hero_title:
+      size: "clamp(3.5rem, 8vw, 7rem)"
+      line_height: 1.05
+      letter_spacing: "-0.02em"
+      weight: 300
+      font: "Newsreader"
+
+    section_title:
+      size: "clamp(2.5rem, 5vw, 4rem)"
+      line_height: 1.15
+      letter_spacing: "-0.01em"
+      weight: 400
+      font: "Newsreader"
+
+    cta_title:
+      size: "clamp(2.5rem, 5vw, 4rem)"
+      line_height: 1.2
+      weight: 400
+      font: "Newsreader"
+
+    card_title_large:
+      size: "1.8rem"
+      line_height: 1.4
+      weight: 500
+      font: "Newsreader"
+
+    card_title_medium:
+      size: "1.5rem"
+      line_height: 1.4
+      weight: 500
+      font: "Newsreader"
+
+    card_title_small:
+      size: "1.3rem"
+      weight: 500
+      font: "Newsreader"
+
+    body_large:
+      size: "1.25rem"
+      line_height: 1.7
+      weight: 300
+      font: "Inter"
+
+    body_regular:
+      size: "1.05rem - 1.15rem"
+      line_height: 1.6-1.7
+      weight: 300-400
+      font: "Inter"
+
+    body_small:
+      size: "0.95rem"
+      line_height: 1.7
+      weight: 400
+      font: "Inter"
+
+    caption:
+      size: "0.9rem"
+      line_height: 1.6
+      font: "Inter"
+
+    label:
+      size: "11px"
+      weight: 600
+      letter_spacing: "0.2em"
+      text_transform: "uppercase"
+      font: "Inter"
+
+    micro_label:
+      size: "9px - 10px"
+      weight: 600
+      letter_spacing: "0.15em"
+      text_transform: "uppercase"
+      font: "Inter"
+
+    nav_link:
+      size: "13px"
+      weight: 500
+      letter_spacing: "0.02em"
+      font: "Inter"
+
+    button:
+      size: "13px"
+      weight: 500
+      letter_spacing: "0.04em"
+      font: "Inter"
+
+    mode_number:
+      size: "4rem"
+      weight: 300
+      line_height: 1
+      font: "Newsreader"
+
+    year_label:
+      size: "2.5rem"
+      weight: 300
+      font: "Newsreader"
+
+  text_rendering:
+    smoothing: "-webkit-font-smoothing: antialiased"
+    selection:
+      background: "var(--terracotta)"
+      color: "white"
+
+# =============================================================================
+# 3. PAPER TEXTURE EFFECT
+# =============================================================================
+
+paper_texture:
+  implementation: "SVG noise filter overlay"
+
+  css_code: |
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+  alternative_css: |
+    /* Slightly different parameters from design_vision_v4.html */
+    .bg-noise::before {
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+      z-index: 50;
+    }
+
+  parameters:
+    filter_type: "fractalNoise"
+    base_frequency: "0.8 - 0.9"
+    num_octaves: "3 - 4"
+    stitch_tiles: "stitch"
+    opacity: "0.035 - 0.04"
+
+# =============================================================================
+# 4. COMPONENT PATTERNS
+# =============================================================================
+
+components:
+
+  # -------------------------------------------------------------------------
+  # Navigation
+  # -------------------------------------------------------------------------
+  navigation:
+    position: "fixed"
+    top: 0
+    left: 0
+    width: "100%"
+    padding: "20px 40px"
+    z_index: 100
+    display: "flex"
+    justify_content: "space-between"
+    align_items: "center"
+    background: "linear-gradient(to bottom, var(--alabaster) 60%, transparent)"
+
+    sticky_variant:
+      background: "rgba(240, 239, 234, 0.9)"
+      backdrop_filter: "blur(10px)"
+      border_bottom: "1px solid rgba(26, 26, 24, 0.05)"
+
+    logo:
+      icon_size: "42px"
+      icon_style:
+        fill: "none"
+        stroke: "var(--terracotta)"
+        stroke_width: "2.5"
+        stroke_linecap: "round"
+        stroke_linejoin: "round"
+        filter: "drop-shadow(0 0 1px rgba(217, 119, 87, 0.3))"
+      text:
+        font: "Newsreader"
+        size: "26px"
+        weight: 500
+        letter_spacing: "-0.02em"
+
+    nav_links:
+      gap: "32px"
+      link_style:
+        color: "var(--ink-light)"
+        font_size: "13px"
+        weight: 500
+        letter_spacing: "0.02em"
+        text_decoration: "none"
+        transition: "all 0.3s ease"
+      hover:
+        color: "var(--terracotta)"
+      underline_effect:
+        position: "absolute"
+        bottom: "-4px"
+        height: "1.5px"
+        background: "var(--terracotta)"
+        width_transition: "width 0.3s ease"
+
+  # -------------------------------------------------------------------------
+  # Buttons
+  # -------------------------------------------------------------------------
+  buttons:
+    scribble:
+      description: "Hand-drawn asymmetric button style"
+      background: "transparent"
+      border: "2px solid var(--ink)"
+      border_radius: "255px 15px 225px 15px / 15px 225px 15px 255px"
+      padding: "14px 32px"
+      font_family: "Inter"
+      font_weight: 500
+      font_size: "13px"
+      letter_spacing: "0.04em"
+      color: "var(--ink)"
+      cursor: "pointer"
+      transition: "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)"
+      overflow: "hidden"
+
+      hover:
+        background: "var(--terracotta)"
+        color: "var(--alabaster)"
+        border_color: "var(--terracotta)"
+        transform: "translateY(-3px) rotate(-1deg)"
+        box_shadow: "4px 4px 0 var(--ink)"
+
+      secondary_variant:
+        border_color: "var(--terracotta)"
+        color: "var(--terracotta)"
+        hover:
+          background: "var(--terracotta)"
+          color: "var(--alabaster)"
+
+  # -------------------------------------------------------------------------
+  # Language Toggle
+  # -------------------------------------------------------------------------
+  language_toggle:
+    position: "fixed"
+    top: "24px"
+    right: "24px"
+    z_index: 1000
+    display: "flex"
+    gap: "4px"
+    background: "rgba(240, 239, 234, 0.95)"
+    padding: "6px"
+    border_radius: "30px"
+    border: "1.5px solid var(--ink-lighter)"
+    backdrop_filter: "blur(10px)"
+
+    button:
+      padding: "8px 16px"
+      border: "none"
+      background: "transparent"
+      font_family: "Inter"
+      font_size: "12px"
+      font_weight: 500
+      letter_spacing: "0.05em"
+      cursor: "pointer"
+      border_radius: "20px"
+      transition: "all 0.3s ease"
+      color: "var(--ink-light)"
+
+    active:
+      background: "var(--ink)"
+      color: "var(--alabaster)"
+
+    hover_not_active:
+      color: "var(--terracotta)"
+
+  # -------------------------------------------------------------------------
+  # Cards
+  # -------------------------------------------------------------------------
+  cards:
+    floating_card:
+      description: "Decorative floating memory cards"
+      position: "absolute"
+      background: "white"
+      padding: "24px"
+      border_radius: "4px"
+      box_shadow: "0 8px 40px rgba(26, 26, 24, 0.08)"
+      border: "1px solid rgba(26, 26, 24, 0.05)"
+      max_width: "280px"
+      z_index: 3
+
+      label:
+        font_size: "9px"
+        font_weight: 600
+        letter_spacing: "0.15em"
+        text_transform: "uppercase"
+        color: "var(--terracotta)"
+        margin_bottom: "8px"
+
+      text:
+        font: "Newsreader"
+        font_size: "1.1rem"
+        font_style: "italic"
+        line_height: 1.5
+        color: "var(--ink)"
+
+      meta:
+        margin_top: "12px"
+        font_size: "10px"
+        color: "var(--ink-light)"
+        display: "flex"
+        align_items: "center"
+        gap: "8px"
+
+      dot:
+        width: "6px"
+        height: "6px"
+        border_radius: "50%"
+        background: "var(--sage)"
+
+    solution_card:
+      description: "Dark mode feature cards"
+      background: "rgba(240, 239, 234, 0.03)"
+      border: "1px solid rgba(240, 239, 234, 0.08)"
+      border_radius: "8px"
+      padding: "40px 32px"
+      transition: "all 0.4s ease"
+
+      top_accent:
+        position: "absolute"
+        top: 0
+        left: 0
+        width: "100%"
+        height: "3px"
+        background: "linear-gradient(90deg, var(--terracotta), var(--sage))"
+        opacity: 0
+
+      hover:
+        background: "rgba(240, 239, 234, 0.06)"
+        transform: "translateY(-8px)"
+        top_accent_opacity: 1
+
+    primitive_card:
+      description: "Feature primitive cards"
+      background: "white"
+      border: "1px solid rgba(26, 26, 24, 0.06)"
+      border_radius: "6px"
+      padding: "36px 28px"
+      transition: "all 0.4s ease"
+
+      hover:
+        transform: "translateY(-6px) rotate(-0.5deg)"
+        box_shadow: "8px 12px 40px rgba(26, 26, 24, 0.08)"
+        border_color: "var(--terracotta)"
+
+      example_box:
+        margin_top: "16px"
+        padding: "12px"
+        background: "rgba(238, 220, 91, 0.15)"
+        border_radius: "4px"
+        font_size: "0.85rem"
+        font_style: "italic"
+        color: "var(--ink)"
+
+    mode_card:
+      description: "Experience mode expandable cards"
+      flex: 1
+      padding: "60px 48px"
+      border: "1px solid var(--ink-lighter)"
+      border_right: "none"
+      transition: "all 0.5s cubic-bezier(0.25, 1, 0.5, 1)"
+      cursor: "pointer"
+
+      hover:
+        flex: 1.5
+        background: "white"
+        box_shadow: "0 20px 60px rgba(26, 26, 24, 0.08)"
+        z_index: 2
+
+    usecase_item:
+      padding: "28px"
+      border: "1px solid var(--ink-lighter)"
+      border_radius: "4px"
+      transition: "all 0.3s ease"
+
+      hover:
+        background: "var(--alabaster)"
+        border_color: "var(--sage)"
+
+    paper_card:
+      description: "Physical paper metaphor card"
+      background: "white"
+      border: "1px solid rgba(26, 26, 24, 0.08)"
+      border_radius: "4px"
+      box_shadow: "0 4px 20px -2px rgba(26, 26, 24, 0.08)"
+      transition: "transform 0.3s ease"
+
+      hover:
+        transform: "translateY(-4px)"
+        border_color: "var(--terracotta)"
+
+  # -------------------------------------------------------------------------
+  # Section Headers
+  # -------------------------------------------------------------------------
+  section_header:
+    max_width: "800px"
+    margin_bottom: "80px"
+
+    label:
+      font_size: "11px"
+      font_weight: 600
+      letter_spacing: "0.2em"
+      text_transform: "uppercase"
+      color: "var(--terracotta)"
+      margin_bottom: "20px"
+      display: "flex"
+      align_items: "center"
+      gap: "12px"
+
+      before_line:
+        width: "24px"
+        height: "2px"
+        background: "var(--terracotta)"
+
+    title:
+      font: "Newsreader"
+      size: "clamp(2.5rem, 5vw, 4rem)"
+      weight: 400
+      line_height: 1.15
+      margin_bottom: "24px"
+      letter_spacing: "-0.01em"
+
+    description:
+      font_size: "1.15rem"
+      color: "var(--ink-light)"
+      max_width: "600px"
+      font_weight: 300
+
+  # -------------------------------------------------------------------------
+  # Manifesto Block
+  # -------------------------------------------------------------------------
+  manifesto_block:
+    background: "white"
+    border_left: "4px solid var(--terracotta)"
+    padding: "40px"
+    margin: "60px 0"
+    box_shadow: "0 8px 40px rgba(26, 26, 24, 0.06)"
+
+    paragraph:
+      font: "Newsreader"
+      font_size: "1.4rem"
+      font_style: "italic"
+      line_height: 1.6
+      color: "var(--ink)"
+
+    strong:
+      color: "var(--terracotta)"
+      font_style: "normal"
+
+  # -------------------------------------------------------------------------
+  # Impact Card
+  # -------------------------------------------------------------------------
+  impact_card:
+    text_align: "center"
+    padding: "48px 32px"
+
+    icon:
+      width: "80px"
+      height: "80px"
+      margin: "0 auto 24px"
+      background: "white"
+      border_radius: "50%"
+      display: "flex"
+      align_items: "center"
+      justify_content: "center"
+      box_shadow: "0 8px 30px rgba(26, 26, 24, 0.06)"
+
+      svg:
+        width: "40px"
+        height: "40px"
+        stroke: "var(--terracotta)"
+        stroke_width: 1.5
+        fill: "none"
+
+  # -------------------------------------------------------------------------
+  # Roadmap Timeline
+  # -------------------------------------------------------------------------
+  roadmap_timeline:
+    display: "flex"
+    gap: 0
+    margin_top: "80px"
+    position: "relative"
+
+    line:
+      position: "absolute"
+      top: "40px"
+      left: 0
+      width: "100%"
+      height: "2px"
+      background: "linear-gradient(90deg, var(--terracotta), var(--sage), var(--highlighter))"
+
+    year:
+      flex: 1
+      padding: "80px 32px 40px"
+
+      dot:
+        position: "absolute"
+        top: "32px"
+        left: "32px"
+        width: "16px"
+        height: "16px"
+        background: "var(--alabaster)"
+        border_radius: "50%"
+        border: "3px solid var(--terracotta)"
+
+  # -------------------------------------------------------------------------
+  # Footer
+  # -------------------------------------------------------------------------
+  footer:
+    padding: "60px 80px"
+    border_top: "1px solid var(--ink-lighter)"
+    display: "flex"
+    justify_content: "space-between"
+    align_items: "center"
+
+    logo:
+      svg_size: "32px"
+      svg_stroke: "var(--terracotta)"
+      svg_stroke_width: 2.5
+      svg_fill: "none"
+
+    text:
+      font_size: "0.85rem"
+      color: "var(--ink-light)"
+
+    meta:
+      font_size: "0.8rem"
+      color: "var(--ink-lighter)"
+
+# =============================================================================
+# 5. HIGHLIGHT EFFECT
+# =============================================================================
+
+highlight_effect:
+  css_class: ".highlight"
+  background: "linear-gradient(180deg, transparent 60%, var(--highlighter) 60%)"
+  padding: "0 4px"
+
+# =============================================================================
+# 6. SVG DECORATIONS & ICONS
+# =============================================================================
+
+svg_decorations:
+  logo_weaver_knot:
+    viewbox: "0 0 100 100"
+    path: "M50,90 C42,78 20,55 20,38 C20,20 38,15 50,32 C62,15 80,20 80,38 C80,55 58,78 50,90 Z M50,32 C50,32 50,45 50,45"
+    style:
+      fill: "none"
+      stroke: "var(--terracotta)"
+      stroke_width: 2.5
+      stroke_linecap: "round"
+      stroke_linejoin: "round"
+      filter: "drop-shadow(0 0 1px rgba(217, 119, 87, 0.3))"
+
+  hero_decoration:
+    viewbox: "0 0 400 400"
+    elements:
+      - type: "circle"
+        cx: 200
+        cy: 200
+        r: 150
+        stroke_dasharray: "4 8"
+      - type: "circle"
+        cx: 200
+        cy: 200
+        r: 100
+        stroke_dasharray: "2 6"
+      - type: "path"
+        d: "M50,200 Q200,50 350,200 Q200,350 50,200"
+        stroke_dasharray: "8 4"
+
+  icon_styles:
+    default:
+      stroke: "var(--ink)"
+      stroke_width: 1.5
+      fill: "none"
+    accent:
+      stroke: "var(--terracotta)"
+      stroke_width: 1.5
+      fill: "none"
+    light_accent:
+      stroke: "var(--sage)"
+      stroke_width: 1.5
+      fill: "none"
+
+# =============================================================================
+# 7. ANIMATIONS
+# =============================================================================
+
+animations:
+  draw:
+    keyframes:
+      to:
+        stroke_dashoffset: 0
+    css: |
+      @keyframes draw {
+        to { stroke-dashoffset: 0; }
+      }
+      .draw-animation {
+        stroke-dasharray: 300;
+        stroke-dashoffset: 300;
+        animation: draw 2s ease forwards;
+      }
+      .path-draw {
+        stroke-dasharray: 250;
+        stroke-dashoffset: 250;
+        animation: draw 2.5s cubic-bezier(0.45, 0, 0.55, 1) forwards;
+      }
+
+  float:
+    float1:
+      keyframes:
+        "0%, 100%":
+          transform: "rotate(3deg) translateY(0)"
+        "50%":
+          transform: "rotate(3deg) translateY(-15px)"
+      duration: "6s"
+      timing: "ease-in-out"
+      iteration: "infinite"
+
+    float2:
+      keyframes:
+        "0%, 100%":
+          transform: "rotate(-2deg) translateY(0)"
+        "50%":
+          transform: "rotate(-2deg) translateY(-20px)"
+      duration: "7s"
+      timing: "ease-in-out"
+      iteration: "infinite"
+
+  fade_up:
+    initial:
+      opacity: 0
+      transform: "translateY(40px)"
+    visible:
+      opacity: 1
+      transform: "translateY(0)"
+    transition: "opacity 0.8s ease, transform 0.8s ease"
+
+# =============================================================================
+# 8. RESPONSIVE BREAKPOINTS
+# =============================================================================
+
+breakpoints:
+  desktop_large:
+    min_width: "1200px"
+    notes: "Full layout"
+
+  desktop:
+    max_width: "1200px"
+    changes:
+      - "solution-cards: grid-template-columns: repeat(2, 1fr)"
+      - "primitives-grid: grid-template-columns: repeat(2, 1fr)"
+
+  tablet:
+    max_width: "900px"
+    changes:
+      - "section padding: 80px 40px"
+      - "hero padding: 100px 40px 60px"
+      - "problem-grid: single column"
+      - "problem-visual: display none"
+      - "solution-cards: single column"
+      - "experience-modes: flex-direction column"
+      - "primitives-grid: single column"
+      - "usecase-category: single column"
+      - "usecase-items: single column"
+      - "roadmap-timeline: flex-direction column, line hidden"
+      - "impact-grid: single column"
+      - "floating-card: display none"
+      - "nav padding: 16px 24px"
+      - "nav-links: display none"
+      - "footer: flex-direction column, gap 24px, text-align center"
+
+  mobile:
+    max_width: "600px"
+    notes: "Further simplification for mobile"
+
+# =============================================================================
+# 9. SECTION LAYOUTS
+# =============================================================================
+
+layouts:
+  hero_section:
+    min_height: "100vh"
+    display: "flex"
+    flex_direction: "column"
+    justify_content: "center"
+    padding: "120px 80px 80px"
+    position: "relative"
+    overflow: "hidden"
+
+    content_max_width: "900px"
+
+  standard_section:
+    padding: "120px 80px"
+    position: "relative"
+
+  cta_section:
+    padding: "160px 80px"
+    text_align: "center"
+    position: "relative"
+    overflow: "hidden"
+
+  problem_section:
+    background: "linear-gradient(180deg, var(--alabaster) 0%, rgba(141, 163, 153, 0.08) 100%)"
+
+  solution_section:
+    background: "var(--ink)"
+    color: "var(--alabaster)"
+
+  primitives_section:
+    background: "linear-gradient(135deg, rgba(217, 119, 87, 0.04) 0%, var(--alabaster) 50%, rgba(141, 163, 153, 0.06) 100%)"
+
+  usecases_section:
+    background: "white"
+
+  roadmap_section:
+    background: "var(--ink)"
+    color: "var(--alabaster)"
+    overflow: "hidden"
+
+  impact_section:
+    background: "linear-gradient(180deg, var(--alabaster) 0%, rgba(141, 163, 153, 0.1) 100%)"
+
+# =============================================================================
+# 10. GRID SYSTEMS
+# =============================================================================
+
+grids:
+  solution_cards:
+    display: "grid"
+    columns: "repeat(3, 1fr)"
+    gap: "32px"
+    breakpoints:
+      1200: "repeat(2, 1fr)"
+      900: "1fr"
+
+  primitives_grid:
+    display: "grid"
+    columns: "repeat(3, 1fr)"
+    gap: "24px"
+    breakpoints:
+      1200: "repeat(2, 1fr)"
+      900: "1fr"
+
+  problem_grid:
+    display: "grid"
+    columns: "1fr 1fr"
+    gap: "60px"
+    align_items: "center"
+    breakpoints:
+      900: "1fr"
+
+  usecase_items:
+    display: "grid"
+    columns: "repeat(2, 1fr)"
+    gap: "24px"
+    breakpoints:
+      900: "1fr"
+
+  impact_grid:
+    display: "grid"
+    columns: "repeat(3, 1fr)"
+    gap: "48px"
+    breakpoints:
+      900: "1fr"
+
+# =============================================================================
+# 11. Z-INDEX LAYERS
+# =============================================================================
+
+z_index:
+  paper_texture: 9999
+  language_toggle: 1000
+  navigation: 100
+  floating_cards: 3
+  hero_content: 2
+  hero_decoration: 1
+  base: 0
+
+# =============================================================================
+# 12. TRANSITIONS & TIMING
+# =============================================================================
+
+transitions:
+  default:
+    duration: "0.3s"
+    easing: "ease"
+
+  smooth:
+    duration: "0.4s"
+    easing: "ease"
+
+  elastic:
+    duration: "0.4s"
+    easing: "cubic-bezier(0.25, 1, 0.5, 1)"
+
+  expand:
+    duration: "0.5s"
+    easing: "cubic-bezier(0.25, 1, 0.5, 1)"
+
+  slow:
+    duration: "0.8s"
+    easing: "ease"
+
+# =============================================================================
+# 13. SHADOWS
+# =============================================================================
+
+shadows:
+  card_subtle: "0 4px 20px -2px rgba(26, 26, 24, 0.08)"
+  card_medium: "0 8px 40px rgba(26, 26, 24, 0.08)"
+  card_elevated: "0 20px 60px rgba(26, 26, 24, 0.08)"
+  impact_icon: "0 8px 30px rgba(26, 26, 24, 0.06)"
+  manifesto: "0 8px 40px rgba(26, 26, 24, 0.06)"
+  button_hover: "4px 4px 0 var(--ink)"
+  phone_mockup: "shadow-2xl"
+
+# =============================================================================
+# 14. LANGUAGE TOGGLE IMPLEMENTATION
+# =============================================================================
+
+language_toggle_js:
+  data_attributes:
+    switch: "data-lang-switch"
+    content: "data-lang"
+  body_classes:
+    german: "lang-de"
+  css_rules: |
+    [data-lang="de"] { display: none; }
+    body.lang-de [data-lang="en"] { display: none; }
+    body.lang-de [data-lang="de"] { display: block; }
+
+# =============================================================================
+# 15. SCROLL BEHAVIOR
+# =============================================================================
+
+scroll_behavior:
+  html:
+    scroll_behavior: "smooth"
+  intersection_observer:
+    threshold: 0.1
+    root_margin: "0px 0px -50px 0px"
+  target_elements:
+    - ".section-header"
+    - ".solution-card"
+    - ".primitive-card"
+    - ".impact-card"
+    - ".usecase-item"
+    - ".mode-card"
+
+# =============================================================================
+# 16. PARALLAX EFFECT
+# =============================================================================
+
+parallax:
+  floating_cards:
+    trigger: "mousemove"
+    calculation: |
+      const x = (e.clientX / window.innerWidth - 0.5) * 20;
+      const y = (e.clientY / window.innerHeight - 0.5) * 20;
+    factor_multiplier: "(index + 1) * 0.5"
+    rotation:
+      card_1: "3deg"
+      card_2: "-2deg"

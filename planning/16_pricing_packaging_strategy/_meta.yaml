@@ -1,0 +1,29 @@
+name: 16_pricing_packaging_strategy
+path: planning/16_pricing_packaging_strategy
+purpose: Pricing model and packaging strategy
+
+contains:
+  - pricing strategy documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - pricing
+  - packaging
+  - monetization
+  - revenue
+
+related:
+  - planning/17_business_model_outline
+  - planning/18_go_to_market_strategy
+
+category: planning
+
+ai_guidance: >
+  Defines pricing tiers, packaging options, and monetization
+  strategy. Reference for business model decisions.
+
+priority: medium
+
+updated: 2026-01-10

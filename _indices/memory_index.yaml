@@ -1,0 +1,60 @@
+# =============================================================================
+# memory Index - Agent Memory Storage
+# =============================================================================
+# Index of all files in the memory/ folder.
+# Claude Flow agent memory storage and session persistence.
+# =============================================================================
+
+metadata:
+  name: memory_index
+  folder: memory
+  purpose: Claude Flow agent memory storage and session persistence
+  updated: "2026-01-10"
+
+# =============================================================================
+# FILES
+# =============================================================================
+
+files:
+
+  # ---------------------------------------------------------------------------
+  # DATA FILES
+  # ---------------------------------------------------------------------------
+
+  - path: memory/claude-flow@alpha-data.json
+    summary: Claude Flow alpha version data storage
+    keywords: [claude-flow, data, json, state]
+    type: data
+    priority: medium
+    updated: 2026-01-10
+
+  # ---------------------------------------------------------------------------
+  # FOLDER METADATA
+  # ---------------------------------------------------------------------------
+
+  - path: memory/_meta.yaml
+    summary: Metadata file describing the memory folder
+    keywords: [meta, folder-info]
+    type: config
+    priority: low
+    updated: 2026-01-10
+
+# =============================================================================
+# SUBFOLDERS
+# =============================================================================
+
+subfolders:
+  - path: memory/agents
+    purpose: Agent-specific memory storage
+
+  - path: memory/sessions
+    purpose: Session snapshots and persistence
+
+# =============================================================================
+# RELATED
+# =============================================================================
+
+related:
+  - _indices/master.yaml
+  - _indices/coordination_index.yaml
+  - _docs/claude_flow_software_dev_and_research_instructions.yaml

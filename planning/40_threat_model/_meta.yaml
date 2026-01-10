@@ -1,0 +1,29 @@
+name: 40_threat_model
+path: planning/40_threat_model
+purpose: Security threat modeling and risk assessment
+
+contains:
+  - threat model documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - threat-model
+  - security
+  - risks
+  - vulnerabilities
+
+related:
+  - planning/39_security_privacy_requirements
+  - planning/42_risk_register
+
+category: planning
+
+ai_guidance: >
+  Documents security threats, attack vectors, and mitigations.
+  Reference for security-focused development.
+
+priority: high
+
+updated: 2026-01-10

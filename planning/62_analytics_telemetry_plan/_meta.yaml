@@ -1,0 +1,29 @@
+name: 62_analytics_telemetry_plan
+path: planning/62_analytics_telemetry_plan
+purpose: Product analytics and telemetry strategy
+
+contains:
+  - analytics plan documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - analytics
+  - telemetry
+  - tracking
+  - metrics
+
+related:
+  - planning/63_metric_definitions
+  - planning/53_monitoring_observability_plan
+
+category: planning
+
+ai_guidance: >
+  Defines what product analytics and telemetry to collect.
+  Includes event tracking and user behavior analysis.
+
+priority: medium
+
+updated: 2026-01-10

@@ -1,0 +1,29 @@
+name: 36_data_model
+path: planning/36_data_model
+purpose: Data model and database schema design
+
+contains:
+  - data model documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - data-model
+  - schema
+  - database
+  - entities
+
+related:
+  - planning/34_architecture_overview
+  - specs/tech/stack/data
+
+category: planning
+
+ai_guidance: >
+  Defines data entities, relationships, and schema design.
+  Foundation for database implementation.
+
+priority: high
+
+updated: 2026-01-10

@@ -1,0 +1,674 @@
+# Claude Flow Instructions for LLM Agents
+# This file provides comprehensive guidance on using Claude Flow for multi-agent orchestration
+# Version: 1.0 | Updated: 2026-01-10
+
+metadata:
+  name: claude_flow_instructions
+  purpose: LLM agent guidance for Claude Flow multi-agent orchestration
+  version: "1.0"
+  updated: "2026-01-10"
+  repository: "https://github.com/ruvnet/claude-flow"
+  wiki: "https://github.com/ruvnet/claude-flow/wiki"
+
+# =============================================================================
+# QUICK START
+# =============================================================================
+
+quick_start:
+  installation:
+    description: "Claude Flow requires Node.js. Use npx for zero-install execution."
+    commands:
+      basic: "npx claude-flow@alpha"
+      with_mcp: "claude mcp add claude-flow npx claude-flow@alpha mcp start"
+
+  initialization:
+    description: "Initialize a new project with Claude Flow"
+    command: 'npx claude-flow@alpha init --force --project-name "my-app"'
+
+  first_swarm:
+    description: "Deploy your first multi-agent swarm"
+    command: 'npx claude-flow@alpha swarm "Build a REST API" --claude'
+
+# =============================================================================
+# SWARM COMMANDS
+# =============================================================================
+
+swarm:
+  description: "Deploy intelligent multi-agent swarms to accomplish complex objectives"
+  syntax: 'claude-flow swarm "<objective>" [options]'
+
+  options:
+    strategy:
+      flag: "--strategy <type>"
+      description: "Execution strategy defining agent behavior patterns"
+      default: "development"
+      values:
+        research:
+          description: "Research with web access and data analysis capabilities"
+          agent_focus: ["information gathering", "pattern discovery", "data synthesis"]
+          best_for:
+            - "knowledge gathering and competitive analysis"
+            - "exploring new technologies or patterns"
+            - "documentation and technical writing"
+            - "market research and trend analysis"
+          example: 'claude-flow swarm "Research microservices patterns" --strategy research'
+
+        development:
+          description: "Code generation, implementation, and feature building"
+          agent_focus: ["code writing", "refactoring", "architecture implementation"]
+          best_for:
+            - "building new features and applications"
+            - "implementing designs and specifications"
+            - "code refactoring and modernization"
+            - "API development and integration"
+          example: 'claude-flow swarm "Build user authentication" --strategy development'
+
+        analysis:
+          description: "Read-only inspection, code review, and bottleneck detection"
+          agent_focus: ["code inspection", "security audit", "performance analysis"]
+          best_for:
+            - "code reviews and security audits"
+            - "architecture analysis and documentation"
+            - "performance bottleneck identification"
+            - "technical debt assessment"
+            - "dependency mapping"
+          notes: "Safe mode - no code modifications allowed"
+          example: 'claude-flow swarm "Analyze codebase for security issues" --strategy analysis --read-only'
+
+        testing:
+          description: "Test creation, automation, and coverage improvement"
+          agent_focus: ["test writing", "automation setup", "coverage analysis"]
+          best_for:
+            - "creating comprehensive test suites"
+            - "setting up CI/CD test automation"
+            - "regression testing workflows"
+            - "integration and e2e test creation"
+          example: 'claude-flow swarm "Create test suite for auth module" --strategy testing'
+
+        optimization:
+          description: "Performance tuning and resource efficiency improvements"
+          agent_focus: ["profiling", "memory optimization", "speed improvements"]
+          best_for:
+            - "database query optimization"
+            - "application performance tuning"
+            - "memory usage reduction"
+            - "load time improvements"
+            - "resource efficiency"
+          example: 'claude-flow swarm "Optimize database queries" --strategy optimization'
+
+        maintenance:
+          description: "Bug fixes, dependency updates, and technical cleanup"
+          agent_focus: ["bug fixing", "dependency management", "code cleanup"]
+          best_for:
+            - "fixing bugs and issues"
+            - "updating dependencies"
+            - "addressing technical debt"
+            - "code cleanup and formatting"
+            - "migration tasks"
+          example: 'claude-flow swarm "Update deprecated dependencies" --strategy maintenance'
+
+    mode:
+      flag: "--mode <type>"
+      description: "Coordination mode defining how agents communicate and organize"
+      default: "hierarchical"
+      values:
+        centralized:
+          description: "Single controller in star topology - one agent coordinates all others"
+          topology: "star"
+          advantages:
+            - "Simple coordination and decision-making"
+            - "Global optimization potential"
+            - "Reduced communication overhead (hub-and-spoke)"
+            - "Easier conflict resolution"
+            - "Clear accountability"
+          disadvantages:
+            - "Single point of failure vulnerability"
+            - "Scalability constraints"
+            - "Potential bottlenecks at controller"
+            - "Reduced agent autonomy"
+          best_for:
+            - "Small teams (2-4 agents)"
+            - "Simple, well-defined tasks"
+            - "Tasks requiring strict coordination"
+          example: 'claude-flow swarm "Simple API" --mode centralized --max-agents 3'
+
+        distributed:
+          description: "Fully decentralized peers - agents coordinate without central controller"
+          topology: "peer-to-peer"
+          advantages:
+            - "Greater robustness through redundancy"
+            - "Improved scalability for large collectives"
+            - "Preserved agent autonomy and specialization"
+            - "Parallel decision-making capability"
+            - "No single point of failure"
+          disadvantages:
+            - "Complex consensus mechanisms required"
+            - "Potential for local minima in decision-making"
+            - "Higher communication overhead"
+            - "Slower global convergence"
+          best_for:
+            - "Large-scale distributed tasks"
+            - "Fault-tolerant requirements"
+            - "Tasks benefiting from diverse perspectives"
+          example: 'claude-flow swarm "Distributed processing" --mode distributed --max-agents 10'
+
+        hierarchical:
+          description: "Tree structure with delegation - managers coordinate worker groups"
+          topology: "tree"
+          advantages:
+            - "Scalable for large agent collectives"
+            - "Clear delegation and responsibility"
+            - "Efficient for structured projects"
+            - "Modular and interpretable"
+          disadvantages:
+            - "Potential bottlenecks at higher levels"
+            - "Less robustness than fully distributed"
+            - "Manager agents become critical paths"
+          best_for:
+            - "Large complex projects"
+            - "Enterprise-scale development"
+            - "Projects with clear component boundaries"
+          example: 'claude-flow swarm "Enterprise app" --mode hierarchical --max-agents 12'
+
+        mesh:
+          description: "Peer-to-peer communication - all agents can communicate directly"
+          topology: "mesh"
+          advantages:
+            - "Maximum collaboration potential"
+            - "Excellent for brainstorming and exploration"
+            - "Resilient to individual agent failures"
+            - "Flexible task reassignment"
+          disadvantages:
+            - "High communication overhead (O(n^2) connections)"
+            - "Coordination complexity increases with agents"
+            - "Can be noisy for large teams"
+          best_for:
+            - "Collaborative research tasks"
+            - "Brainstorming and ideation"
+            - "Parallel problem-solving"
+            - "Medium-sized teams (4-8 agents)"
+          example: 'claude-flow swarm "Explore solutions" --mode mesh --max-agents 6'
+
+        hybrid:
+          description: "Combines multiple approaches - strategic centralization with tactical distribution"
+          topology: "adaptive"
+          advantages:
+            - "Best of both worlds flexibility"
+            - "Adapts coordination to task needs"
+            - "Centralized strategy, distributed execution"
+            - "Optimized for complex real-world scenarios"
+          disadvantages:
+            - "More complex to configure"
+            - "Requires careful mode switching"
+          best_for:
+            - "Complex multi-phase projects"
+            - "Tasks with varying coordination needs"
+            - "Production-grade workflows"
+          example: 'claude-flow swarm "Full-stack app" --mode hybrid --max-agents 8'
+
+    max_agents:
+      flag: "--max-agents <n>"
+      description: "Maximum number of agents in the swarm"
+      default: 5
+      recommendations:
+        small: { range: "2-3", use_for: "Simple tasks, prototyping, quick fixes" }
+        medium: { range: "4-6", use_for: "Medium-complexity projects, feature development" }
+        large: { range: "7-12", use_for: "Large applications, complex systems" }
+        enterprise: { range: "12+", use_for: "Enterprise-scale development" }
+
+    parallel:
+      flag: "--parallel"
+      description: "Enable parallel execution for 2.8-4.4x speed improvement"
+      performance_gain: "2.8-4.4x faster execution"
+      when_to_use:
+        - "Tasks with independent subtasks"
+        - "No internal dependencies between work items"
+        - "Large-scale processing"
+      when_to_avoid:
+        - "Tasks with sequential dependencies"
+        - "When one task output feeds into another"
+        - "Strict ordering requirements"
+      critical_note: "ONLY use parallel when tasks have NO internal dependencies. For dependent tasks, sequential execution is required."
+
+    monitor:
+      flag: "--monitor"
+      description: "Enable real-time swarm monitoring dashboard"
+
+    background:
+      flag: "--background"
+      description: "Run swarm in background with progress tracking"
+
+    claude:
+      flag: "--claude"
+      description: "Open Claude Code CLI for interactive development"
+
+    executor:
+      flag: "--executor"
+      description: "Use built-in executor instead of Claude Code"
+
+    analysis_mode:
+      flags: ["--analysis", "--read-only"]
+      description: "Enable read-only mode - no code modifications allowed"
+      safe_operations:
+        - "Read files and search codebases"
+        - "Generate reports and documentation"
+        - "Analyze patterns and architecture"
+      blocked_operations:
+        - "Write, Edit, or create files"
+        - "System-modifying operations"
+        - "Git commits or pushes"
+
+  examples:
+    basic: 'claude-flow swarm "Build a REST API with authentication"'
+    research: 'claude-flow swarm "Research cloud architecture patterns" --strategy research'
+    parallel: 'claude-flow swarm "Optimize database queries" --max-agents 3 --parallel'
+    monitored: 'claude-flow swarm "Develop feature X" --strategy development --monitor'
+    interactive: 'claude-flow swarm "Build API" --claude'
+    safe_analysis: 'claude-flow swarm "Analyze codebase for security issues" --analysis --read-only'
+
+# =============================================================================
+# HIVE MIND
+# =============================================================================
+
+hive_mind:
+  description: "Queen-led hierarchical coordination system for complex, persistent projects"
+  architecture: "Queen-Worker Model with specialized agents and shared memory"
+
+  commands:
+    wizard:
+      syntax: "npx claude-flow@alpha hive-mind wizard"
+      description: "Interactive setup wizard for hive mind configuration"
+
+    spawn:
+      syntax: 'npx claude-flow@alpha hive-mind spawn "<task>" [options]'
+      description: "Create a new hive mind session"
+      options:
+        namespace:
+          flag: "--namespace <name>"
+          description: "Isolate session in a named namespace for organization"
+        agents:
+          flag: "--agents <types>"
+          description: "Comma-separated list of agent types"
+          example: "--agents researcher,analyst,coder"
+        claude:
+          flag: "--claude"
+          description: "Enable Claude Code integration"
+        queen_type:
+          flag: "--queen-type <type>"
+          values:
+            strategic: "High-level planning and coordination"
+            tactical: "Hands-on task management and execution"
+        max_workers:
+          flag: "--max-workers <n>"
+          description: "Maximum worker agents"
+      examples:
+        basic: 'npx claude-flow@alpha hive-mind spawn "Build microservices" --claude'
+        namespaced: 'npx claude-flow@alpha hive-mind spawn "auth-system" --namespace auth --claude'
+        with_agents: 'npx claude-flow@alpha hive-mind spawn "Research AI" --agents researcher,analyst --claude'
+        tactical: 'npx claude-flow@alpha hive-mind spawn "Implement API" --queen-type tactical --max-workers 12'
+
+    status:
+      syntax: "npx claude-flow@alpha hive-mind status"
+      description: "Check current hive mind status and active sessions"
+
+    sessions:
+      syntax: "npx claude-flow@alpha hive-mind sessions"
+      description: "List all active hive mind sessions"
+
+    resume:
+      syntax: "npx claude-flow@alpha hive-mind resume <session-id>"
+      description: "Resume a paused or stopped hive mind session"
+      example: "npx claude-flow@alpha hive-mind resume session-abc123"
+      notes: "Restores session context but may not fully restore MCP server state"
+
+    pause:
+      syntax: "npx claude-flow@alpha hive-mind pause <session-id>"
+      description: "Pause a running hive mind session (can be resumed later)"
+
+    stop:
+      syntax: "npx claude-flow@alpha hive-mind stop <session-id>"
+      description: "Stop and terminate a hive mind session"
+
+  initialization:
+    basic: "claude-flow hive init"
+    with_topology: "claude-flow hive init --topology mesh --agents 5"
+    full: "claude-flow hive init --topology hierarchical --agents 8 --memory-size 1GB"
+
+  topologies:
+    mesh: "Best for collaborative tasks, brainstorming, parallel problem-solving"
+    hierarchical: "Structured delegation for large projects"
+    ring: "Sequential pipeline processing"
+    star: "Centralized control and simple coordination"
+
+  orchestration_modes:
+    parallel: "Simultaneous execution for independent tasks"
+    sequential: "Ordered execution for dependent tasks"
+    adaptive: "Automatically switches between parallel/sequential based on task dependencies"
+    hybrid: "Combined strategies for complex projects"
+
+# =============================================================================
+# MEMORY OPERATIONS
+# =============================================================================
+
+memory:
+  description: "SQLite-based persistent memory system with ReasoningBank for cross-session learning"
+  database_location: ".swarm/memory.db"
+
+  commands:
+    store:
+      syntax: 'npx claude-flow@alpha memory store <key> "<content>" [options]'
+      options:
+        namespace: "--namespace <name>"
+        reasoningbank: "--reasoningbank"
+      examples:
+        basic: 'npx claude-flow@alpha memory store api-design "REST endpoints for users"'
+        namespaced: 'npx claude-flow@alpha memory store auth-flow "OAuth2 implementation" --namespace auth'
+        reasoningbank: 'npx claude-flow@alpha memory store pattern-1 "Singleton pattern usage" --reasoningbank'
+
+    store_vector:
+      syntax: 'npx claude-flow@alpha memory store-vector <key> "<content>" [options]'
+      description: "Store with vector embeddings for semantic search"
+      options:
+        namespace: "--namespace <name>"
+        metadata: "--metadata '<json>'"
+      example: |
+        npx claude-flow@alpha memory store-vector design-doc "System architecture overview" \
+          --namespace docs --metadata '{"type": "architecture"}'
+
+    query:
+      syntax: 'npx claude-flow@alpha memory query "<term>" [options]'
+      options:
+        namespace: "--namespace <name>"
+        reasoningbank: "--reasoningbank"
+        recent: "--recent"
+      examples:
+        basic: 'npx claude-flow@alpha memory query "authentication"'
+        namespaced: 'npx claude-flow@alpha memory query "patterns" --namespace auth'
+        reasoningbank: 'npx claude-flow@alpha memory query "microservices patterns" --reasoningbank'
+        recent: 'npx claude-flow@alpha memory query "auth" --recent'
+
+    vector_search:
+      syntax: 'npx claude-flow@alpha memory vector-search "<query>" [options]'
+      description: "Semantic similarity search using embeddings"
+      options:
+        k: { flag: "--k <n>", description: "Number of results", default: 10 }
+        threshold: { flag: "--threshold <n>", description: "Similarity threshold (0-1)", default: 0.7 }
+        namespace: "--namespace <name>"
+      example: 'npx claude-flow@alpha memory vector-search "user authentication flow" --k 10 --threshold 0.7'
+
+    list:
+      syntax: "npx claude-flow@alpha memory list [options]"
+      options:
+        namespace: "--namespace <name>"
+        reasoningbank: "--reasoningbank"
+
+    stats:
+      syntax: "npx claude-flow@alpha memory stats"
+      description: "Show memory usage statistics"
+
+    status:
+      syntax: "npx claude-flow@alpha memory status --reasoningbank"
+      description: "Show ReasoningBank status and health"
+
+    agentdb_info:
+      syntax: "npx claude-flow@alpha memory agentdb-info"
+      description: "Show AgentDB configuration and statistics"
+
+  tables:
+    core:
+      - "swarm_state: Current hive status"
+      - "agent_interactions: Communication logs"
+      - "task_history: Completed tasks and outcomes"
+      - "decision_tree: Decision-making patterns"
+    learning:
+      - "neural_patterns: Learned coordination patterns"
+      - "code_patterns: Successful implementations"
+      - "error_patterns: Common mistakes and solutions"
+
+# =============================================================================
+# MULTI-FEATURE PROJECTS
+# =============================================================================
+
+multi_feature_projects:
+  description: "Patterns for managing complex projects with multiple independent features"
+
+  namespace_isolation:
+    description: "Use namespaces to isolate feature development"
+    pattern:
+      - step: "Initialize project"
+        command: 'npx claude-flow@alpha init --force --project-name "my-app"'
+      - step: "Feature 1: Authentication"
+        command: 'npx claude-flow@alpha hive-mind spawn "auth-system" --namespace auth --claude'
+      - step: "Feature 2: User Management"
+        command: 'npx claude-flow@alpha hive-mind spawn "user-mgmt" --namespace users --claude'
+      - step: "Feature 3: API Gateway"
+        command: 'npx claude-flow@alpha hive-mind spawn "api-gateway" --namespace gateway --claude'
+
+  research_session:
+    description: "Start a research session with specialized agents"
+    commands:
+      start: |
+        npx claude-flow@alpha hive-mind spawn "Research microservices" \
+          --agents researcher,analyst --claude
+      check_knowledge: "npx claude-flow@alpha memory stats"
+      query_findings: 'npx claude-flow@alpha memory query "microservices patterns" --reasoningbank'
+
+  session_continuation:
+    description: "Continue work across sessions"
+    workflow:
+      - "Start session: npx claude-flow@alpha hive-mind spawn 'task' --claude"
+      - "Work on task..."
+      - "Pause if needed: npx claude-flow@alpha hive-mind pause <session-id>"
+      - "Resume later: npx claude-flow@alpha hive-mind resume <session-id>"
+
+# =============================================================================
+# PARALLEL VS SEQUENTIAL EXECUTION
+# =============================================================================
+
+execution_patterns:
+  description: "Critical guidance on when to use parallel vs sequential execution"
+
+  parallel:
+    flag: "--parallel"
+    performance: "2.8-4.4x speed improvement"
+    when_to_use:
+      - "Tasks are completely independent"
+      - "No task output is needed by another task"
+      - "Order of completion does not matter"
+      - "Subtasks can run simultaneously"
+    examples:
+      - "Multiple independent API endpoints"
+      - "Parallel test execution"
+      - "Independent file processing"
+      - "Concurrent research on different topics"
+
+  sequential:
+    description: "Default execution - tasks run one after another"
+    when_to_use:
+      - "Task B depends on output from Task A"
+      - "Strict ordering is required"
+      - "Database migrations or schema changes"
+      - "Build steps with dependencies"
+    examples:
+      - "Design -> Implementation -> Testing"
+      - "API design -> Backend code -> Frontend integration"
+      - "Database schema -> ORM models -> API endpoints"
+
+  critical_warning: |
+    NEVER use --parallel when tasks have internal dependencies.
+    If Task B needs the output of Task A, they MUST run sequentially.
+    Using parallel execution with dependent tasks will cause failures.
+
+  decision_guide:
+    question: "Does any task depend on the output of another task?"
+    if_yes: "Use sequential execution (default)"
+    if_no: "Use --parallel for significant speed improvement"
+
+# =============================================================================
+# MULTI-INSTANCE SPAWNING
+# =============================================================================
+
+multi_instance:
+  description: "Run multiple Claude Flow instances simultaneously on different jobs"
+  capability: "Multiple Claude Flow swarms can operate in parallel on separate objectives"
+
+  prompt_examples:
+    parallel_swarms:
+      description: "Spawn multiple parallel swarms for different tasks"
+      prompt: |
+        Spin up multiple Claude Code swarms working on XYZ.
+        Use the research strategy and hybrid mode.
+        Set max agents to 7 and add the --parallel flag.
+      cli_equivalent: |
+        claude-flow swarm "Task 1" --strategy research --mode hybrid --max-agents 7 --parallel &
+        claude-flow swarm "Task 2" --strategy research --mode hybrid --max-agents 7 --parallel &
+        claude-flow swarm "Task 3" --strategy research --mode hybrid --max-agents 7 --parallel
+
+    mixed_strategies:
+      description: "Different swarms with different strategies"
+      prompt: |
+        Start three swarms:
+        1. Research swarm analyzing patterns
+        2. Development swarm implementing features
+        3. Testing swarm creating test coverage
+      commands:
+        - 'claude-flow swarm "Analyze patterns" --strategy research --mode mesh --parallel &'
+        - 'claude-flow swarm "Implement features" --strategy development --mode hierarchical --parallel &'
+        - 'claude-flow swarm "Create tests" --strategy testing --mode centralized --parallel'
+
+    feature_isolation:
+      description: "Separate swarms for different features using namespaces"
+      commands:
+        - 'npx claude-flow@alpha hive-mind spawn "auth-feature" --namespace auth --claude &'
+        - 'npx claude-flow@alpha hive-mind spawn "payments-feature" --namespace payments --claude &'
+        - 'npx claude-flow@alpha hive-mind spawn "notifications-feature" --namespace notif --claude'
+
+  considerations:
+    resource_usage: "Each swarm consumes API tokens and system resources"
+    coordination: "Use namespaces to prevent memory conflicts"
+    dependency_check: "Only parallelize truly independent workstreams"
+
+# =============================================================================
+# AGENT TYPES
+# =============================================================================
+
+agent_types:
+  researcher:
+    description: "Research with web access and data analysis"
+    capabilities: ["web search", "data synthesis", "pattern discovery", "documentation"]
+    spawn: 'claude-flow agent spawn researcher --capabilities "web-access,analysis"'
+
+  coder:
+    description: "Code development with neural patterns"
+    capabilities: ["code writing", "refactoring", "implementation", "debugging"]
+    spawn: 'claude-flow agent spawn coder --capabilities "react,node.js,typescript"'
+
+  analyst:
+    description: "Performance analysis and optimization"
+    capabilities: ["profiling", "bottleneck detection", "metrics analysis"]
+    spawn: 'claude-flow agent spawn analyst --capabilities "performance,metrics"'
+
+  architect:
+    description: "System design with enterprise patterns"
+    capabilities: ["system design", "microservices", "API design", "scalability"]
+    spawn: 'claude-flow agent spawn architect --capabilities "system-design,microservices"'
+
+  tester:
+    description: "Comprehensive testing with automation"
+    capabilities: ["unit testing", "integration testing", "e2e testing", "automation"]
+    spawn: 'claude-flow agent spawn tester --capabilities "jest,cypress,load-testing"'
+
+  coordinator:
+    description: "Multi-agent orchestration and task management"
+    capabilities: ["task distribution", "progress tracking", "conflict resolution"]
+    spawn: 'claude-flow agent spawn coordinator --capabilities "orchestration"'
+
+# =============================================================================
+# BEST PRACTICES
+# =============================================================================
+
+best_practices:
+  agent_count:
+    small_tasks: { agents: "2-3", description: "Simple tasks, prototyping, quick fixes" }
+    medium_projects: { agents: "4-6", description: "Feature development, medium complexity" }
+    large_projects: { agents: "7-12", description: "Large applications, complex systems" }
+    enterprise: { agents: "12+", description: "Enterprise-scale, multi-team coordination" }
+
+  topology_selection:
+    mesh: "Use for exploratory collaboration and brainstorming"
+    hierarchical: "Use for structured large projects with clear delegation"
+    ring: "Use for sequential pipeline workflows"
+    star: "Use for centralized control with simple coordination"
+    hybrid: "Use for complex projects with varying needs"
+
+  memory_management:
+    - "Store important decisions and patterns"
+    - "Use namespaces to organize by feature or domain"
+    - "Query memory before starting new tasks to leverage prior knowledge"
+    - "Export memory regularly for backup"
+    - "Clean old patterns periodically"
+
+  parallel_execution:
+    - "Always verify tasks are truly independent before using --parallel"
+    - "Use sequential for any dependent task chains"
+    - "Monitor resource usage with multiple parallel swarms"
+    - "Use namespaces to prevent memory conflicts in parallel work"
+
+  session_management:
+    - "Use descriptive task names for easy session identification"
+    - "Pause sessions before long breaks rather than stopping"
+    - "Check session status regularly during long-running tasks"
+    - "Export session state before major changes"
+
+# =============================================================================
+# COMMON WORKFLOWS
+# =============================================================================
+
+common_workflows:
+  full_stack_development:
+    description: "Complete full-stack application development"
+    steps:
+      - command: 'npx claude-flow@alpha init --force --project-name "my-app"'
+        description: "Initialize project"
+      - command: 'npx claude-flow@alpha hive-mind spawn "Design system architecture" --agents architect,analyst --claude'
+        description: "Architecture design"
+      - command: 'npx claude-flow@alpha hive-mind spawn "Build backend API" --namespace backend --strategy development --claude'
+        description: "Backend development"
+      - command: 'npx claude-flow@alpha hive-mind spawn "Build frontend UI" --namespace frontend --strategy development --claude'
+        description: "Frontend development (can run parallel to backend if independent)"
+      - command: 'npx claude-flow@alpha swarm "Create test suite" --strategy testing --parallel'
+        description: "Testing"
+
+  code_review:
+    description: "Safe read-only code analysis"
+    command: 'npx claude-flow@alpha swarm "Review codebase for security and quality" --strategy analysis --read-only --max-agents 4'
+
+  performance_optimization:
+    description: "Optimize application performance"
+    command: 'npx claude-flow@alpha swarm "Identify and fix performance bottlenecks" --strategy optimization --max-agents 5 --monitor'
+
+  research_and_implement:
+    description: "Research patterns then implement"
+    steps:
+      - command: 'npx claude-flow@alpha swarm "Research best practices for X" --strategy research'
+        description: "Research phase (sequential - need results first)"
+      - command: 'npx claude-flow@alpha swarm "Implement X using researched patterns" --strategy development --parallel'
+        description: "Implementation phase (can be parallel)"
+
+# =============================================================================
+# TROUBLESHOOTING
+# =============================================================================
+
+troubleshooting:
+  session_resume_issues:
+    problem: "Session resume does not restore MCP server state"
+    solution: "Re-initialize MCP connection after resume if needed"
+    reference: "https://github.com/ruvnet/claude-flow/issues/900"
+
+  memory_conflicts:
+    problem: "Multiple swarms overwriting each other's memory"
+    solution: "Use --namespace flag to isolate memory by feature/domain"
+
+  parallel_failures:
+    problem: "Parallel execution causes unexpected failures"
+    solution: "Verify tasks are truly independent; switch to sequential if dependencies exist"

@@ -1,0 +1,108 @@
+# =============================================================================
+# Index Lookup Guide
+# =============================================================================
+# This document explains the _indices/ folder indexing system.
+# Read this to understand how to create, update, and use index files.
+# =============================================================================
+
+# WHAT IS THE INDEX SYSTEM?
+# -----------------------------------------------------------------------------
+purpose: >
+  The _indices/ folder works like a book's index - a quick reference catalog
+  that lets you find content without scanning every folder. When a new file
+  is created anywhere in the project, an index entry should be added here.
+
+why_it_exists: >
+  Instead of traversing directories and reading multiple files, check the
+  index first. This reduces token usage for LLMs and saves time for humans.
+
+# INDEX ORGANIZATION (Two-Tier System)
+# -----------------------------------------------------------------------------
+organization:
+  master_index:
+    file: _indices/master.yaml
+    purpose: High-level overview of all project content
+    contains: One entry per folder or major content area
+    use_when: You need a quick project overview or don't know where to look
+
+  folder_indices:
+    pattern: _indices/<folder>_index.yaml
+    examples:
+      - _indices/planning_index.yaml
+      - _indices/docs_index.yaml
+      - _indices/vision_index.yaml
+    purpose: Detailed entries for all files within a specific folder
+    use_when: You know which area you need and want specific file details
+
+# INDEX ENTRY FORMAT
+# -----------------------------------------------------------------------------
+entry_format:
+  required_fields:
+    path: Relative path from project root (e.g., planning/01_problem_statement)
+    summary: One-line description of what the file contains
+    keywords: List of search terms for discovery
+
+  optional_fields:
+    type: File type (document, code, config, template, data)
+    updated: Last modification date (YYYY-MM-DD)
+    related: Paths to related files
+
+  example:
+    path: planning/01_problem_statement
+    summary: Defines the core problem the product solves
+    keywords: [problem, market-gap, pain-points, opportunity]
+    type: document
+    updated: 2025-01-10
+
+# CREATING INDEX ENTRIES
+# -----------------------------------------------------------------------------
+when_to_create:
+  - rule: When a new file is created, add it to the appropriate folder index
+  - rule: When a new folder is created, add it to master.yaml
+  - rule: When file content significantly changes, update the summary/keywords
+
+how_to_create:
+  step_1: Identify which folder the file belongs to
+  step_2: Open _indices/<folder>_index.yaml (create if doesn't exist)
+  step_3: Add entry with path, summary, and keywords
+  step_4: If new folder, also add entry to _indices/master.yaml
+
+maintenance_rules:
+  - Keep summaries under 100 characters
+  - Use 3-6 keywords per entry
+  - Update indices when files are moved or deleted
+  - Review indices periodically for accuracy
+
+# FOR LLM AGENTS
+# -----------------------------------------------------------------------------
+llm_usage:
+  navigation_flow:
+    1: Read _indices/master.yaml for project overview
+    2: Identify relevant folder from master index
+    3: Read _indices/<folder>_index.yaml for detailed file list
+    4: Use keywords to find specific files
+    5: Read actual files only when needed
+
+  best_practices:
+    - Check indices before exploring folders directly
+    - Use keyword search to narrow down results
+    - Trust the summaries for quick decisions
+    - Only read full files when details are needed
+
+  token_efficiency: >
+    Reading a 50-line index file is much cheaper than scanning 20 folders
+    with 100+ files. Always start with indices.
+
+# QUICK REFERENCE
+# -----------------------------------------------------------------------------
+file_locations:
+  master_index: _indices/master.yaml
+  folder_indices: _indices/<folder>_index.yaml
+  this_guide: _docs/index_maintenance.yaml
+  meta_template: _templates/_meta.template.yaml
+
+related_docs:
+  - _docs/understanding_meta_files.yaml
+  - _indices/_meta.yaml
+
+updated: 2025-01-10

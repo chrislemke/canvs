@@ -1,0 +1,39 @@
+# =============================================================================
+# specs/content Index - Content Specifications
+# =============================================================================
+# Index of all files in the specs/content/ folder.
+# Content specifications for website, marketing, and copy.
+# =============================================================================
+
+metadata:
+  name: specs_content_index
+  folder: specs/content
+  purpose: Content specifications for website, marketing, and copy
+  updated: "2026-01-10"
+
+# =============================================================================
+# FILES
+# =============================================================================
+
+files:
+
+  # ---------------------------------------------------------------------------
+  # WEBSITE CONTENT
+  # ---------------------------------------------------------------------------
+
+  - path: specs/content/website_content_spec.yaml
+    summary: Comprehensive website content specification with all page copy
+    keywords: [website, content, copy, marketing, pages, messaging]
+    type: config
+    priority: high
+    updated: 2026-01-10
+
+# =============================================================================
+# RELATED
+# =============================================================================
+
+related:
+  - _indices/master.yaml
+  - _indices/specs_index.yaml
+  - planning/14_messaging_framework/
+  - planning/71_website_landing_page_brief/

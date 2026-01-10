@@ -1,0 +1,29 @@
+name: 71_website_landing_page_brief
+path: planning/71_website_landing_page_brief
+purpose: Website and landing page requirements
+
+contains:
+  - landing page brief documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - website
+  - landing-page
+  - marketing
+  - conversion
+
+related:
+  - planning/68_press_pr_brief
+  - presentation
+
+category: planning
+
+ai_guidance: >
+  Requirements and brief for website landing pages.
+  Includes messaging, layout, and conversion goals.
+
+priority: medium
+
+updated: 2026-01-10

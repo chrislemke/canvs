@@ -1,0 +1,29 @@
+name: 04_product_principles
+path: planning/04_product_principles
+purpose: Core principles guiding product decisions and development
+
+contains:
+  - product principles documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - principles
+  - values
+  - guidelines
+  - decisions
+
+related:
+  - planning/03_vision_statement
+  - planning/05_goals_and_non_goals
+
+category: planning
+
+ai_guidance: >
+  Defines guiding principles for product decisions. Reference
+  when making trade-offs or prioritization decisions.
+
+priority: high
+
+updated: 2026-01-10

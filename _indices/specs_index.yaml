@@ -1,0 +1,56 @@
+# =============================================================================
+# specs Index - Technical & Design Specifications
+# =============================================================================
+# Index of all files in the specs/ folder.
+# Contains design and technical specifications for the project.
+# =============================================================================
+
+metadata:
+  name: specs_index
+  folder: specs
+  purpose: Technical and design specifications for the project
+  updated: "2026-01-10"
+
+# =============================================================================
+# FILES
+# =============================================================================
+
+files:
+
+  # ---------------------------------------------------------------------------
+  # FOLDER METADATA
+  # ---------------------------------------------------------------------------
+
+  - path: specs/_meta.yaml
+    summary: Metadata file describing the specs folder
+    keywords: [meta, folder-info]
+    type: config
+    priority: low
+    updated: 2026-01-10
+
+# =============================================================================
+# SUBFOLDERS
+# =============================================================================
+
+subfolders:
+  - path: specs/design
+    purpose: Visual design specifications, style guides, and design assets
+    index: _indices/specs_design_index.yaml
+
+  - path: specs/tech
+    purpose: Technical specifications, architecture, and stack documentation
+    index: _indices/specs_tech_index.yaml
+
+  - path: specs/content
+    purpose: Content specifications for website, marketing, and copy
+    index: _indices/specs_content_index.yaml
+
+# =============================================================================
+# RELATED
+# =============================================================================
+
+related:
+  - _indices/master.yaml
+  - _indices/specs_design_index.yaml
+  - _indices/specs_tech_index.yaml
+  - planning/

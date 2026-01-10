@@ -1,0 +1,32 @@
+name: notes
+path: notes
+purpose: Daily notes, meeting notes, and informal documentation
+
+contains:
+  - daily notes
+  - meeting notes
+  - brainstorming documents
+
+primary_files:
+  - 2025-01-10_notes.md
+
+keywords:
+  - notes
+  - daily
+  - meetings
+  - brainstorming
+
+related:
+  - planning
+  - vision
+
+category: notes
+
+ai_guidance: >
+  This folder contains informal notes and documentation.
+  Notes are typically dated. Check for recent notes to
+  understand current project context and decisions.
+
+priority: low
+
+updated: 2026-01-10

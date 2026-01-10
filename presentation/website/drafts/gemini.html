@@ -1,0 +1,952 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CANVS: The Spatial Social Layer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg-paper: #f0efea;
+        --ink: #1a1a18;
+        --terracotta: #d97757;
+        --sage: #8da399;
+        --highlighter: #eedc5b;
+      }
+
+      /* 1. Paper Texture */
+      .bg-noise {
+        background-color: var(--bg-paper);
+        position: relative;
+      }
+      .bg-noise::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 50;
+        mix-blend-mode: multiply;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        color: var(--ink);
+        overflow-x: hidden;
+        cursor: default;
+      }
+
+      .serif {
+        font-family: "Newsreader", serif;
+      }
+      .text-ink {
+        color: var(--ink);
+      }
+      .text-terracotta {
+        color: var(--terracotta);
+      }
+      .text-sage {
+        color: var(--sage);
+      }
+
+      /* 2. Hand-Drawn "Scribble" Borders */
+      .btn-scribble {
+        background: transparent;
+        border: 2px solid var(--ink);
+        border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+        transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-scribble:hover {
+        background-color: var(--terracotta);
+        color: #f0efea;
+        border-color: var(--terracotta);
+        transform: translateY(-2px) rotate(-1deg);
+        box-shadow: 2px 2px 0px var(--ink);
+      }
+
+      .card-scribble {
+        background: #ffffff;
+        border: 1px solid rgba(26, 26, 24, 0.1);
+        border-radius: 2px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+      }
+      .card-scribble:hover {
+        transform: translateY(-4px) rotate(0.5deg);
+        border-color: var(--terracotta);
+      }
+
+      /* 3. Highlighter Animation */
+      .highlight-text {
+        background: linear-gradient(120deg, transparent 0%, transparent 100%);
+        background-repeat: no-repeat;
+        background-size: 100% 40%;
+        background-position: 0 88%;
+        transition: background-size 0.8s ease 0.2s;
+      }
+      .highlight-text.active {
+        background-image: linear-gradient(
+          120deg,
+          var(--highlighter) 0%,
+          var(--highlighter) 100%
+        );
+        background-size: 100% 40%;
+      }
+
+      /* 4. SVG Drawing Animation Classes */
+      .path-draw {
+        stroke-dasharray: 1000;
+        stroke-dashoffset: 1000;
+        transition: stroke-dashoffset 2s ease-out;
+      }
+      .path-draw.active {
+        stroke-dashoffset: 0;
+      }
+
+      /* 5. Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg-paper);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--ink);
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--terracotta);
+      }
+
+      /* Language Toggle Switch */
+      .toggle-checkbox:checked {
+        right: 0;
+        border-color: var(--terracotta);
+      }
+      .toggle-checkbox:checked + .toggle-label {
+        background-color: var(--terracotta);
+      }
+
+      /* Grid Pattern for Tech Section */
+      .bg-grid {
+        background-size: 40px 40px;
+        background-image:
+          linear-gradient(
+            to right,
+            rgba(26, 26, 24, 0.05) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            to bottom,
+            rgba(26, 26, 24, 0.05) 1px,
+            transparent 1px
+          );
+      }
+    </style>
+  </head>
+  <body class="bg-noise selection:bg-[#D97757] selection:text-white">
+    <nav
+      class="fixed w-full px-6 py-4 flex justify-between items-center z-[60] mix-blend-multiply bg-[#F0EFEA]/80 backdrop-blur-sm border-b border-[#1A1A18]/5"
+    >
+      <div class="flex items-center gap-3">
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 100 100"
+          class="stroke-[#D97757] fill-none stroke-[3px]"
+          style="filter: drop-shadow(0 0 1px rgba(217, 119, 87, 0.3))"
+        >
+          <path
+            d="M50,90 C42,78 20,55 20,38 C20,20 38,15 50,32 C62,15 80,20 80,38 C80,55 58,78 50,90 Z M50,32 C50,32 50,45 50,45"
+          />
+        </svg>
+        <span class="serif text-xl font-bold tracking-tight">CANVS</span>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <div
+          class="flex items-center gap-2 text-xs font-semibold tracking-widest uppercase cursor-pointer"
+          onclick="toggleLanguage()"
+        >
+          <span id="lang-en" class="text-ink">EN</span>
+          <div
+            class="w-8 h-4 rounded-full border border-ink relative px-0.5 flex items-center"
+          >
+            <div
+              id="lang-dot"
+              class="w-2.5 h-2.5 rounded-full bg-ink transition-all duration-300 absolute left-0.5"
+            ></div>
+          </div>
+          <span id="lang-de" class="text-ink/40">DE</span>
+        </div>
+
+        <button
+          class="hidden md:block btn-scribble text-xs tracking-wider uppercase px-6 py-2"
+          data-key="cta_access"
+        >
+          Request Deck
+        </button>
+      </div>
+    </nav>
+
+    <header
+      class="relative min-h-screen flex flex-col justify-center items-center px-6 pt-20"
+    >
+      <svg
+        class="absolute top-0 left-0 w-full h-full -z-10 opacity-20 pointer-events-none"
+        viewBox="0 0 1440 900"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <path
+          class="path-draw"
+          d="M-100,100 Q400,500 800,200 T1600,600"
+          fill="none"
+          stroke="#1A1A18"
+          stroke-width="1"
+        />
+        <path
+          class="path-draw"
+          d="M-100,300 Q200,100 600,600 T1500,400"
+          fill="none"
+          stroke="#D97757"
+          stroke-width="2"
+          style="transition-delay: 0.5s"
+        />
+      </svg>
+
+      <div class="max-w-4xl mx-auto text-center relative">
+        <div
+          class="inline-block mb-6 px-3 py-1 border border-ink/10 rounded-full bg-white/50 backdrop-blur-sm"
+        >
+          <span
+            class="text-[10px] font-bold tracking-[0.2em] uppercase text-terracotta"
+            data-key="status"
+            >Vision Paper 2026</span
+          >
+        </div>
+
+        <h1
+          class="serif text-6xl md:text-8xl lg:text-9xl leading-[0.95] mb-8 text-ink"
+        >
+          <span data-key="hero_line1">The world is</span><br />
+          <span class="italic text-terracotta relative inline-block">
+            <span class="highlight-text" data-key="hero_line2"
+              >a blank page.</span
+            >
+          </span>
+        </h1>
+
+        <p
+          class="font-light text-lg md:text-2xl max-w-2xl mx-auto text-ink/70 leading-relaxed mb-12"
+          data-key="hero_sub"
+        >
+          We are building the internet of places. Not a feed that scrolls
+          forever, but a layer of meaning that stays where you leave it.
+        </p>
+
+        <div
+          class="flex flex-col md:flex-row gap-4 justify-center items-center"
+        >
+          <button
+            class="btn-scribble text-sm uppercase tracking-widest px-8 py-4 bg-ink text-[#F0EFEA] hover:text-[#F0EFEA]"
+            data-key="cta_main"
+          >
+            Read the Vision
+          </button>
+          <span class="serif italic text-ink/50 text-sm" data-key="scroll_hint"
+            >or scroll to explore</span
+          >
+        </div>
+      </div>
+
+      <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#1A1A18"
+          stroke-width="1.5"
+        >
+          <path d="M7 13l5 5 5-5M12 4v14" />
+        </svg>
+      </div>
+    </header>
+
+    <section
+      class="py-32 px-6 relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center"
+    >
+      <div>
+        <h2 class="serif text-4xl md:text-5xl mb-8 leading-tight">
+          <span data-key="problem_title">The end of the feed.</span><br />
+          <span class="italic text-sage" data-key="problem_subtitle"
+            >The beginning of the world.</span
+          >
+        </h2>
+        <div class="prose prose-lg text-ink/80 font-light">
+          <p class="mb-6" data-key="problem_p1">
+            Today’s social platforms are optimized for infinite scrolling,
+            isolating us inside algorithmic loops. They replace lived reality
+            with mediated content.
+          </p>
+          <p
+            class="mb-6 highlight-text inline-block"
+            data-key="problem_highlight"
+          >
+            A story about a sunset becomes inevitable when you’re sitting in the
+            exact place it happened.
+          </p>
+          <p data-key="problem_p2">
+            CANVS turns the planet into an addressable surface. Every bench,
+            alley, and trailhead becomes a node in a living network of memory.
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="relative h-[500px] bg-white border border-ink/10 rounded-[2px] shadow-sm p-8 flex items-center justify-center overflow-hidden group"
+      >
+        <div
+          class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517502166870-13f572d42bb2?q=80&w=800&auto=format&fit=crop')] bg-cover opacity-20 grayscale contrast-125 transition-opacity duration-700 group-hover:opacity-10"
+        ></div>
+
+        <div class="relative z-10 w-full max-w-sm">
+          <div
+            class="absolute -top-12 -left-8 font-serif text-3xl italic text-terracotta opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100 transform -rotate-12"
+          >
+            "First kiss here."
+          </div>
+
+          <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-md">
+            <path
+              class="path-draw stroke-ink stroke-[1.5] fill-none group-hover:stroke-terracotta transition-colors"
+              d="M100,160 C100,160 100,100 100,80"
+            />
+            <circle
+              cx="100"
+              cy="80"
+              r="40"
+              class="fill-white stroke-ink stroke-[1.5]"
+            />
+
+            <g
+              class="opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200"
+            >
+              <text
+                x="100"
+                y="75"
+                text-anchor="middle"
+                font-family="Inter"
+                font-size="10"
+                fill="#1A1A18"
+              >
+                OCT 14, 2023
+              </text>
+              <path
+                d="M80,90 Q100,100 120,90"
+                fill="none"
+                stroke="#D97757"
+                stroke-width="2"
+              />
+            </g>
+          </svg>
+        </div>
+        <div
+          class="absolute bottom-4 left-0 w-full text-center text-xs font-mono uppercase tracking-widest text-ink/40"
+          data-key="interaction_hint"
+        >
+          Hover to Reveal Layer
+        </div>
+      </div>
+    </section>
+
+    <div class="w-full h-px bg-ink/10 max-w-7xl mx-auto"></div>
+
+    <section class="py-32 px-6 bg-white relative">
+      <div class="max-w-7xl mx-auto">
+        <div class="mb-20">
+          <span
+            class="text-xs font-bold uppercase tracking-widest text-terracotta mb-2 block"
+            data-key="product_label"
+            >Product Vision</span
+          >
+          <h2 class="serif text-5xl text-ink mb-6" data-key="product_title">
+            Spatial Primitives
+          </h2>
+          <p class="max-w-xl text-ink/60" data-key="product_desc">
+            We are not building a map app. We are creating a Spatial Browser
+            consisting of new digital-physical artifacts.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="card-scribble p-8 flex flex-col justify-between h-80">
+            <div>
+              <div
+                class="w-10 h-10 border border-ink/20 rounded-full flex items-center justify-center mb-6 text-terracotta"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                  ></path>
+                </svg>
+              </div>
+              <h3 class="serif text-2xl mb-2" data-key="feat_1_title">
+                Bubbles
+              </h3>
+              <p
+                class="text-sm text-ink/60 leading-relaxed"
+                data-key="feat_1_desc"
+              >
+                Shared containers anchored to a place. "We used to meet here
+                every Friday." Group memories that live on location.
+              </p>
+            </div>
+            <div class="h-1 w-12 bg-terracotta/30"></div>
+          </div>
+
+          <div class="card-scribble p-8 flex flex-col justify-between h-80">
+            <div>
+              <div
+                class="w-10 h-10 border border-ink/20 rounded-full flex items-center justify-center mb-6 text-sage"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+              <h3 class="serif text-2xl mb-2" data-key="feat_2_title">
+                Time Capsules
+              </h3>
+              <p
+                class="text-sm text-ink/60 leading-relaxed"
+                data-key="feat_2_desc"
+              >
+                Rich artifacts hidden until a specific date or until you return.
+                A letter to your future self, locked to a coordinate.
+              </p>
+            </div>
+            <div class="h-1 w-12 bg-sage/50"></div>
+          </div>
+
+          <div class="card-scribble p-8 flex flex-col justify-between h-80">
+            <div>
+              <div
+                class="w-10 h-10 border border-ink/20 rounded-full flex items-center justify-center mb-6 text-ink"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M15 10l5 5-5 5"></path>
+                  <path d="M4 4v7a4 4 0 0 0 4 4h12"></path>
+                </svg>
+              </div>
+              <h3 class="serif text-2xl mb-2" data-key="feat_3_title">
+                Trails
+              </h3>
+              <p
+                class="text-sm text-ink/60 leading-relaxed"
+                data-key="feat_3_desc"
+              >
+                Narrative routes woven through the city. "My break-up walk," or
+                "Architecture of 1920." Curated paths.
+              </p>
+            </div>
+            <div class="h-1 w-12 bg-ink/30"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-32 px-6 bg-grid border-y border-ink/5">
+      <div class="max-w-5xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16">
+          <h2 class="serif text-4xl" data-key="tech_title">
+            Deep Tech Foundation
+          </h2>
+          <span
+            class="font-mono text-xs uppercase tracking-widest text-ink/40"
+            data-key="tech_sub"
+            >Anchor Runtime V1</span
+          >
+        </div>
+
+        <div
+          class="relative w-full aspect-[16/9] md:aspect-[21/9] border border-ink rounded-sm bg-[#F0EFEA] p-8 overflow-hidden"
+        >
+          <svg
+            width="100%"
+            height="100%"
+            viewBox="0 0 800 300"
+            class="overflow-visible"
+          >
+            <path
+              class="path-draw"
+              d="M100,150 L300,150"
+              stroke="#1A1A18"
+              stroke-width="2"
+              stroke-dasharray="4 4"
+            />
+            <path
+              class="path-draw"
+              d="M400,150 L600,150"
+              stroke="#1A1A18"
+              stroke-width="2"
+            />
+
+            <g transform="translate(50, 110)">
+              <rect
+                x="0"
+                y="0"
+                width="100"
+                height="80"
+                rx="2"
+                fill="white"
+                stroke="#1A1A18"
+                stroke-width="2"
+              />
+              <text
+                x="50"
+                y="45"
+                text-anchor="middle"
+                font-family="Inter"
+                font-weight="600"
+                font-size="12"
+              >
+                COARSE GPS
+              </text>
+            </g>
+
+            <g transform="translate(300, 110)">
+              <rect
+                x="0"
+                y="0"
+                width="100"
+                height="80"
+                rx="2"
+                fill="#D97757"
+                stroke="#1A1A18"
+                stroke-width="2"
+              />
+              <text
+                x="50"
+                y="35"
+                text-anchor="middle"
+                font-family="Inter"
+                font-weight="600"
+                font-size="12"
+                fill="white"
+              >
+                VPS
+              </text>
+              <text
+                x="50"
+                y="55"
+                text-anchor="middle"
+                font-family="Inter"
+                font-size="10"
+                fill="white"
+              >
+                Visual Lock
+              </text>
+            </g>
+
+            <g transform="translate(600, 100)">
+              <circle
+                cx="50"
+                cy="50"
+                r="45"
+                fill="none"
+                stroke="#1A1A18"
+                stroke-width="2"
+              />
+              <path
+                d="M35,50 L50,65 L75,35"
+                fill="none"
+                stroke="#8DA399"
+                stroke-width="4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <text
+                x="50"
+                y="120"
+                text-anchor="middle"
+                font-family="Newsreader"
+                font-style="italic"
+                font-size="14"
+              >
+                Persistent Anchor
+              </text>
+            </g>
+          </svg>
+        </div>
+        <div
+          class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm text-ink/70"
+        >
+          <div>
+            <strong class="block text-ink mb-1" data-key="tech_1_head"
+              >Multi-tier Anchoring</strong
+            >
+            <span data-key="tech_1_body"
+              >GPS drift breaks immersion. We utilize Visual Positioning Systems
+              (VPS) and local SLAM to lock memories to physical geometry.</span
+            >
+          </div>
+          <div>
+            <strong class="block text-ink mb-1" data-key="tech_2_head"
+              >The AR Cloud</strong
+            >
+            <span data-key="tech_2_body"
+              >A persistent, spatially accurate digital twin of the world. We
+              don't own the map; we own the meaning layer on top.</span
+            >
+          </div>
+          <div>
+            <strong class="block text-ink mb-1" data-key="tech_3_head"
+              >Glass Native</strong
+            >
+            <span data-key="tech_3_body"
+              >Architected for the transition from phones to spatial computing
+              hardware. The world becomes the operating system.</span
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-32 px-6">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="serif text-4xl mb-16 text-center" data-key="roadmap_title">
+          Strategic Roadmap
+        </h2>
+
+        <div class="relative border-l-2 border-ink/10 pl-10 space-y-20">
+          <div class="relative">
+            <div
+              class="absolute -left-[49px] top-0 w-4 h-4 rounded-full bg-terracotta border-2 border-[#F0EFEA] ring-1 ring-ink/20"
+            ></div>
+            <span class="font-mono text-xs font-bold text-terracotta mb-2 block"
+              >2026</span
+            >
+            <h3 class="serif text-2xl mb-2" data-key="rm_2026_title">
+              Build the Core Loop
+            </h3>
+            <p class="text-ink/60 text-sm" data-key="rm_2026_desc">
+              Phone-first. World-locked. MVP Spatial Browser launches in pilot
+              cities. Focus on "Meaningful Place Interactions" (MPI).
+            </p>
+          </div>
+
+          <div class="relative">
+            <div
+              class="absolute -left-[49px] top-0 w-4 h-4 rounded-full bg-white border-2 border-ink"
+            ></div>
+            <span class="font-mono text-xs font-bold text-ink/40 mb-2 block"
+              >2027</span
+            >
+            <h3 class="serif text-2xl mb-2" data-key="rm_2027_title">
+              Scale the Meaning Graph
+            </h3>
+            <p class="text-ink/60 text-sm" data-key="rm_2027_desc">
+              AI Reality Filters. Semantic search for emotions ("Show me quiet
+              places"). Web-native distribution.
+            </p>
+          </div>
+
+          <div class="relative">
+            <div
+              class="absolute -left-[49px] top-0 w-4 h-4 rounded-full bg-ink border-2 border-[#F0EFEA]"
+            ></div>
+            <span class="font-mono text-xs font-bold text-ink/40 mb-2 block"
+              >2030</span
+            >
+            <h3 class="serif text-2xl mb-2" data-key="rm_2030_title">
+              The Spatial Social OS
+            </h3>
+            <p class="text-ink/60 text-sm" data-key="rm_2030_desc">
+              CANVS becomes the default "meaning layer" for smart glasses. The
+              feed is obsolete.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="bg-ink text-[#F0EFEA] py-24 px-6 relative overflow-hidden">
+      <div class="max-w-4xl mx-auto text-center relative z-10">
+        <h2 class="serif text-5xl md:text-7xl mb-8" data-key="footer_title">
+          Build the Layer.
+        </h2>
+        <p
+          class="text-white/60 mb-12 max-w-xl mx-auto font-light"
+          data-key="footer_sub"
+        >
+          This is a once-a-decade platform shift. We are looking for partners,
+          engineers, and dreamers.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-6 justify-center">
+          <button
+            class="btn-scribble border-[#F0EFEA] text-[#F0EFEA] hover:bg-terracotta hover:border-terracotta hover:text-white"
+            data-key="cta_contact"
+          >
+            Contact Founder
+          </button>
+          <button
+            class="btn-scribble border-[#F0EFEA]/30 text-[#F0EFEA]/70 hover:border-[#F0EFEA] hover:text-white"
+            data-key="cta_deck"
+          >
+            Download Whitepaper
+          </button>
+        </div>
+      </div>
+
+      <svg
+        class="absolute bottom-0 left-0 w-full h-64 opacity-10 pointer-events-none"
+        viewBox="0 0 1440 320"
+      >
+        <path
+          d="M0,320 C300,300 600,100 900,250 C1200,400 1440,200 1440,320"
+          fill="none"
+          stroke="#F0EFEA"
+          stroke-width="2"
+        />
+      </svg>
+    </footer>
+
+    <script>
+      // Content Dictionary
+      const content = {
+        en: {
+          status: "Vision Paper 2026",
+          hero_line1: "The world is",
+          hero_line2: "a blank page.",
+          hero_sub:
+            "We are building the internet of places. Not a feed that scrolls forever, but a layer of meaning that stays where you leave it.",
+          cta_main: "Read the Vision",
+          scroll_hint: "or scroll to explore",
+          cta_access: "Request Deck",
+          problem_title: "The end of the feed.",
+          problem_subtitle: "The beginning of the world.",
+          problem_p1:
+            "Today’s social platforms are optimized for infinite scrolling, isolating us inside algorithmic loops. They replace lived reality with mediated content.",
+          problem_highlight:
+            "A story about a sunset becomes inevitable when you’re sitting in the exact place it happened.",
+          problem_p2:
+            "CANVS turns the planet into an addressable surface. Every bench, alley, and trailhead becomes a node in a living network of memory.",
+          interaction_hint: "Hover to Reveal Layer",
+          product_label: "Product Vision",
+          product_title: "Spatial Primitives",
+          product_desc:
+            "We are not building a map app. We are creating a Spatial Browser consisting of new digital-physical artifacts.",
+          feat_1_title: "Bubbles",
+          feat_1_desc:
+            "Shared containers anchored to a place. 'We used to meet here every Friday.' Group memories that live on location.",
+          feat_2_title: "Time Capsules",
+          feat_2_desc:
+            "Rich artifacts hidden until a specific date or until you return. A letter to your future self, locked to a coordinate.",
+          feat_3_title: "Trails",
+          feat_3_desc:
+            "Narrative routes woven through the city. 'My break-up walk,' or 'Architecture of 1920.' Curated paths.",
+          tech_title: "Deep Tech Foundation",
+          tech_sub: "Anchor Runtime V1",
+          tech_1_head: "Multi-tier Anchoring",
+          tech_1_body:
+            "GPS drift breaks immersion. We utilize Visual Positioning Systems (VPS) and local SLAM to lock memories to physical geometry.",
+          tech_2_head: "The AR Cloud",
+          tech_2_body:
+            "A persistent, spatially accurate digital twin of the world. We don't own the map; we own the meaning layer on top.",
+          tech_3_head: "Glass Native",
+          tech_3_body:
+            "Architected for the transition from phones to spatial computing hardware. The world becomes the operating system.",
+          roadmap_title: "Strategic Roadmap",
+          rm_2026_title: "Build the Core Loop",
+          rm_2026_desc:
+            "Phone-first. World-locked. MVP Spatial Browser launches in pilot cities. Focus on 'Meaningful Place Interactions' (MPI).",
+          rm_2027_title: "Scale the Meaning Graph",
+          rm_2027_desc:
+            "AI Reality Filters. Semantic search for emotions ('Show me quiet places'). Web-native distribution.",
+          rm_2030_title: "The Spatial Social OS",
+          rm_2030_desc:
+            "CANVS becomes the default 'meaning layer' for smart glasses. The feed is obsolete.",
+          footer_title: "Build the Layer.",
+          footer_sub:
+            "This is a once-a-decade platform shift. We are looking for partners, engineers, and dreamers.",
+          cta_contact: "Contact Founder",
+          cta_deck: "Download Whitepaper",
+        },
+        de: {
+          status: "Visionspapier 2026",
+          hero_line1: "Die Welt ist",
+          hero_line2: "ein leeres Blatt.",
+          hero_sub:
+            "Wir bauen das Internet der Orte. Kein Feed, der ewig scrollt, sondern eine Bedeutungsebene, die dort bleibt, wo sie hingehört.",
+          cta_main: "Vision Lesen",
+          scroll_hint: "oder scrollen zum Entdecken",
+          cta_access: "Deck Anfordern",
+          problem_title: "Das Ende des Feeds.",
+          problem_subtitle: "Der Anfang der Welt.",
+          problem_p1:
+            "Heutige soziale Plattformen sind für endloses Scrollen optimiert und isolieren uns in algorithmischen Schleifen. Sie ersetzen gelebte Realität durch Medien.",
+          problem_highlight:
+            "Eine Geschichte über einen Sonnenuntergang wird unvermeidlich, wenn man genau an dem Ort sitzt, an dem sie geschah.",
+          problem_p2:
+            "CANVS macht den Planeten adressierbar. Jede Bank, jede Gasse und jeder Pfad wird zu einem Knotenpunkt in einem lebendigen Gedächtnisnetzwerk.",
+          interaction_hint: "Hovern zum Enthüllen",
+          product_label: "Produktvision",
+          product_title: "Räumliche Primitive",
+          product_desc:
+            "Wir bauen keine Karten-App. Wir schaffen einen 'Spatial Browser', der aus neuen digital-physischen Artefakten besteht.",
+          feat_1_title: "Bubbles",
+          feat_1_desc:
+            "Geteilte Container, die an einem Ort verankert sind. 'Wir haben uns hier jeden Freitag getroffen.' Gruppenerinnerungen vor Ort.",
+          feat_2_title: "Zeitkapseln",
+          feat_2_desc:
+            "Artefakte, die bis zu einem Datum oder Ihrer Rückkehr verborgen bleiben. Ein Brief an Ihr zukünftiges Ich, an Koordinaten gebunden.",
+          feat_3_title: "Pfade",
+          feat_3_desc:
+            "Narrative Routen durch die Stadt. 'Mein Trennungsspaziergang' oder 'Architektur von 1920'. Kuratierte Wege.",
+          tech_title: "Technologisches Fundament",
+          tech_sub: "Anchor Runtime V1",
+          tech_1_head: "Multi-Tier Verankerung",
+          tech_1_body:
+            "GPS-Drift zerstört Immersion. Wir nutzen VPS (Visual Positioning) und lokales SLAM, um Erinnerungen an physischer Geometrie zu fixieren.",
+          tech_2_head: "Die AR Cloud",
+          tech_2_body:
+            "Ein persistenter, räumlich genauer digitaler Zwilling der Welt. Uns gehört nicht die Karte, sondern die Bedeutungsebene darauf.",
+          tech_3_head: "Glass Native",
+          tech_3_body:
+            "Entwickelt für den Übergang vom Smartphone zu Spatial-Computing-Hardware. Die Welt wird zum Betriebssystem.",
+          roadmap_title: "Strategische Roadmap",
+          rm_2026_title: "Der Core Loop",
+          rm_2026_desc:
+            "Phone-first. Welt-verankert. MVP Spatial Browser startet in Pilotstädten. Fokus auf 'Bedeutungsvolle Ortsinteraktionen' (MPI).",
+          rm_2027_title: "Skalierung des Graphen",
+          rm_2027_desc:
+            "KI-Realitätsfilter. Semantische Suche nach Emotionen ('Zeig mir stille Orte'). Web-native Distribution.",
+          rm_2030_title: "Das räumliche soziale OS",
+          rm_2030_desc:
+            "CANVS wird zur Standard-'Bedeutungsebene' für Smart Glasses. Der Feed ist obsolet.",
+          footer_title: "Bau die Ebene.",
+          footer_sub:
+            "Dies ist ein Plattformwechsel, wie er nur einmal im Jahrzehnt vorkommt. Wir suchen Partner, Ingenieure und Träumer.",
+          cta_contact: "Gründer Kontaktieren",
+          cta_deck: "Whitepaper Laden",
+        },
+      };
+
+      // Language Toggle Logic
+      let currentLang = "en";
+
+      function toggleLanguage() {
+        currentLang = currentLang === "en" ? "de" : "en";
+
+        // Visual Switch Animation
+        const dot = document.getElementById("lang-dot");
+        const enLabel = document.getElementById("lang-en");
+        const deLabel = document.getElementById("lang-de");
+
+        if (currentLang === "de") {
+          dot.style.transform = "translateX(100%)";
+          dot.style.backgroundColor = "#D97757";
+          enLabel.classList.add("opacity-40");
+          deLabel.classList.remove("opacity-40");
+          deLabel.classList.add("text-ink");
+        } else {
+          dot.style.transform = "translateX(0)";
+          dot.style.backgroundColor = "#1A1A18";
+          enLabel.classList.remove("opacity-40");
+          deLabel.classList.add("opacity-40");
+        }
+
+        // Text Replacement with Animation
+        const elements = document.querySelectorAll("[data-key]");
+        elements.forEach((el) => {
+          gsap.to(el, {
+            opacity: 0,
+            duration: 0.2,
+            onComplete: () => {
+              el.innerText = content[currentLang][el.getAttribute("data-key")];
+              gsap.to(el, { opacity: 1, duration: 0.2 });
+            },
+          });
+        });
+      }
+
+      // Scroll Animations (GSAP)
+      gsap.registerPlugin(ScrollTrigger);
+
+      // 1. Reveal Elements on Scroll
+      const sections = document.querySelectorAll("section");
+      sections.forEach((section) => {
+        gsap.fromTo(
+          section.children,
+          { y: 50, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            stagger: 0.2,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: section,
+              start: "top 80%",
+            },
+          },
+        );
+      });
+
+      // 2. SVG Line Drawing Effects
+      const paths = document.querySelectorAll(".path-draw");
+      paths.forEach((path) => {
+        ScrollTrigger.create({
+          trigger: path,
+          start: "top 80%",
+          onEnter: () => path.classList.add("active"),
+        });
+      });
+
+      // 3. Highlighter Text Effect
+      const highlights = document.querySelectorAll(".highlight-text");
+      highlights.forEach((hl) => {
+        ScrollTrigger.create({
+          trigger: hl,
+          start: "top 85%",
+          onEnter: () => hl.classList.add("active"),
+        });
+      });
+    </script>
+  </body>
+</html>

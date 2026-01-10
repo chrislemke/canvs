@@ -1,0 +1,55 @@
+# =============================================================================
+# _bucket Index - Unstructured Storage
+# =============================================================================
+# Index of all files in the _bucket/ folder.
+# Fallback storage for miscellaneous project resources.
+# =============================================================================
+
+metadata:
+  name: bucket_index
+  folder: _bucket
+  purpose: Unstructured data storage for miscellaneous project resources
+  updated: "2026-01-10"
+
+# =============================================================================
+# FILES
+# =============================================================================
+
+files:
+
+  # ---------------------------------------------------------------------------
+  # STORAGE SUBFOLDER
+  # ---------------------------------------------------------------------------
+
+  - path: _bucket/storage/_meta.yaml
+    summary: Metadata for LLM agent storage location
+    keywords: [storage, llm, agents, data]
+    type: config
+    priority: low
+    updated: 2026-01-10
+
+  # ---------------------------------------------------------------------------
+  # FOLDER METADATA
+  # ---------------------------------------------------------------------------
+
+  - path: _bucket/_meta.yaml
+    summary: Metadata file describing the _bucket folder
+    keywords: [meta, folder-info]
+    type: config
+    priority: low
+    updated: 2026-01-10
+
+# =============================================================================
+# SUBFOLDERS
+# =============================================================================
+
+subfolders:
+  - path: _bucket/storage
+    purpose: LLM-generated content storage when no suitable location exists elsewhere
+
+# =============================================================================
+# RELATED
+# =============================================================================
+
+related:
+  - _indices/master.yaml

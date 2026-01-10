@@ -1,0 +1,133 @@
+# =============================================================================
+# _docs Index - Guidance Documents
+# =============================================================================
+# Index of all files in the _docs/ folder.
+# These are LLM and human guidance documents for working with the project.
+# =============================================================================
+
+metadata:
+  name: docs_index
+  folder: _docs
+  purpose: Index of guidance documents for LLMs and humans
+  updated: "2026-01-10"
+
+# =============================================================================
+# FILES
+# =============================================================================
+
+files:
+
+  # ---------------------------------------------------------------------------
+  # ENTRY POINTS (Read First)
+  # ---------------------------------------------------------------------------
+
+  - path: _docs/start_here.yaml
+    summary: Entry point for LLMs - recommended reading order
+    keywords: [start, begin, entry, onboarding, first]
+    type: document
+    priority: high
+    updated: 2026-01-10
+
+  - path: _docs/about_this_project.yaml
+    summary: Quick reference for CANVS product definition
+    keywords: [about, overview, product, canvs, definition]
+    type: document
+    priority: high
+    updated: 2026-01-10
+
+  # ---------------------------------------------------------------------------
+  # BEST PRACTICES & GUIDELINES
+  # ---------------------------------------------------------------------------
+
+  - path: _docs/best_practice.yaml
+    summary: Guidelines for LLMs and humans working with project
+    keywords: [best-practice, guidelines, rules, conventions, workflow]
+    type: document
+    priority: high
+    updated: 2026-01-10
+
+  - path: _docs/understanding_meta_files.yaml
+    summary: Guide to _meta.yaml folder metadata system
+    keywords: [meta, metadata, folders, navigation, structure]
+    type: document
+    priority: medium
+    updated: 2026-01-10
+
+  - path: _docs/index_maintenance.yaml
+    summary: Guide to the _indices/ indexing system
+    keywords: [index, maintenance, catalog, navigation, search]
+    type: document
+    priority: medium
+    updated: 2026-01-10
+
+  # ---------------------------------------------------------------------------
+  # CLAUDE FLOW INSTRUCTIONS
+  # ---------------------------------------------------------------------------
+
+  - path: _docs/claude_flow_planning_instructions.yaml
+    summary: Claude Flow guidance for planning and strategy tasks
+    keywords: [claude-flow, planning, strategy, research, swarm]
+    type: document
+    priority: high
+    updated: 2026-01-10
+
+  - path: _docs/claude_flow_software_dev_and_research_instructions.yaml
+    summary: Claude Flow guidance for development and research
+    keywords: [claude-flow, development, coding, research, agents]
+    type: document
+    priority: high
+    updated: 2026-01-10
+
+  # ---------------------------------------------------------------------------
+  # INDEX & NAVIGATION
+  # ---------------------------------------------------------------------------
+
+  - path: _docs/index_lookup.yaml
+    summary: Guide for using the _indices system to find content
+    keywords: [index, lookup, navigation, search, find]
+    type: document
+    priority: medium
+    updated: 2026-01-10
+
+  # ---------------------------------------------------------------------------
+  # TOOLS & UTILITIES
+  # ---------------------------------------------------------------------------
+
+  - path: _docs/use_gemini_cli.yaml
+    summary: Reference for Gemini CLI commands
+    keywords: [gemini, cli, tool, commands]
+    type: document
+    priority: low
+    updated: 2026-01-10
+
+  # ---------------------------------------------------------------------------
+  # FOLDER METADATA
+  # ---------------------------------------------------------------------------
+
+  - path: _docs/_meta.yaml
+    summary: Metadata file describing the _docs folder
+    keywords: [meta, folder-info]
+    type: config
+    priority: low
+    updated: 2026-01-10
+
+# =============================================================================
+# READING ORDER (FOR LLMs)
+# =============================================================================
+
+recommended_reading_order:
+  1: _docs/start_here.yaml
+  2: _docs/about_this_project.yaml
+  3: _docs/best_practice.yaml
+  4: _docs/understanding_meta_files.yaml
+  5: _docs/index_maintenance.yaml
+  6: _docs/claude_flow_planning_instructions.yaml (if doing planning)
+  7: _docs/claude_flow_software_dev_and_research_instructions.yaml (if coding)
+
+# =============================================================================
+# RELATED
+# =============================================================================
+
+related:
+  - _indices/master.yaml
+  - _templates/_meta.template.yaml

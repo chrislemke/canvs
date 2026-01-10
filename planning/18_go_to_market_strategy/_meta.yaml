@@ -1,0 +1,29 @@
+name: 18_go_to_market_strategy
+path: planning/18_go_to_market_strategy
+purpose: Go-to-market strategy and launch planning
+
+contains:
+  - GTM strategy documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - gtm
+  - go-to-market
+  - launch
+  - marketing
+
+related:
+  - planning/17_business_model_outline
+  - planning/67_launch_readiness_checklist
+
+category: planning
+
+ai_guidance: >
+  Defines the strategy for bringing the product to market.
+  Includes channels, tactics, and launch approach.
+
+priority: medium
+
+updated: 2026-01-10

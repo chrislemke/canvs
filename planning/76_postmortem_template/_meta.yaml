@@ -1,0 +1,29 @@
+name: 76_postmortem_template
+path: planning/76_postmortem_template
+purpose: Incident postmortem template and process
+
+contains:
+  - postmortem template documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - postmortem
+  - incident
+  - retrospective
+  - learning
+
+related:
+  - planning/55_incident_response_playbook
+  - planning/77_post_launch_review_report
+
+category: planning
+
+ai_guidance: >
+  Template for conducting incident postmortems.
+  Blameless approach focused on system improvement.
+
+priority: medium
+
+updated: 2026-01-10

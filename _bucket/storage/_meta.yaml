@@ -1,0 +1,43 @@
+# =============================================================================
+# _meta.yaml - _bucket/storage folder
+# =============================================================================
+
+# IDENTIFICATION
+name: storage
+path: _bucket/storage
+purpose: Fallback storage for LLM agent data when no suitable location exists
+
+# CONTENT DESCRIPTION
+contains:
+  - Temporary files
+  - Agent-generated notes
+  - Miscellaneous data
+  - Content without a defined home
+
+primary_files: []
+
+# NAVIGATION
+keywords:
+  - storage
+  - agent-storage
+  - temporary
+  - llm-data
+  - fallback
+  - notes
+
+related:
+  - _bucket
+
+category: notes
+
+# FOR LLMs
+ai_guidance: >
+  Use this folder to store information when no better location can be
+  found via the indices. Can be used as temporary or permanent storage
+  for agent-generated content. Always check _indices/master.yaml first
+  to see if a more suitable location exists.
+
+priority: low
+
+# METADATA
+updated: 2026-01-10

@@ -1,0 +1,28 @@
+# =============================================================================
+# Using Gemini CLI
+# =============================================================================
+# Quick reference for using Gemini CLI in this project.
+# =============================================================================
+
+name: Gemini CLI
+description: Command-line interface for interacting with Google's Gemini AI.
+
+# USAGE
+# -----------------------------------------------------------------------------
+usage:
+  basic: gemini <your prompt>
+
+  explanation: >
+    Run the gemini command followed by your prompt text. The prompt is the
+    text you want to send to Gemini for processing.
+
+# EXAMPLES
+# -----------------------------------------------------------------------------
+examples:
+  - command: gemini "Explain this error message"
+  - command: gemini "How do I implement a binary search?"
+  - command: gemini "Review this code for bugs"
+
+# METADATA
+# -----------------------------------------------------------------------------
+updated: 2026-01-10

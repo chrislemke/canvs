@@ -1,0 +1,29 @@
+name: 25_information_architecture
+path: planning/25_information_architecture
+purpose: Information architecture and content structure
+
+contains:
+  - IA documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - information-architecture
+  - ia
+  - structure
+  - navigation
+
+related:
+  - planning/24_user_journey_maps
+  - planning/28_wireframes
+
+category: planning
+
+ai_guidance: >
+  Defines how information is organized and structured.
+  Foundation for navigation and content hierarchy.
+
+priority: medium
+
+updated: 2026-01-10

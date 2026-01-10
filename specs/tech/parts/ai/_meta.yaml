@@ -1,0 +1,31 @@
+name: ai
+path: specs/tech/parts/ai
+purpose: AI feature specifications and integration plans
+
+contains:
+  - AI feature specifications
+  - integration documentation
+
+primary_files:
+  - visionary_feature_integrations.md
+
+keywords:
+  - ai
+  - features
+  - integrations
+  - machine-learning
+
+related:
+  - specs/tech
+  - specs/tech/stack/ai
+
+category: docs
+
+ai_guidance: >
+  Contains AI-specific feature specifications and integration
+  plans. visionary_feature_integrations.md outlines planned
+  AI capabilities and how they integrate with the product.
+
+priority: medium
+
+updated: 2026-01-10

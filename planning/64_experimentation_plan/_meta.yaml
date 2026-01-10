@@ -1,0 +1,29 @@
+name: 64_experimentation_plan
+path: planning/64_experimentation_plan
+purpose: A/B testing and experimentation framework
+
+contains:
+  - experimentation plan documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - experimentation
+  - ab-testing
+  - feature-flags
+  - experiments
+
+related:
+  - planning/62_analytics_telemetry_plan
+  - planning/65_beta_program_plan
+
+category: planning
+
+ai_guidance: >
+  Framework for running experiments and A/B tests.
+  Includes methodology and statistical rigor requirements.
+
+priority: medium
+
+updated: 2026-01-10

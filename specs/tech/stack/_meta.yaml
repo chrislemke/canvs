@@ -1,0 +1,35 @@
+name: stack
+path: specs/tech/stack
+purpose: Technology stack documentation and architecture decisions
+
+contains:
+  - data layer specifications
+  - backend specifications
+  - frontend specifications
+  - mobile specifications
+
+primary_files: []
+
+keywords:
+  - stack
+  - technology
+  - architecture
+  - backend
+  - frontend
+  - data
+
+related:
+  - specs/tech/stack/data
+  - specs/tech
+
+category: docs
+
+ai_guidance: >
+  Contains technology stack documentation organized by layer.
+  Currently data/ has data layer specs. Other subfolders
+  (website, backend, mobile, ai) are placeholders for future
+  stack documentation.
+
+priority: medium
+
+updated: 2026-01-10

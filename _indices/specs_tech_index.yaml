@@ -1,0 +1,75 @@
+# =============================================================================
+# specs/tech Index - Technical Specifications
+# =============================================================================
+# Index of all files in the specs/tech/ folder.
+# Technical specifications, architecture, and stack documentation.
+# =============================================================================
+
+metadata:
+  name: specs_tech_index
+  folder: specs/tech
+  purpose: Technical specifications, architecture, and stack documentation
+  updated: "2026-01-10"
+
+# =============================================================================
+# FILES
+# =============================================================================
+
+files:
+
+  # ---------------------------------------------------------------------------
+  # FOLDER METADATA
+  # ---------------------------------------------------------------------------
+
+  - path: specs/tech/_meta.yaml
+    summary: Metadata file describing the specs/tech folder
+    keywords: [meta, folder-info]
+    type: config
+    priority: low
+    updated: 2026-01-10
+
+# =============================================================================
+# SUBFOLDERS
+# =============================================================================
+
+subfolders:
+
+  # ---------------------------------------------------------------------------
+  # MVP SPECIFICATIONS
+  # ---------------------------------------------------------------------------
+
+  - path: specs/tech/mvp
+    purpose: MVP-specific specifications
+    contains:
+      - specs/tech/mvp/specs/ - MVP spec documents
+
+  # ---------------------------------------------------------------------------
+  # COMPONENT SPECIFICATIONS
+  # ---------------------------------------------------------------------------
+
+  - path: specs/tech/parts
+    purpose: Component specifications
+    contains:
+      - specs/tech/parts/ai/ - AI component specifications
+
+  # ---------------------------------------------------------------------------
+  # TECHNOLOGY STACK
+  # ---------------------------------------------------------------------------
+
+  - path: specs/tech/stack
+    purpose: Technology stack documentation
+    contains:
+      - specs/tech/stack/ai/ - AI stack decisions
+      - specs/tech/stack/backend/ - Backend stack decisions
+      - specs/tech/stack/data/ - Data layer specifications
+      - specs/tech/stack/mobile/ - Mobile stack decisions
+      - specs/tech/stack/website/ - Website stack decisions
+
+# =============================================================================
+# RELATED
+# =============================================================================
+
+related:
+  - _indices/master.yaml
+  - _indices/specs_index.yaml
+  - planning/34_architecture_overview/

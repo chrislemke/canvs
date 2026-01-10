@@ -1,0 +1,29 @@
+name: parts
+path: specs/tech/parts
+purpose: Component and feature specifications
+
+contains:
+  - AI feature specifications
+  - component documentation
+
+primary_files: []
+
+keywords:
+  - components
+  - parts
+  - features
+  - modules
+
+related:
+  - specs/tech/parts/ai
+  - specs/tech
+
+category: docs
+
+ai_guidance: >
+  Contains specifications for individual components and features.
+  Currently has AI-specific feature documentation in the ai/ subfolder.
+
+priority: medium
+
+updated: 2026-01-10

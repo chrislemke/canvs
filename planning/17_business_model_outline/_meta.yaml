@@ -1,0 +1,29 @@
+name: 17_business_model_outline
+path: planning/17_business_model_outline
+purpose: Business model and revenue strategy overview
+
+contains:
+  - business model documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - business-model
+  - revenue
+  - strategy
+  - economics
+
+related:
+  - planning/16_pricing_packaging_strategy
+  - planning/18_go_to_market_strategy
+
+category: planning
+
+ai_guidance: >
+  Outlines the business model including revenue streams,
+  cost structure, and key metrics. Foundation for business planning.
+
+priority: medium
+
+updated: 2026-01-10

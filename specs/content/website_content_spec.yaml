@@ -1,0 +1,838 @@
+# CANVS Splash Website - Content Specification
+# Complete bilingual content structure (EN/DE)
+# Generated from: vision/product_vision_paper.md + presentation/website/drafts/claude.html
+
+metadata:
+  project: CANVS Splash Website
+  version: "1.0"
+  languages: ["en", "de"]
+  primary_tagline: "The end of the feed. The beginning of the world."
+  primary_tagline_de: "Das Ende des Feeds. Der Anfang der Welt."
+  page_title: "CANVS - The World is a Blank Page"
+
+# =============================================================================
+# NAVIGATION
+# =============================================================================
+navigation:
+  logo:
+    text: "CANVS"
+    icon: "pin-heart-path" # Custom SVG with heart/pin motif
+
+  menu_items:
+    - id: manifesto
+      en: "Manifesto"
+      de: "Manifest"
+      anchor: "#manifesto"
+    - id: experience
+      en: "Experience"
+      de: "Erlebnis"
+      anchor: "#experience"
+    - id: impact
+      en: "Impact"
+      de: "Wirkung"
+      anchor: "#impact"
+    - id: roadmap
+      en: "Roadmap"
+      de: "Fahrplan"
+      anchor: "#roadmap"
+
+  cta_button:
+    en: "Join the Vision"
+    de: "Vision mitgestalten"
+
+  language_toggle:
+    options: ["EN", "DE"]
+    default: "EN"
+
+# =============================================================================
+# HERO SECTION
+# =============================================================================
+hero:
+  section_id: hero
+
+  tagline:
+    en: "Spatial Social Layer - 2026-2030"
+    de: "Raumliche Soziale Schicht - 2026-2030"
+
+  headline:
+    en: "The world is <em>a blank page.</em>"
+    de: "Die Welt ist <em>eine leere Seite.</em>"
+    highlight_word_en: "a blank page"
+    highlight_word_de: "eine leere Seite"
+
+  description:
+    en: "We are building the Internet of Places. Not a feed that scrolls forever, but a layer of meaning that stays where you leave it."
+    de: "Wir bauen das Internet der Orte. Kein endloser Feed, sondern eine Bedeutungsschicht, die dort bleibt, wo du sie hinterlasst."
+
+  cta_buttons:
+    primary:
+      en: "Explore the Vision"
+      de: "Vision entdecken"
+    secondary:
+      en: "Read the Paper"
+      de: "Konzeptpapier lesen"
+
+  floating_cards:
+    - type: memory
+      label:
+        en: "Memory"
+        de: "Erinnerung"
+      text:
+        en: "\"The light hits this wall perfectly at 5pm.\""
+        de: "\"Um 17 Uhr trifft das Licht diese Wand perfekt.\""
+      meta:
+        en: "Placed 2 hours ago"
+        de: "Vor 2 Stunden platziert"
+
+    - type: trail
+      label:
+        en: "Trail"
+        de: "Pfad"
+      text:
+        en: "\"My favorite route through the old town - every corner has a story.\""
+        de: "\"Meine Lieblingsroute durch die Altstadt - jede Ecke erzahlt eine Geschichte.\""
+      meta:
+        en: "12 stops - 45 min"
+        de: "12 Stationen - 45 Min"
+
+# =============================================================================
+# MANIFESTO / PROBLEM SECTION
+# =============================================================================
+manifesto:
+  section_id: manifesto
+
+  label:
+    en: "The Problem"
+    de: "Das Problem"
+
+  title:
+    en: "We walk through a world full of <highlight>invisible meaning</highlight>"
+    de: "Wir laufen durch eine Welt voller <highlight>unsichtbarer Bedeutung</highlight>"
+
+  quote:
+    en: "\"Things happen at places. But digital memory is detached from the physical world.\""
+    de: "\"Dinge passieren an Orten. Aber digitale Erinnerung ist von der physischen Welt entkoppelt.\""
+
+  problem_examples:
+    en: "A first kiss. A perfect skate trick. A protest that changed someone's life. A conversation that flipped a career. A hidden cafe that felt like finding oxygen."
+    de: "Ein erster Kuss. Ein perfekter Skateboard-Trick. Ein Protest, der jemandes Leben verandert hat. Ein Gesprach, das eine Karriere wendete. Ein verstecktes Cafe, das sich anfuhlte wie Sauerstoff zu finden."
+
+  problem_consequence:
+    en: "Then the moment ends - and the meaning becomes <strong>invisible</strong>. Someone stands at that place two weeks later and sees... concrete. The emotion is gone. The story exists somewhere in a cloud account, if at all."
+    de: "Dann endet der Moment - und die Bedeutung wird <strong>unsichtbar</strong>. Jemand steht zwei Wochen spater an diesem Ort und sieht... Beton. Die Emotion ist verschwunden. Die Geschichte existiert irgendwo in einem Cloud-Konto, wenn uberhaupt."
+
+  problem_statement:
+    en: "It's not \"there.\" It's nowhere."
+    de: "Es ist nicht \"dort\". Es ist nirgendwo."
+
+  manifesto_statements:
+    - statement:
+        en: "<strong>The feed is not the home screen.</strong> The world is."
+        de: "<strong>Der Feed ist nicht der Startbildschirm.</strong> Die Welt ist es."
+    - statement:
+        en: "<strong>Content is not something you \"go find.\"</strong> It's something you encounter, because you are there."
+        de: "<strong>Inhalte sind nichts, das man \"suchen geht\".</strong> Es ist etwas, dem man begegnet, weil man dort ist."
+    - statement:
+        en: "<strong>Meaning is not manufactured by engagement hacks.</strong> Meaning is in context."
+        de: "<strong>Bedeutung wird nicht durch Engagement-Tricks erzeugt.</strong> Bedeutung liegt im Kontext."
+
+  additional_manifesto_content:
+    # From vision paper - extended content
+    sunset_metaphor:
+      en: "A story about a sunset is powerful anywhere. A story about a sunset becomes *inevitable* when you're sitting in the exact place it happened - at the same angle, the same horizon line, the same wind."
+      de: "Eine Geschichte uber einen Sonnenuntergang ist uberall kraftvoll. Eine Geschichte uber einen Sonnenuntergang wird *unvermeidlich*, wenn du genau an dem Ort sitzt, wo sie passierte - im gleichen Winkel, an der gleichen Horizontlinie, im gleichen Wind."
+
+    vision_statement:
+      en: "When the world becomes a canvas, CANVS provides the paint."
+      de: "Wenn die Welt zur Leinwand wird, liefert CANVS die Farbe."
+
+# =============================================================================
+# SOLUTION SECTION
+# =============================================================================
+solution:
+  section_id: solution
+  background: dark
+
+  label:
+    en: "The Solution"
+    de: "Die Losung"
+
+  title:
+    en: "Persistent Emotional Anchoring"
+    de: "Persistente emotionale Verankerung"
+
+  description:
+    en: "CANVS makes moments spatially persistent. Not as a gimmick, but as a new medium: <em>Place becomes the index.</em>"
+    de: "CANVS macht Momente raumlich persistent. Nicht als Spielerei, sondern als neues Medium: <em>Der Ort wird zum Index.</em>"
+
+  cards:
+    - id: time-capsules
+      icon: pin-location
+      title:
+        en: "Reality Time Capsules"
+        de: "Realitats-Zeitkapseln"
+      description:
+        en: "Content - text, audio, video, 3D captures, sketches - pinned to real-world locations so future visitors can \"open\" the moment where it happened."
+        de: "Inhalte - Text, Audio, Video, 3D-Aufnahmen, Skizzen - an realen Orten verankert, damit zukunftige Besucher den Moment \"offnen\" konnen, wo er passiert ist."
+
+    - id: async-presence
+      icon: infinity-loop
+      title:
+        en: "Asynchronous Presence"
+        de: "Asynchrone Prasenz"
+      description:
+        en: "Experience a moment later, not by \"watching a video,\" but by seeing the memory <em>in situ</em>, aligned to the geometry of the world."
+        de: "Erlebe einen Moment spater - nicht durch \"ein Video ansehen\", sondern indem du die Erinnerung <em>in situ</em> siehst, ausgerichtet an der Geometrie der Welt."
+
+    - id: world-locked
+      icon: anchor-grid
+      title:
+        en: "World-Locked Anchoring"
+        de: "Weltgebundene Verankerung"
+      description:
+        en: "Modern AR stacks combine GPS with vision-based localization for stable, multi-tier anchoring that persists across time and devices."
+        de: "Moderne AR-Systeme kombinieren GPS mit visueller Lokalisierung fur stabile, mehrstufige Verankerung, die uber Zeit und Gerate hinweg besteht."
+
+# =============================================================================
+# EXPERIENCE SECTION - THREE MODES
+# =============================================================================
+experience:
+  section_id: experience
+
+  label:
+    en: "The Experience"
+    de: "Das Erlebnis"
+
+  title:
+    en: "The Spatial Browser"
+    de: "Der Raumliche Browser"
+
+  description:
+    en: "A browser that lets you \"read\" places the way you read websites. Three modes, one mental model."
+    de: "Ein Browser, mit dem du Orte \"lesen\" kannst, wie du Websites liest. Drei Modi, ein mentales Modell."
+
+  modes:
+    - number: "01"
+      id: ar-mode
+      title:
+        en: "AR Mode"
+        de: "AR-Modus"
+      subtitle:
+        en: "\"Magic Window\""
+        de: "\"Magisches Fenster\""
+      description:
+        en: "Look at the world and see location-anchored content where it belongs. Stories float exactly where they happened."
+        de: "Blicke auf die Welt und sieh ortsgebundene Inhalte, wo sie hingehoren. Geschichten schweben genau dort, wo sie passierten."
+      technical_name: "Magic Window / Glass View"
+
+    - number: "02"
+      id: map-mode
+      title:
+        en: "Map Mode"
+        de: "Karten-Modus"
+      subtitle:
+        en: "\"Spatial Radar\""
+        de: "\"Raumliches Radar\""
+      description:
+        en: "See nearby layers, hotspots, and trails. The map is not the product - it's the minimap for the real world."
+        de: "Sieh nahegelegene Ebenen, Hotspots und Pfade. Die Karte ist nicht das Produkt - sie ist die Minikarte fur die echte Welt."
+      technical_name: "Spatial Radar"
+
+    - number: "03"
+      id: time-mode
+      title:
+        en: "Time Mode"
+        de: "Zeit-Modus"
+      subtitle:
+        en: "\"Temporal Scrub\""
+        de: "\"Zeitlicher Durchlauf\""
+      description:
+        en: "Slide through time to see what happened here: yesterday, last summer, 10 years ago. Places remember."
+        de: "Gleite durch die Zeit, um zu sehen, was hier passiert ist: gestern, letzten Sommer, vor 10 Jahren. Orte erinnern sich."
+      technical_name: "Temporal Scrub"
+
+  interaction_model:
+    name: "Look - Understand - Act"
+    description:
+      en: "CANVS is built around micro-encounters: see a story, feel something, reply/add context/create your own layer, move on."
+      de: "CANVS basiert auf Mikro-Begegnungen: eine Geschichte sehen, etwas fuhlen, antworten/Kontext hinzufugen/eigene Ebene erstellen, weitergehen."
+
+# =============================================================================
+# SPATIAL PRIMITIVES / BUILDING BLOCKS
+# =============================================================================
+primitives:
+  section_id: primitives
+
+  label:
+    en: "Building Blocks"
+    de: "Bausteine"
+
+  title:
+    en: "Spatial Primitives"
+    de: "Raumliche Primitive"
+
+  description:
+    en: "The fundamental objects that make up the meaning layer. Each one anchored to the world."
+    de: "Die grundlegenden Objekte, die die Bedeutungsschicht bilden. Jedes an der Welt verankert."
+
+  items:
+    - id: pins
+      icon: pin-simple
+      title:
+        en: "Pins"
+        de: "Pins"
+      description:
+        en: "Simple anchors: notes, photos, audio, links, tips, warnings, micro-stories."
+        de: "Einfache Anker: Notizen, Fotos, Audio, Links, Tipps, Warnungen, Mikrogeschichten."
+      example:
+        en: "\"Best espresso in the city - trust me.\""
+        de: "\"Bester Espresso der Stadt - vertrau mir.\""
+
+    - id: bubbles
+      icon: bubble-group
+      title:
+        en: "Bubbles"
+        de: "Blasen"
+      description:
+        en: "Shared containers anchored to places - group memories, collective stories."
+        de: "Geteilte Container an Orten verankert - Gruppenerinnerungen, kollektive Geschichten."
+      example:
+        en: "\"We used to meet here every Friday.\""
+        de: "\"Wir haben uns hier jeden Freitag getroffen.\""
+      extended_examples:
+        - en: "\"This bench is where she told me yes.\""
+          de: "\"Diese Bank ist, wo sie mir Ja sagte.\""
+        - en: "\"We found this spot during our first week in this city.\""
+          de: "\"Wir fanden diesen Ort wahrend unserer ersten Woche in dieser Stadt.\""
+
+    - id: time-capsules
+      icon: capsule-time
+      title:
+        en: "Time Capsules"
+        de: "Zeitkapseln"
+      description:
+        en: "Rich artifacts: multi-media + 3D capture + timeline. Walkable memory fragments."
+        de: "Reichhaltige Artefakte: Multimedia + 3D-Aufnahme + Zeitachse. Begehbare Erinnerungsfragmente."
+      example:
+        en: "\"Open in 5 years, at this exact spot.\""
+        de: "\"In 5 Jahren offnen, an genau diesem Ort.\""
+
+    - id: trails
+      icon: path-connected
+      title:
+        en: "Trails"
+        de: "Pfade"
+      description:
+        en: "A sequence of anchors forming a narrative route - curated walks, emotional journeys."
+        de: "Eine Sequenz von Ankern, die eine narrative Route bildet - kuratierte Spaziergange, emotionale Reisen."
+      example:
+        en: "\"The city through immigrant food.\""
+        de: "\"Die Stadt durch Einwandererkuche.\""
+      extended_examples:
+        - en: "\"My break-up walk.\""
+          de: "\"Mein Trennungsspaziergang.\""
+        - en: "\"Best street art within 12 minutes.\""
+          de: "\"Beste Street Art in 12 Minuten.\""
+        - en: "\"A grief trail for remembrance.\""
+          de: "\"Ein Trauerpfad zum Gedenken.\""
+
+    - id: drops
+      icon: drop-unlock
+      title:
+        en: "Drops"
+        de: "Drops"
+      description:
+        en: "Geo-fenced releases: music, artwork, collectibles that only unlock at a location and time."
+        de: "Geo-begrenzte Veroffentlichungen: Musik, Kunst, Sammlerstucke, die nur an einem Ort und zu einer Zeit freigeschaltet werden."
+      example:
+        en: "\"Available here, tonight only.\""
+        de: "\"Nur hier verfugbar, nur heute Nacht.\""
+
+    - id: portals
+      icon: portal-link
+      title:
+        en: "Portals"
+        de: "Portale"
+      description:
+        en: "Places anchored to other places via story logic - connections across geography."
+        de: "Orte, die uber Geschichtenlogik mit anderen Orten verbunden sind - Verbindungen uber Geographie hinweg."
+      example:
+        en: "\"This spot is the sibling of that spot.\""
+        de: "\"Dieser Ort ist das Geschwister jenes Ortes.\""
+      extended_examples:
+        - en: "\"If you liked this, go to that.\""
+          de: "\"Wenn dir das gefallen hat, geh dorthin.\""
+
+# =============================================================================
+# USE CASES SECTION
+# =============================================================================
+use_cases:
+  section_id: usecases
+
+  label:
+    en: "Use Cases"
+    de: "Anwendungsfalle"
+
+  title:
+    en: "Re-enchanting Reality"
+    de: "Realitat neu verzaubern"
+
+  categories:
+    - id: emotional
+      icon: heart
+      title:
+        en: "Emotional Layer"
+        de: "Emotionale Schicht"
+      description:
+        en: "Shared memories, personal stories, moments that matter."
+        de: "Geteilte Erinnerungen, personliche Geschichten, Momente, die zahlen."
+      items:
+        - id: skating-bubble
+          title:
+            en: "The Skating Bubble"
+            de: "Die Skating-Blase"
+          description:
+            en: "Friends leave a group bubble at the rink. Years later, someone returns alone and opens it - hearing laughter and seeing spatial clips aligned to the ice."
+            de: "Freunde hinterlassen eine Gruppenblase an der Eisbahn. Jahre spater kehrt jemand allein zuruck und offnet sie - hort Lachen und sieht raumliche Clips, die auf das Eis ausgerichtet sind."
+
+        - id: sunset-stories
+          title:
+            en: "Sunset Stories"
+            de: "Sonnenuntergangs-Geschichten"
+          description:
+            en: "A global atlas of romance: \"Sit here at 19:42. Perfect angle.\" The world becomes a map of beautiful moments."
+            de: "Ein globaler Atlas der Romantik: \"Setz dich hier um 19:42 hin. Perfekter Winkel.\" Die Welt wird zur Karte schoner Momente."
+
+        - id: grief-remembrance
+          title:
+            en: "Grief & Remembrance"
+            de: "Trauer & Gedenken"
+          description:
+            en: "Digital candles and memories anchored to meaningful places - lasting, revisitable, shareable with chosen people."
+            de: "Digitale Kerzen und Erinnerungen an bedeutungsvollen Orten verankert - dauerhaft, wieder besuchbar, teilbar mit ausgewahlten Menschen."
+
+        - id: letters-future
+          title:
+            en: "Letters to Future Me"
+            de: "Briefe an mein zukunftiges Ich"
+          description:
+            en: "A capsule you can only open when you physically return. Time + place as the key."
+            de: "Eine Kapsel, die du nur offnen kannst, wenn du physisch zuruckkehrst. Zeit + Ort als Schlussel."
+
+    - id: utility
+      icon: clock
+      title:
+        en: "Utility Layer"
+        de: "Nutzlichkeits-Schicht"
+      description:
+        en: "Hyper-local knowledge, practical wisdom, community intelligence."
+        de: "Hyperlocales Wissen, praktische Weisheit, Gemeinschaftsintelligenz."
+      items:
+        - id: hidden-menu
+          title:
+            en: "Hidden Menu Layer"
+            de: "Geheimmenu-Schicht"
+          description:
+            en: "Recommendations pinned to a specific table or counter: \"Order it this way.\" Local secrets, openly shared."
+            de: "Empfehlungen an einem bestimmten Tisch oder Tresen angeheftet: \"Bestell es so.\" Lokale Geheimnisse, offen geteilt."
+
+        - id: accessibility
+          title:
+            en: "Accessibility Layer"
+            de: "Barrierefreiheits-Schicht"
+          description:
+            en: "User-generated accessibility notes anchored precisely: step-free entrances, quiet hours, safe seating, lighting warnings."
+            de: "Nutzergenerierte Barrierefreiheitshinweise prazise verankert: stufenlose Eingange, ruhige Stunden, sichere Sitzplatze, Beleuchtungswarnungen."
+
+        - id: surf-intelligence
+          title:
+            en: "Surf Intelligence"
+            de: "Surf-Intelligenz"
+          description:
+            en: "AR markers at beaches: hazards, entry points, wind advice. Local knowledge made visible."
+            de: "AR-Marker an Stranden: Gefahren, Einstiegspunkte, Windratschlage. Lokales Wissen sichtbar gemacht."
+
+        - id: civic-signals
+          title:
+            en: "Civic Signals"
+            de: "Burger-Signale"
+          description:
+            en: "Hazards, unsafe corners, mutual aid requests, neighborhood alerts. Community looking out for community."
+            de: "Gefahren, unsichere Ecken, gegenseitige Hilfsanfragen, Nachbarschaftswarnungen. Gemeinschaft achtet auf Gemeinschaft."
+
+    - id: creative
+      icon: star
+      title:
+        en: "Creative Layer"
+        de: "Kreative Schicht"
+      description:
+        en: "Urban culture, play, art that lives where it belongs."
+        de: "Stadtkultur, Spiel, Kunst, die dort lebt, wo sie hingehort."
+      items:
+        - id: street-art
+          title:
+            en: "Street Art Threads"
+            de: "Street-Art-Diskussionen"
+          description:
+            en: "Discussions float in front of murals - timelines, artist credits, community response - without touching the wall."
+            de: "Diskussionen schweben vor Wandbildern - Zeitleisten, Kunstlercredits, Community-Reaktionen - ohne die Wand zu beruhren."
+
+        - id: location-drops
+          title:
+            en: "Location Drops"
+            de: "Orts-Drops"
+          description:
+            en: "Exclusive content appears when a place \"activates\" at a time. Artists release where their art lives."
+            de: "Exklusive Inhalte erscheinen, wenn ein Ort zu einer bestimmten Zeit \"aktiviert\" wird. Kunstler veroffentlichen, wo ihre Kunst lebt."
+
+# =============================================================================
+# IMPACT SECTION
+# =============================================================================
+impact:
+  section_id: impact
+
+  label:
+    en: "Societal Impact"
+    de: "Gesellschaftliche Wirkung"
+
+  title:
+    en: "Why the World Needs This"
+    de: "Warum die Welt das braucht"
+
+  cards:
+    - id: movement
+      icon: graph-up
+      title:
+        en: "Movement & Presence"
+        de: "Bewegung & Prasenz"
+      description:
+        en: "Content requires presence. Presence requires movement. Movement increases serendipity and real human contact."
+        de: "Inhalte erfordern Prasenz. Prasenz erfordert Bewegung. Bewegung erhoht Zufallsbegegnungen und echten menschlichen Kontakt."
+      extended:
+        en: "Location-based AR can drive real-world activity. CANVS generalizes that mechanism beyond a single game loop."
+        de: "Standortbasierte AR kann reale Aktivitat fordern. CANVS verallgemeinert diesen Mechanismus uber eine einzelne Spielschleife hinaus."
+
+    - id: local-revival
+      icon: buildings
+      title:
+        en: "Local Revival"
+        de: "Lokale Wiederbelebung"
+      description:
+        en: "Location-anchored layers drive discovery and attention to local businesses. Emotional, not transactional."
+        de: "Ortsgebundene Schichten fordern Entdeckung und Aufmerksamkeit fur lokale Geschafte. Emotional, nicht transaktional."
+      extended:
+        en: "CANVS can become the \"local discovery layer\" that is emotional, not transactional."
+        de: "CANVS kann zur \"lokalen Entdeckungsschicht\" werden, die emotional ist, nicht transaktional."
+
+    - id: meaning-graph
+      icon: network-globe
+      title:
+        en: "Human Meaning Graph"
+        de: "Menschlicher Bedeutungsgraph"
+      description:
+        en: "Planet-scale spatial mapping becomes strategic. CANVS specializes in the human layer - stories, not just coordinates."
+        de: "Planetenweite raumliche Kartierung wird strategisch. CANVS spezialisiert sich auf die menschliche Schicht - Geschichten, nicht nur Koordinaten."
+      extended:
+        en: "We don't need to own the entire AR Cloud. We need to own the social meaning layer that lives on top of it."
+        de: "Wir mussen nicht die gesamte AR Cloud besitzen. Wir mussen die soziale Bedeutungsschicht besitzen, die darauf lebt."
+
+# =============================================================================
+# ROADMAP SECTION
+# =============================================================================
+roadmap:
+  section_id: roadmap
+  background: dark
+
+  label:
+    en: "Strategic Roadmap"
+    de: "Strategischer Fahrplan"
+
+  title:
+    en: "2026 - 2030"
+    de: "2026 - 2030"
+
+  description:
+    en: "From phone-first MVP to the spatial social operating system."
+    de: "Vom phone-first MVP zum raumlichen sozialen Betriebssystem."
+
+  years:
+    - year: "2026"
+      title:
+        en: "Build the Core Loop"
+        de: "Kernschleife bauen"
+      subtitle: "Phone-first, World-locked"
+      items:
+        - en: "MVP Spatial Browser (AR + map + time)"
+          de: "MVP Raumlicher Browser (AR + Karte + Zeit)"
+        - en: "Core primitives: pins, bubbles, capsules"
+          de: "Kern-Primitive: Pins, Blasen, Kapseln"
+        - en: "Anchor runtime v1"
+          de: "Anker-Runtime v1"
+        - en: "Safety foundations"
+          de: "Sicherheitsgrundlagen"
+        - en: "Pilot city strategy"
+          de: "Pilotstadt-Strategie"
+      success_metric:
+        en: "People revisit places because CANVS *changes what the place feels like*."
+        de: "Menschen besuchen Orte erneut, weil CANVS *andert, wie sich der Ort anfuhlt*."
+
+    - year: "2027"
+      title:
+        en: "Scale the Meaning Graph"
+        de: "Bedeutungsgraph skalieren"
+      subtitle: "LLM + Social"
+      items:
+        - en: "AI \"Reality Filter\" v1"
+          de: "KI \"Reality Filter\" v1"
+        - en: "Trails, drops, portals"
+          de: "Pfade, Drops, Portale"
+        - en: "Local business tools"
+          de: "Lokale Geschaftstools"
+        - en: "Web-native sharing"
+          de: "Web-natives Teilen"
+        - en: "Creator marketplace"
+          de: "Creator-Marktplatz"
+
+    - year: "2028"
+      title:
+        en: "Glass-Native Transition"
+        de: "Glass-Native Ubergang"
+      subtitle: "Spatial Computing"
+      items:
+        - en: "Spatial computing integrations"
+          de: "Spatial-Computing-Integrationen"
+        - en: "Always-on lightweight layer"
+          de: "Always-on leichte Schicht"
+        - en: "Spatial audio cues"
+          de: "Raumliche Audio-Hinweise"
+        - en: "Shared co-located sessions"
+          de: "Geteilte ko-lokalisierte Sessions"
+        - en: "Hands-free capture"
+          de: "Freihändige Aufnahme"
+
+    - year: "2029"
+      title:
+        en: "Platformization"
+        de: "Plattformisierung"
+      subtitle: "SDK & Standards"
+      items:
+        - en: "Public SDK for \"place apps\""
+          de: "Offentliches SDK fur \"Orts-Apps\""
+        - en: "Verified civic layers"
+          de: "Verifizierte Burger-Schichten"
+        - en: "Standards alignment"
+          de: "Standards-Ausrichtung"
+        - en: "Third-party layers"
+          de: "Drittanbieter-Schichten"
+
+    - year: "2030"
+      title:
+        en: "The Spatial Social OS"
+        de: "Das raumliche soziale OS"
+      subtitle: "Default Layer"
+      items:
+        - en: "Default meaning layer across devices"
+          de: "Standard-Bedeutungsschicht uber Gerate"
+        - en: "Places become queryable"
+          de: "Orte werden abfragbar"
+        - en: "The feed is obsolete"
+          de: "Der Feed ist obsolet"
+        - en: "Emotionally legible navigation"
+          de: "Emotional lesbare Navigation"
+
+# =============================================================================
+# CTA SECTION
+# =============================================================================
+cta:
+  section_id: cta
+
+  title:
+    en: "Build the <em>layer</em> with us"
+    de: "Bau die <em>Schicht</em> mit uns"
+
+  description:
+    en: "CANVS is not \"another app.\" It's a bet that the next interface is not a rectangle, not a feed, not a timeline. It's the world."
+    de: "CANVS ist nicht \"noch eine App\". Es ist eine Wette, dass das nachste Interface kein Rechteck ist, kein Feed, keine Timeline. Es ist die Welt."
+
+  buttons:
+    primary:
+      en: "Get in Touch"
+      de: "Kontakt aufnehmen"
+    secondary:
+      en: "Download Vision Paper"
+      de: "Visionspapier herunterladen"
+
+# =============================================================================
+# FOOTER
+# =============================================================================
+footer:
+  logo_text: "CANVS"
+
+  tagline:
+    en: "The end of the feed. The beginning of the world."
+    de: "Das Ende des Feeds. Der Anfang der Welt."
+
+  copyright: "© 2026 CANVS"
+
+  links: [] # Add if needed: Privacy, Imprint, etc.
+
+# =============================================================================
+# KEY MARKETING MESSAGES (Summary)
+# =============================================================================
+key_messages:
+  primary_tagline:
+    en: "The end of the feed. The beginning of the world."
+    de: "Das Ende des Feeds. Der Anfang der Welt."
+
+  product_definition:
+    en: "A persistent, AR-native social layer anchored to physical places."
+    de: "Eine persistente, AR-native soziale Schicht, die an physischen Orten verankert ist."
+
+  vision_statement:
+    en: "The Internet of Places"
+    de: "Das Internet der Orte"
+
+  differentiator:
+    en: "Not a feed that scrolls forever, but a layer of meaning that stays where you leave it."
+    de: "Kein endloser Feed, sondern eine Bedeutungsschicht, die dort bleibt, wo du sie hinterlasst."
+
+  product_thesis:
+    en: "The Spatial Social Layer"
+    de: "Die raumliche soziale Schicht"
+
+  north_star:
+    metric: "MPI/week"
+    definition: "Meaningful Place Interactions per user per week"
+    examples:
+      - "Opening a capsule"
+      - "Leaving a voice note"
+      - "Contributing to a utility marker"
+      - "Participating in a local thread"
+
+  value_propositions:
+    - en: "Place becomes the index"
+      de: "Der Ort wird zum Index"
+    - en: "The world as a browsable interface"
+      de: "Die Welt als durchsuchbares Interface"
+    - en: "Meaning is in context"
+      de: "Bedeutung liegt im Kontext"
+    - en: "No moment is lost - because the place remembers"
+      de: "Kein Moment geht verloren - weil der Ort sich erinnert"
+
+  platform_positioning:
+    not:
+      - "A traditional social network (feed-first)"
+      - "A maps app (utility-first)"
+      - "A game (loop-first)"
+    is:
+      en: "A Spatial Browser that lets you 'read' places the way you read websites."
+      de: "Ein raumlicher Browser, mit dem du Orte 'lesen' kannst, wie du Websites liest."
+
+# =============================================================================
+# VISUAL ELEMENTS NEEDED
+# =============================================================================
+visual_elements:
+  icons:
+    - id: pin-heart-path
+      description: "Logo icon - pin with heart and path element"
+      usage: "Navigation logo, footer"
+
+    - id: pin-location
+      description: "Simple location pin"
+      usage: "Reality Time Capsules card"
+
+    - id: infinity-loop
+      description: "Infinity or async symbol"
+      usage: "Asynchronous Presence card"
+
+    - id: anchor-grid
+      description: "Anchor with grid/stability"
+      usage: "World-Locked Anchoring card"
+
+    - id: pin-simple
+      description: "Simple pin marker"
+      usage: "Pins primitive"
+
+    - id: bubble-group
+      description: "Group of connected bubbles"
+      usage: "Bubbles primitive"
+
+    - id: capsule-time
+      description: "Capsule with clock element"
+      usage: "Time Capsules primitive"
+
+    - id: path-connected
+      description: "Connected path/trail"
+      usage: "Trails primitive"
+
+    - id: drop-unlock
+      description: "Drop with unlock element"
+      usage: "Drops primitive"
+
+    - id: portal-link
+      description: "Portal/wormhole connection"
+      usage: "Portals primitive"
+
+    - id: heart
+      description: "Heart icon"
+      usage: "Emotional Layer category"
+
+    - id: clock
+      description: "Clock/utility icon"
+      usage: "Utility Layer category"
+
+    - id: star
+      description: "Star/creative icon"
+      usage: "Creative Layer category"
+
+    - id: graph-up
+      description: "Upward graph/movement"
+      usage: "Movement & Presence impact"
+
+    - id: buildings
+      description: "Buildings/local business"
+      usage: "Local Revival impact"
+
+    - id: network-globe
+      description: "Globe with network"
+      usage: "Human Meaning Graph impact"
+
+  decorative:
+    - id: hero-circles
+      description: "Concentric dashed circles for hero background"
+
+    - id: cta-circles
+      description: "Concentric circles for CTA section"
+
+    - id: ghost-illustration
+      description: "Ghost/invisible figure for problem section"
+
+    - id: timeline-gradient
+      description: "Gradient line connecting roadmap years"
+
+  floating_cards:
+    - Memory card with dot indicator
+    - Trail card with stop count
+
+# =============================================================================
+# DESIGN TOKENS (from HTML)
+# =============================================================================
+design_tokens:
+  colors:
+    alabaster: "#F0EFEA"  # Background
+    ink: "#1A1A18"        # Primary text
+    terracotta: "#D97757" # Accent/CTA
+    sage: "#8DA399"       # Secondary accent
+    highlighter: "#EEDC5B" # Highlight
+    ink_light: "rgba(26, 26, 24, 0.6)"
+    ink_lighter: "rgba(26, 26, 24, 0.15)"
+
+  fonts:
+    serif: "Newsreader, Georgia, serif"
+    sans: "Inter, sans-serif"
+
+  effects:
+    paper_texture: true
+    scribble_buttons: true
+    parallax_cards: true
+    scroll_animations: true

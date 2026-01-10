@@ -1,0 +1,30 @@
+name: 22_product_requirements_document
+path: planning/22_product_requirements_document
+purpose: Comprehensive product requirements specification
+
+contains:
+  - PRD documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - prd
+  - requirements
+  - features
+  - specifications
+
+related:
+  - planning/21_scope_definition
+  - planning/23_user_stories_acceptance_criteria
+  - specs/tech/mvp/specs
+
+category: planning
+
+ai_guidance: >
+  Master requirements document for the product. Contains
+  detailed feature requirements and acceptance criteria.
+
+priority: high
+
+updated: 2026-01-10

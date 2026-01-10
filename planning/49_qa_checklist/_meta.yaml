@@ -1,0 +1,29 @@
+name: 49_qa_checklist
+path: planning/49_qa_checklist
+purpose: QA checklist and quality verification
+
+contains:
+  - QA checklist documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - qa
+  - checklist
+  - quality
+  - verification
+
+related:
+  - planning/48_test_plan
+  - planning/67_launch_readiness_checklist
+
+category: planning
+
+ai_guidance: >
+  Checklist for QA verification before releases.
+  Ensures consistent quality checks.
+
+priority: medium
+
+updated: 2026-01-10

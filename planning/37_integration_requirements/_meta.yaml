@@ -1,0 +1,29 @@
+name: 37_integration_requirements
+path: planning/37_integration_requirements
+purpose: Third-party integration requirements
+
+contains:
+  - integration documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - integrations
+  - third-party
+  - apis
+  - services
+
+related:
+  - planning/35_api_specification
+  - planning/74_vendor_third_party_contracts
+
+category: planning
+
+ai_guidance: >
+  Documents required integrations with third-party services.
+  Includes API requirements and data exchange formats.
+
+priority: medium
+
+updated: 2026-01-10

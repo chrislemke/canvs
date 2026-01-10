@@ -1,0 +1,29 @@
+name: 55_incident_response_playbook
+path: planning/55_incident_response_playbook
+purpose: Incident response procedures and playbooks
+
+contains:
+  - incident response documentation
+
+primary_files:
+  - _description.md
+
+keywords:
+  - incident
+  - response
+  - playbook
+  - on-call
+
+related:
+  - planning/52_rollback_plan
+  - planning/56_runbook_operations_manual
+
+category: planning
+
+ai_guidance: >
+  Incident response procedures for production issues.
+  Critical reference during outages and incidents.
+
+priority: high
+
+updated: 2026-01-10

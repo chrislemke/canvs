@@ -1,0 +1,221 @@
+# =============================================================================
+# planning Index - Product Planning Documents
+# =============================================================================
+# Index of the planning/ folder with 77 numbered subfolders.
+# Comprehensive product planning documents organized by workflow phase.
+# =============================================================================
+
+metadata:
+  name: planning_index
+  folder: planning
+  purpose: Comprehensive product planning documents organized by workflow phase
+  updated: "2026-01-10"
+
+# =============================================================================
+# OVERVIEW
+# =============================================================================
+
+overview: >
+  The planning folder contains 77 numbered subfolders covering the complete
+  product development lifecycle. Each subfolder contains a _meta.yaml file
+  and a _description.md file explaining that planning phase.
+
+# =============================================================================
+# PLANNING PHASES BY CATEGORY
+# =============================================================================
+
+phases:
+
+  # ---------------------------------------------------------------------------
+  # STRATEGY & VISION (01-06)
+  # ---------------------------------------------------------------------------
+  strategy_vision:
+    range: "01-06"
+    purpose: Core product strategy and vision definition
+    folders:
+      - 01_problem_statement
+      - 02_opportunity_market_context_brief
+      - 03_vision_statement
+      - 04_product_principles
+      - 05_goals_and_non_goals
+      - 06_elevator_pitch
+
+  # ---------------------------------------------------------------------------
+  # CUSTOMER & MARKET (07-16)
+  # ---------------------------------------------------------------------------
+  customer_market:
+    range: "07-16"
+    purpose: Customer understanding and market positioning
+    folders:
+      - 07_target_customer_personas
+      - 08_jobs_to_be_done
+      - 09_value_proposition_differentiators
+      - 10_assumptions_hypotheses_log
+      - 11_competitive_analysis
+      - 12_market_sizing
+      - 13_positioning_statement
+      - 14_messaging_framework
+      - 15_brand_naming_brief
+      - 16_pricing_packaging_strategy
+
+  # ---------------------------------------------------------------------------
+  # BUSINESS MODEL (17-20)
+  # ---------------------------------------------------------------------------
+  business_model:
+    range: "17-20"
+    purpose: Business model and go-to-market planning
+    folders:
+      - 17_business_model_outline
+      - 18_go_to_market_strategy
+      - 19_high_level_product_roadmap
+      - 20_milestone_plan
+
+  # ---------------------------------------------------------------------------
+  # PRODUCT DEFINITION (21-32)
+  # ---------------------------------------------------------------------------
+  product_definition:
+    range: "21-32"
+    purpose: Product requirements and UX design
+    folders:
+      - 21_scope_definition
+      - 22_product_requirements_document
+      - 23_user_stories_acceptance_criteria
+      - 24_user_journey_maps
+      - 25_information_architecture
+      - 26_ux_research_plan
+      - 27_research_findings_report
+      - 28_wireframes
+      - 29_clickable_prototype
+      - 30_design_system_ui_kit
+      - 31_ux_copy_microcopy_guidelines
+      - 32_accessibility_requirements
+
+  # ---------------------------------------------------------------------------
+  # TECHNICAL ARCHITECTURE (33-41)
+  # ---------------------------------------------------------------------------
+  technical_architecture:
+    range: "33-41"
+    purpose: Technical design and security requirements
+    folders:
+      - 33_technical_discovery_feasibility
+      - 34_architecture_overview
+      - 35_api_specification
+      - 36_data_model
+      - 37_integration_requirements
+      - 38_non_functional_requirements
+      - 39_security_privacy_requirements
+      - 40_threat_model
+      - 41_compliance_assessment
+
+  # ---------------------------------------------------------------------------
+  # PROJECT MANAGEMENT (42-46)
+  # ---------------------------------------------------------------------------
+  project_management:
+    range: "42-46"
+    purpose: Risk management and sprint planning
+    folders:
+      - 42_risk_register
+      - 43_decision_log
+      - 44_build_plan_sprint_plan
+      - 45_backlog
+      - 46_definition_of_ready_done
+
+  # ---------------------------------------------------------------------------
+  # QUALITY & TESTING (47-49)
+  # ---------------------------------------------------------------------------
+  quality_testing:
+    range: "47-49"
+    purpose: Testing strategy and QA processes
+    folders:
+      - 47_test_strategy
+      - 48_test_plan
+      - 49_qa_checklist
+
+  # ---------------------------------------------------------------------------
+  # DEPLOYMENT & OPERATIONS (50-56)
+  # ---------------------------------------------------------------------------
+  deployment_operations:
+    range: "50-56"
+    purpose: Release planning and operations readiness
+    folders:
+      - 50_release_plan
+      - 51_deployment_plan
+      - 52_rollback_plan
+      - 53_monitoring_observability_plan
+      - 54_slo_sli_definition
+      - 55_incident_response_playbook
+      - 56_runbook_operations_manual
+
+  # ---------------------------------------------------------------------------
+  # DOCUMENTATION (57-60)
+  # ---------------------------------------------------------------------------
+  documentation:
+    range: "57-60"
+    purpose: Internal and user documentation
+    folders:
+      - 57_internal_documentation
+      - 58_user_documentation
+      - 59_onboarding_flow_spec
+      - 60_support_escalation_process
+
+  # ---------------------------------------------------------------------------
+  # ANALYTICS & EXPERIMENTATION (61-65)
+  # ---------------------------------------------------------------------------
+  analytics_experimentation:
+    range: "61-65"
+    purpose: Feedback, analytics, and testing programs
+    folders:
+      - 61_customer_feedback_collection_plan
+      - 62_analytics_telemetry_plan
+      - 63_metric_definitions
+      - 64_experimentation_plan
+      - 65_beta_program_plan
+
+  # ---------------------------------------------------------------------------
+  # LAUNCH & MARKETING (66-74)
+  # ---------------------------------------------------------------------------
+  launch_marketing:
+    range: "66-74"
+    purpose: Launch readiness and marketing materials
+    folders:
+      - 66_stakeholder_review_decks
+      - 67_launch_readiness_checklist
+      - 68_press_pr_brief
+      - 69_sales_enablement_pack
+      - 70_customer_case_study_template
+      - 71_website_landing_page_brief
+      - 72_app_store_listing_copy
+      - 73_legal_docs
+      - 74_vendor_third_party_contracts
+
+  # ---------------------------------------------------------------------------
+  # POST-LAUNCH (75-77)
+  # ---------------------------------------------------------------------------
+  post_launch:
+    range: "75-77"
+    purpose: Post-launch operations and review
+    folders:
+      - 75_post_launch_plan
+      - 76_postmortem_template
+      - 77_post_launch_review_report
+
+# =============================================================================
+# NAVIGATION GUIDE
+# =============================================================================
+
+navigation_guide:
+  start_with: planning/01_problem_statement/
+  for_vision: planning/03_vision_statement/
+  for_requirements: planning/22_product_requirements_document/
+  for_architecture: planning/34_architecture_overview/
+  for_testing: planning/47_test_strategy/
+  for_launch: planning/67_launch_readiness_checklist/
+
+# =============================================================================
+# RELATED
+# =============================================================================
+
+related:
+  - _indices/master.yaml
+  - vision/
+  - specs/
