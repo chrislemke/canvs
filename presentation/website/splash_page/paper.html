@@ -1,0 +1,2599 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CANVS — Vision Paper | The Spatial Social Layer</title>
+    <meta
+      name="description"
+      content="CANVS Product Vision Paper: Building the Internet of Places. A persistent, AR-native social layer anchored to physical places."
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="CANVS — Vision Paper" />
+    <meta
+      property="og:description"
+      content="The end of the feed. The beginning of the world."
+    />
+    <meta property="og:type" content="website" />
+
+    <!-- Preconnect for fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ========================================
+           CSS CUSTOM PROPERTIES
+           ======================================== */
+      :root {
+        --alabaster: #f0efea;
+        --ink: #1a1a18;
+        --terracotta: #d97757;
+        --sage: #8da399;
+        --highlighter: #eedc5b;
+        --ink-light: rgba(26, 26, 24, 0.6);
+        --ink-lighter: rgba(26, 26, 24, 0.15);
+        --ink-subtle: rgba(26, 26, 24, 0.08);
+        --alabaster-translucent: rgba(240, 239, 234, 0.95);
+
+        --font-serif: "Newsreader", Georgia, serif;
+        --font-sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+
+        --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+        --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+        --duration-fast: 0.2s;
+        --duration-normal: 0.4s;
+        --duration-slow: 0.8s;
+        --duration-slower: 1.2s;
+      }
+
+      /* ========================================
+           RESET & BASE
+           ======================================== */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+        overflow-x: hidden;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        background-color: var(--alabaster);
+        color: var(--ink);
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
+        position: relative;
+        width: 100%;
+        max-width: 100vw;
+      }
+
+      /* Paper texture overlay */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 9999;
+      }
+
+      .serif {
+        font-family: var(--font-serif);
+      }
+      .sans {
+        font-family: var(--font-sans);
+      }
+
+      /* ========================================
+           SKIP LINK (Accessibility)
+           ======================================== */
+      .skip-link {
+        position: absolute;
+        top: -100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--ink);
+        color: var(--alabaster);
+        padding: 12px 24px;
+        border-radius: 0 0 8px 8px;
+        z-index: 10001;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: top var(--duration-fast) ease;
+      }
+
+      .skip-link:focus {
+        top: 0;
+        outline: none;
+      }
+
+      /* ========================================
+           SCROLL PROGRESS BAR
+           ======================================== */
+      .scroll-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          var(--terracotta),
+          var(--sage),
+          var(--highlighter)
+        );
+        z-index: 10000;
+        transition: width 0.1s linear;
+      }
+
+      /* ========================================
+           NAVIGATION
+           ======================================== */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 20px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+        background: linear-gradient(
+          to bottom,
+          var(--alabaster) 60%,
+          transparent
+        );
+        transition: all var(--duration-normal) var(--ease-out-quart);
+      }
+
+      nav.scrolled {
+        background: var(--alabaster-translucent);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--ink-lighter);
+        padding: 16px 40px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .logo-icon {
+        width: 42px;
+        height: 42px;
+        position: relative;
+      }
+
+      .logo-icon svg {
+        fill: none;
+        stroke: var(--terracotta);
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        filter: drop-shadow(0 0 2px rgba(217, 119, 87, 0.3));
+        transition: filter var(--duration-normal) ease;
+      }
+
+      .logo:hover .logo-icon svg {
+        filter: drop-shadow(0 0 8px rgba(217, 119, 87, 0.5));
+      }
+
+      .logo-text {
+        font-family: var(--font-serif);
+        font-size: 26px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+      }
+
+      .logo-slogan {
+        font-family: var(--font-serif);
+        font-size: 14px;
+        font-style: italic;
+        color: var(--ink-light);
+        margin-left: 8px;
+        padding-left: 12px;
+        border-left: 1px solid var(--ink-lighter);
+      }
+
+      @media (max-width: 768px) {
+        .logo-slogan {
+          display: none;
+        }
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 32px;
+      }
+
+      .nav-link {
+        color: var(--ink-light);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        transition: all var(--duration-normal) ease;
+        position: relative;
+        padding: 4px 0;
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--terracotta);
+        transition: width var(--duration-normal) var(--ease-out-quart);
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        color: var(--terracotta);
+      }
+
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        width: 100%;
+      }
+
+      .nav-link:focus-visible {
+        outline: 2px solid var(--terracotta);
+        outline-offset: 4px;
+        border-radius: 2px;
+      }
+
+      /* ========================================
+           MOBILE MENU
+           ======================================== */
+      .mobile-menu-btn {
+        display: none;
+        width: 40px;
+        height: 40px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        position: relative;
+        z-index: 101;
+      }
+
+      .mobile-menu-btn span {
+        display: block;
+        width: 24px;
+        height: 2px;
+        background: var(--ink);
+        margin: 6px auto;
+        transition: all var(--duration-normal) ease;
+      }
+
+      .mobile-menu-btn.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+
+      .mobile-menu-btn.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .mobile-menu-btn.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(6px, -6px);
+      }
+
+      /* Mobile Menu Overlay */
+      .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: var(--alabaster);
+        z-index: 99;
+        padding: 100px 24px 40px;
+        flex-direction: column;
+        gap: 4px;
+        overflow-y: auto;
+      }
+
+      .mobile-menu.active {
+        display: flex;
+      }
+
+      .mobile-menu-link {
+        display: block;
+        padding: 12px 0;
+        font-family: var(--font-serif);
+        font-size: 1.2rem;
+        color: var(--ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--ink-lighter);
+        transition: color 0.2s ease;
+      }
+
+      .mobile-menu-link:hover {
+        color: var(--terracotta);
+      }
+
+      .mobile-menu-section-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--ink-light);
+        margin-top: 20px;
+        margin-bottom: 8px;
+        padding-top: 12px;
+        border-top: 1px solid var(--ink-lighter);
+      }
+
+      /* ========================================
+           PAPER CONTENT
+           ======================================== */
+      .paper-hero {
+        padding: 160px 80px 80px;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .paper-tagline {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--terracotta);
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .paper-tagline::before {
+        content: "";
+        width: 40px;
+        height: 2px;
+        background: var(--terracotta);
+      }
+
+      .paper-hero h1 {
+        font-family: var(--font-serif);
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 300;
+        line-height: 1.15;
+        margin-bottom: 24px;
+        letter-spacing: -0.02em;
+      }
+
+      .paper-hero h1 em {
+        font-style: italic;
+        color: var(--terracotta);
+      }
+
+      .paper-subtitle {
+        font-family: var(--font-serif);
+        font-size: 1.4rem;
+        font-style: italic;
+        color: var(--ink-light);
+        margin-bottom: 16px;
+      }
+
+      .paper-meta {
+        font-size: 0.9rem;
+        color: var(--ink-light);
+        margin-bottom: 40px;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--terracotta);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all var(--duration-normal) ease;
+      }
+
+      .back-link:hover {
+        gap: 12px;
+      }
+
+      .back-link svg {
+        width: 16px;
+        height: 16px;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+      }
+
+      /* ========================================
+           PAPER SECTIONS
+           ======================================== */
+      .paper-content {
+        max-width: 800px;
+        width: 100%;
+        padding: 0 0 120px;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        word-break: break-word;
+        box-sizing: border-box;
+        overflow-x: hidden;
+      }
+
+      .paper-section {
+        margin-bottom: 80px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+      }
+
+      .paper-section h2 {
+        font-family: var(--font-serif);
+        font-size: 2rem;
+        font-weight: 500;
+        margin-bottom: 24px;
+        color: var(--ink);
+        position: relative;
+        padding-left: 24px;
+      }
+
+      .paper-section h2::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.3em;
+        width: 4px;
+        height: 1em;
+        background: var(--terracotta);
+      }
+
+      .paper-section h3 {
+        font-family: var(--font-serif);
+        font-size: 1.4rem;
+        font-weight: 500;
+        margin-top: 40px;
+        margin-bottom: 16px;
+        color: var(--ink);
+      }
+
+      .paper-section h4 {
+        font-family: var(--font-serif);
+        font-size: 1.15rem;
+        font-weight: 500;
+        margin-top: 32px;
+        margin-bottom: 12px;
+        color: var(--ink);
+      }
+
+      .paper-section p {
+        font-size: 1.05rem;
+        line-height: 1.8;
+        margin-bottom: 20px;
+        color: var(--ink);
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        max-width: 100%;
+      }
+
+      .paper-section ul,
+      .paper-section ol {
+        margin-bottom: 20px;
+        padding-left: 24px;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      .paper-section li {
+        font-size: 1.05rem;
+        line-height: 1.8;
+        margin-bottom: 12px;
+        color: var(--ink);
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+      }
+
+      .paper-section strong {
+        font-weight: 600;
+        color: var(--ink);
+      }
+
+      .paper-section em {
+        font-style: italic;
+      }
+
+      .highlight-box {
+        background: white;
+        border-left: 4px solid var(--terracotta);
+        padding: 32px;
+        margin: 32px 0;
+        box-shadow: 0 8px 40px rgba(26, 26, 24, 0.06);
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+      }
+
+      .highlight-box p {
+        font-family: var(--font-serif);
+        font-size: 1.25rem;
+        font-style: italic;
+        line-height: 1.6;
+        margin-bottom: 0;
+      }
+
+      .highlight-box p + p {
+        margin-top: 16px;
+      }
+
+      .highlight-box strong {
+        color: var(--terracotta);
+        font-style: normal;
+      }
+
+      .section-divider {
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--terracotta), var(--sage));
+        margin: 60px 0;
+      }
+
+      .roadmap-item {
+        margin-bottom: 40px;
+        padding-left: 24px;
+        border-left: 2px solid var(--ink-lighter);
+      }
+
+      .roadmap-item h4 {
+        color: var(--terracotta);
+        margin-top: 0;
+      }
+
+      /* Visual break elements */
+      .visual-break {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 0;
+        gap: 24px;
+      }
+
+      .visual-break svg {
+        width: 80px;
+        height: 80px;
+        opacity: 0.6;
+      }
+
+      .icon-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 24px;
+        margin: 40px 0;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      .icon-card {
+        background: white;
+        padding: 24px;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(26, 26, 24, 0.05);
+        text-align: center;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+
+      .icon-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(26, 26, 24, 0.08);
+      }
+
+      .icon-card svg {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 16px;
+        stroke: var(--terracotta);
+        stroke-width: 1.5;
+        fill: none;
+      }
+
+      .icon-card h5 {
+        font-family: var(--font-serif);
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: var(--ink);
+      }
+
+      .icon-card p {
+        font-size: 0.9rem;
+        color: var(--ink-light);
+        margin-bottom: 0;
+        line-height: 1.5;
+      }
+
+      .feature-strip {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 32px;
+        background: linear-gradient(
+          135deg,
+          var(--sage) 0%,
+          var(--terracotta) 100%
+        );
+        border-radius: 12px;
+        margin: 40px 0;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      .feature-strip-item {
+        text-align: center;
+        color: white;
+      }
+
+      .feature-strip-item .number {
+        font-family: var(--font-serif);
+        font-size: 2rem;
+        font-weight: 600;
+        display: block;
+      }
+
+      .feature-strip-item .label {
+        font-size: 0.85rem;
+        opacity: 0.9;
+      }
+
+      .quote-card {
+        background: linear-gradient(
+          135deg,
+          rgba(141, 163, 153, 0.1) 0%,
+          rgba(217, 119, 87, 0.1) 100%
+        );
+        border-radius: 16px;
+        padding: 40px;
+        margin: 40px 0;
+        position: relative;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+      }
+
+      .quote-card::before {
+        content: '"';
+        font-family: var(--font-serif);
+        font-size: 6rem;
+        color: var(--terracotta);
+        opacity: 0.2;
+        position: absolute;
+        top: 10px;
+        left: 20px;
+        line-height: 1;
+      }
+
+      .quote-card p {
+        font-family: var(--font-serif);
+        font-size: 1.4rem;
+        font-style: italic;
+        line-height: 1.6;
+        margin-bottom: 0;
+        position: relative;
+        z-index: 1;
+      }
+
+      .timeline-visual {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 24px 0;
+        margin: 40px 0;
+        position: relative;
+      }
+
+      .timeline-visual::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--terracotta),
+          var(--sage),
+          var(--highlighter)
+        );
+        z-index: 0;
+      }
+
+      .timeline-node {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: white;
+        border: 3px solid var(--terracotta);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-serif);
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--terracotta);
+        position: relative;
+        z-index: 1;
+      }
+
+      .timeline-node:nth-child(2) {
+        border-color: var(--sage);
+        color: var(--sage);
+      }
+
+      .timeline-node:nth-child(3) {
+        border-color: var(--highlighter);
+        color: var(--ink);
+      }
+
+      /* ========================================
+           PAPER LAYOUT WITH SIDEBAR
+           ======================================== */
+      .paper-layout {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 40px;
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 40px;
+        box-sizing: border-box;
+        overflow-x: hidden;
+      }
+
+      @media (max-width: 1000px) {
+        .paper-layout {
+          grid-template-columns: 1fr;
+          padding: 0 24px;
+          max-width: 100%;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .paper-layout {
+          padding: 0 16px;
+          max-width: 100%;
+        }
+      }
+
+      /* ========================================
+           TABLE OF CONTENTS (Sticky Sidebar)
+           ======================================== */
+      .toc {
+        position: sticky;
+        top: 100px;
+        height: fit-content;
+        padding: 0;
+        align-self: start;
+      }
+
+      .toc-title {
+        font-family: var(--font-serif);
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--ink-light);
+        margin-bottom: 16px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--ink-lighter);
+      }
+
+      .toc-list {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .toc-list li {
+        margin: 0;
+      }
+
+      .toc-link {
+        display: block;
+        color: var(--ink-light);
+        text-decoration: none;
+        font-size: 0.8rem;
+        padding: 6px 0;
+        transition: all 0.2s ease;
+        border-left: 2px solid transparent;
+        padding-left: 12px;
+        margin-left: -12px;
+      }
+
+      .toc-link:hover {
+        color: var(--terracotta);
+        border-left-color: var(--terracotta);
+      }
+
+      .toc-link.active {
+        color: var(--terracotta);
+        border-left-color: var(--terracotta);
+        font-weight: 500;
+      }
+
+      @media (max-width: 1000px) {
+        .toc {
+          display: none;
+        }
+      }
+
+      /* ========================================
+           TECH STACK VISUAL
+           ======================================== */
+      .tech-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin: 32px 0;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      .tech-layer {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 20px;
+        background: white;
+        border-radius: 8px;
+        border-left: 4px solid var(--layer-color, var(--ink-lighter));
+        box-shadow: 0 2px 12px rgba(26, 26, 24, 0.04);
+        transition: transform 0.2s ease;
+      }
+
+      .tech-layer:hover {
+        transform: translateX(4px);
+      }
+
+      .tech-layer-num {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--layer-color, var(--ink-lighter));
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        font-weight: 600;
+        flex-shrink: 0;
+      }
+
+      .tech-layer-content {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .tech-layer-content strong {
+        font-size: 0.95rem;
+        color: var(--ink);
+      }
+
+      .tech-layer-content span {
+        font-size: 0.85rem;
+        color: var(--ink-light);
+      }
+
+      /* ========================================
+           USE CASE CARDS
+           ======================================== */
+      .use-case-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin: 24px 0;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      @media (max-width: 600px) {
+        .use-case-grid {
+          grid-template-columns: 1fr;
+          max-width: 100%;
+        }
+      }
+
+      .use-case-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 12px rgba(26, 26, 24, 0.04);
+        border-top: 3px solid var(--card-color, var(--terracotta));
+      }
+
+      .use-case-card h5 {
+        font-family: var(--font-serif);
+        font-size: 1rem;
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: var(--ink);
+      }
+
+      .use-case-card p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        color: var(--ink-light);
+        margin: 0;
+      }
+
+      /* ========================================
+           COMPARISON UI
+           ======================================== */
+      .comparison-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin: 32px 0;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      @media (max-width: 600px) {
+        .comparison-container {
+          grid-template-columns: 1fr;
+          max-width: 100%;
+        }
+      }
+
+      .comparison-side {
+        background: white;
+        border-radius: 12px;
+        padding: 28px;
+        box-shadow: 0 4px 20px rgba(26, 26, 24, 0.05);
+      }
+
+      .comparison-side.old {
+        border-top: 3px solid var(--ink-lighter);
+      }
+
+      .comparison-side.new {
+        border-top: 3px solid var(--terracotta);
+      }
+
+      .comparison-label {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .comparison-side.old .comparison-label {
+        color: var(--ink-light);
+      }
+
+      .comparison-side.new .comparison-label {
+        color: var(--terracotta);
+      }
+
+      .comparison-items {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .comparison-items li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 0;
+        font-size: 1rem;
+        border-bottom: 1px solid var(--ink-subtle);
+      }
+
+      .comparison-items li:last-child {
+        border-bottom: none;
+      }
+
+      .comparison-side.old .comparison-items li::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        background: var(--ink-lighter);
+        border-radius: 2px;
+        flex-shrink: 0;
+      }
+
+      .comparison-side.new .comparison-items li::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        background: var(--terracotta);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      /* ========================================
+           CROSS-LINKS
+           ======================================== */
+      .cross-links {
+        margin-top: 80px;
+        padding-top: 60px;
+        border-top: 1px solid var(--ink-lighter);
+        text-align: center;
+      }
+
+      .cross-links-title {
+        font-family: var(--font-serif);
+        font-size: 1.2rem;
+        color: var(--ink-light);
+        margin-bottom: 32px;
+      }
+
+      .cross-links-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 16px;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      .cross-link {
+        display: flex;
+        flex-direction: column;
+        padding: 20px 16px;
+        background: white;
+        border-radius: 8px;
+        text-decoration: none;
+        box-shadow: 0 2px 12px rgba(26, 26, 24, 0.04);
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+      }
+
+      .cross-link:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(26, 26, 24, 0.08);
+        border-color: var(--terracotta);
+      }
+
+      .cross-link-label {
+        font-size: 0.75rem;
+        color: var(--ink-light);
+        margin-bottom: 4px;
+      }
+
+      .cross-link-title {
+        font-family: var(--font-serif);
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: var(--ink);
+      }
+
+      .cross-link:hover .cross-link-title {
+        color: var(--terracotta);
+      }
+
+      /* ========================================
+           FOOTER
+           ======================================== */
+      footer {
+        padding: 60px 80px;
+        border-top: 1px solid var(--ink-lighter);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .footer-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .footer-logo svg {
+        width: 32px;
+        height: 32px;
+        stroke: var(--terracotta);
+        stroke-width: 2.5;
+        fill: none;
+      }
+
+      .footer-text {
+        font-size: 0.85rem;
+        color: var(--ink-light);
+      }
+
+      .footer-meta {
+        font-size: 0.8rem;
+        color: var(--ink-lighter);
+      }
+
+      /* ========================================
+           RESPONSIVE
+           ======================================== */
+      @media (max-width: 900px) {
+        .paper-hero {
+          padding: 120px 24px 60px;
+        }
+
+        .paper-content {
+          padding: 0 0 80px;
+        }
+
+        nav {
+          padding: 16px 24px;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .mobile-menu-btn {
+          display: block;
+        }
+
+        footer {
+          flex-direction: column;
+          gap: 24px;
+          text-align: center;
+          padding: 40px 24px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .paper-hero {
+          padding: 100px 16px 40px;
+        }
+
+        .paper-content {
+          padding: 0 0 60px;
+        }
+
+        .paper-hero h1 {
+          font-size: 1.75rem;
+        }
+
+        .paper-subtitle {
+          font-size: 1.1rem;
+        }
+
+        .paper-section h2 {
+          font-size: 1.4rem;
+          padding-left: 16px;
+        }
+
+        .paper-section h3 {
+          font-size: 1.2rem;
+        }
+
+        .paper-section h4 {
+          font-size: 1rem;
+        }
+
+        .paper-section p,
+        .paper-section li {
+          font-size: 0.95rem;
+        }
+
+        .highlight-box {
+          padding: 20px;
+          margin: 24px 0;
+        }
+
+        .highlight-box p {
+          font-size: 1.05rem;
+        }
+
+        .quote-card {
+          padding: 24px;
+          margin: 24px 0;
+        }
+
+        .quote-card p {
+          font-size: 1.1rem;
+        }
+
+        .quote-card::before {
+          font-size: 4rem;
+          top: 5px;
+          left: 10px;
+        }
+
+        /* Tech Stack Mobile */
+        .tech-stack {
+          gap: 8px;
+          margin: 20px 0;
+        }
+
+        .tech-layer {
+          padding: 12px 14px;
+          gap: 12px;
+        }
+
+        .tech-layer-num {
+          width: 24px;
+          height: 24px;
+          font-size: 0.75rem;
+        }
+
+        .tech-layer-content strong {
+          font-size: 0.85rem;
+        }
+
+        .tech-layer-content span {
+          font-size: 0.75rem;
+        }
+
+        /* Use Case Grid Mobile */
+        .use-case-grid {
+          gap: 12px;
+          margin: 16px 0;
+        }
+
+        .use-case-card {
+          padding: 16px;
+        }
+
+        .use-case-card h5 {
+          font-size: 0.95rem;
+        }
+
+        .use-case-card p {
+          font-size: 0.85rem;
+        }
+
+        /* Comparison Container Mobile */
+        .comparison-container {
+          gap: 16px;
+          margin: 24px 0;
+        }
+
+        .comparison-side {
+          padding: 20px;
+        }
+
+        .comparison-items li {
+          font-size: 0.9rem;
+          padding: 8px 0;
+        }
+
+        /* Icon Grid Mobile */
+        .icon-grid {
+          gap: 12px;
+          margin: 24px 0;
+        }
+
+        .icon-card {
+          padding: 16px;
+        }
+
+        .icon-card svg {
+          width: 36px;
+          height: 36px;
+          margin-bottom: 12px;
+        }
+
+        .icon-card h5 {
+          font-size: 0.95rem;
+        }
+
+        .icon-card p {
+          font-size: 0.8rem;
+        }
+
+        /* Feature Strip Mobile */
+        .feature-strip {
+          flex-direction: column;
+          gap: 16px;
+          padding: 24px;
+        }
+
+        .feature-strip-item .number {
+          font-size: 1.5rem;
+        }
+
+        /* Timeline Mobile */
+        .timeline-visual {
+          flex-direction: column;
+          gap: 20px;
+          padding: 16px 0;
+        }
+
+        .timeline-visual::before {
+          display: none;
+        }
+
+        .timeline-node {
+          width: 50px;
+          height: 50px;
+          font-size: 0.8rem;
+        }
+
+        /* Roadmap Mobile */
+        .roadmap-item {
+          padding-left: 16px;
+          margin-bottom: 32px;
+        }
+
+        /* Cross-links Mobile */
+        .cross-links {
+          margin-top: 60px;
+          padding-top: 40px;
+        }
+
+        .cross-links-grid {
+          gap: 12px;
+        }
+
+        .cross-link {
+          padding: 16px 12px;
+        }
+
+        .cross-link-title {
+          font-size: 1rem;
+        }
+
+        /* Footer Mobile */
+        footer {
+          padding: 32px 16px;
+        }
+      }
+
+      /* ========================================
+           REDUCED MOTION
+           ======================================== */
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+
+        html {
+          scroll-behavior: auto;
+        }
+      }
+
+      /* ========================================
+           FOCUS VISIBLE
+           ======================================== */
+      :focus:not(:focus-visible) {
+        outline: none;
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--terracotta);
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Skip Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" aria-hidden="true"></div>
+
+    <!-- Navigation -->
+    <nav role="navigation" aria-label="Main navigation">
+      <a href="index.html" class="logo" aria-label="CANVS Home">
+        <div class="logo-icon">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <!-- Infinity-heart symbol -->
+            <path
+              d="M50,85 C35,70 10,50 10,35 C10,20 25,15 40,30 C45,35 48,38 50,40 C52,38 55,35 60,30 C75,15 90,20 90,35 C90,50 65,70 50,85 Z"
+            />
+            <path d="M40,30 C30,40 25,50 35,55 C45,60 55,55 50,40" />
+            <path d="M60,30 C70,40 75,50 65,55 C55,60 45,55 50,40" />
+          </svg>
+        </div>
+        <span class="logo-text">CANVS</span>
+        <span class="logo-slogan">It's the world</span>
+      </a>
+
+      <div class="nav-links">
+        <a href="index.html#manifesto" class="nav-link">Manifesto</a>
+        <a href="index.html#experience" class="nav-link">Experience</a>
+        <a href="index.html#impact" class="nav-link">Impact</a>
+        <a href="index.html#roadmap" class="nav-link">Roadmap</a>
+      </div>
+
+      <button
+        class="mobile-menu-btn"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="index.html" class="mobile-menu-link">Home</a>
+      <div class="mobile-menu-section-label">Paper Contents</div>
+      <a href="#executive-summary" class="mobile-menu-link"
+        >Executive Summary</a
+      >
+      <a href="#manifesto" class="mobile-menu-link">Manifesto</a>
+      <a href="#the-problem" class="mobile-menu-link">The Problem</a>
+      <a href="#the-solution" class="mobile-menu-link">The Solution</a>
+      <a href="#product-thesis" class="mobile-menu-link">Product Thesis</a>
+      <a href="#core-experience" class="mobile-menu-link">Core Experience</a>
+      <a href="#spatial-primitives" class="mobile-menu-link">Primitives</a>
+      <a href="#deep-tech" class="mobile-menu-link">Deep-Tech</a>
+      <a href="#llm-agents" class="mobile-menu-link">LLM Agents</a>
+      <a href="#use-cases" class="mobile-menu-link">Use Cases</a>
+      <a href="#impact" class="mobile-menu-link">Impact</a>
+      <a href="#safety" class="mobile-menu-link">Trust & Safety</a>
+      <a href="#monetization" class="mobile-menu-link">Monetization</a>
+      <a href="#roadmap" class="mobile-menu-link">Roadmap</a>
+      <a href="#opportunity" class="mobile-menu-link">Opportunity</a>
+      <a href="#conclusion" class="mobile-menu-link">Conclusion</a>
+    </div>
+
+    <!-- Main Content -->
+    <main id="main-content">
+      <!-- Paper Hero -->
+      <section class="paper-hero">
+        <a href="index.html" class="back-link">
+          <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
+          Back to Home
+        </a>
+
+        <div class="paper-tagline">Vision Paper</div>
+
+        <h1>CANVS — <em>It's the world</em></h1>
+
+        <p class="paper-subtitle">The Spatial Social Layer</p>
+
+        <p class="paper-meta">
+          Product Vision Paper & Strategic Roadmap (2026-2030)
+        </p>
+      </section>
+
+      <!-- Paper Layout with Sidebar -->
+      <div class="paper-layout">
+        <!-- Table of Contents (Sticky Sidebar) -->
+        <nav class="toc" aria-label="Table of contents">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#executive-summary" class="toc-link"
+                >Executive Summary</a
+              >
+            </li>
+            <li><a href="#manifesto" class="toc-link">Manifesto</a></li>
+            <li><a href="#the-problem" class="toc-link">The Problem</a></li>
+            <li><a href="#the-solution" class="toc-link">The Solution</a></li>
+            <li>
+              <a href="#product-thesis" class="toc-link">Product Thesis</a>
+            </li>
+            <li>
+              <a href="#core-experience" class="toc-link">Core Experience</a>
+            </li>
+            <li>
+              <a href="#spatial-primitives" class="toc-link">Primitives</a>
+            </li>
+            <li><a href="#deep-tech" class="toc-link">Deep-Tech</a></li>
+            <li><a href="#llm-agents" class="toc-link">LLM Agents</a></li>
+            <li><a href="#use-cases" class="toc-link">Use Cases</a></li>
+            <li><a href="#impact" class="toc-link">Impact</a></li>
+            <li><a href="#safety" class="toc-link">Trust & Safety</a></li>
+            <li><a href="#monetization" class="toc-link">Monetization</a></li>
+            <li><a href="#roadmap" class="toc-link">Roadmap</a></li>
+            <li><a href="#opportunity" class="toc-link">Opportunity</a></li>
+            <li><a href="#conclusion" class="toc-link">Conclusion</a></li>
+          </ul>
+        </nav>
+
+        <!-- Paper Content -->
+        <article class="paper-content">
+          <!-- Executive Summary -->
+          <section id="executive-summary" class="paper-section">
+            <h2>Executive Summary: What CANVS Is</h2>
+
+            <p>
+              CANVS is a
+              <strong
+                >persistent, AR-native social layer anchored to physical
+                places</strong
+              >. Instead of consuming life through a decontextualized feed,
+              people experience content <strong>where it belongs</strong>: at
+              the location it refers to, at the scale it happened, with the
+              atmosphere that gave it meaning.
+            </p>
+
+            <p>
+              CANVS turns the planet into an
+              <strong>addressable surface</strong>: every bench, alley, beach,
+              mural, cafe table, trailhead, and plaza becomes a node in a living
+              network of memories, knowledge, art, and coordination.
+            </p>
+
+            <p>
+              This idea is now feasible because the enabling stack has matured:
+            </p>
+
+            <ul>
+              <li>
+                <strong
+                  >World-scale AR anchoring is real and productized.</strong
+                >
+                Visual Positioning Systems (VPS) combine GPS with vision-based
+                localization to place content far more reliably than GPS alone.
+              </li>
+              <li>
+                <strong
+                  >Persistent, shareable AR at real-world locations is
+                  shipping.</strong
+                >
+                Modern AR platforms can lock content to places in a way that
+                multiple people can reliably see over time.
+              </li>
+              <li>
+                <strong
+                  >Consumers and creators are being trained for
+                  location-anchored AR.</strong
+                >
+                Place-anchored AR content creation is becoming mainstream.
+              </li>
+              <li>
+                <strong
+                  >Spatial computing hardware is moving from "demo" to
+                  "platform."</strong
+                >
+                Headsets and smart glasses are evolving into everyday computing
+                surfaces.
+              </li>
+            </ul>
+
+            <p>
+              CANVS is designed to become <strong>glass-native</strong>: as AR
+              glasses and spatial computers transition into everyday devices,
+              CANVS becomes an always-available layer—less like an app, more
+              like a <em>new default interface for place</em>.
+            </p>
+            <!-- Visual: Icon Grid for Key Concepts -->
+            <div class="icon-grid">
+              <div class="icon-card">
+                <svg viewBox="0 0 50 50">
+                  <circle cx="25" cy="20" r="10" />
+                  <path d="M25 30 L25 45" />
+                  <path d="M15 45 L35 45" />
+                </svg>
+                <h5>World-Locked</h5>
+                <p>Content stays where you place it</p>
+              </div>
+              <div class="icon-card">
+                <svg viewBox="0 0 50 50">
+                  <path d="M10 25 Q25 10 40 25 Q25 40 10 25" />
+                  <circle cx="25" cy="25" r="5" />
+                </svg>
+                <h5>Always-On</h5>
+                <p>A layer you can always access</p>
+              </div>
+              <div class="icon-card">
+                <svg viewBox="0 0 50 50">
+                  <circle cx="15" cy="25" r="8" />
+                  <circle cx="35" cy="25" r="8" />
+                  <path d="M23 25 L27 25" stroke-dasharray="2 2" />
+                </svg>
+                <h5>Shared</h5>
+                <p>Experiences that persist for others</p>
+              </div>
+            </div>
+          </section>
+
+          <div class="section-divider"></div>
+
+          <!-- Manifesto -->
+          <section id="manifesto" class="paper-section">
+            <h2>Manifesto: The End of the Feed, the Beginning of the World</h2>
+
+            <p>We are building the <strong>Internet of Places</strong>.</p>
+
+            <p>
+              Today's social platforms are optimized for
+              <strong>infinite scrolling</strong>, not for human life. They
+              isolate us inside algorithmic loops and replace lived reality with
+              mediated content.
+            </p>
+
+            <p>CANVS flips the direction of attention:</p>
+
+            <div class="highlight-box">
+              <p>
+                <strong>The feed is not the home screen.</strong> The world is.
+              </p>
+              <p>
+                <strong>Content is not something you "go find."</strong> It's
+                something you encounter, because you are there.
+              </p>
+              <p>
+                <strong
+                  >Meaning is not manufactured by engagement hacks.</strong
+                >
+                Meaning is in context.
+              </p>
+            </div>
+
+            <p>
+              A story about a sunset is powerful anywhere. A story about a
+              sunset becomes <em>inevitable</em> when you're sitting in the
+              exact place it happened—at the same angle, the same horizon line,
+              the same wind.
+            </p>
+
+            <p>
+              <strong>Vision:</strong> CANVS is the social operating layer for
+              spatial computing. When the world becomes a canvas, CANVS provides
+              the paint.
+            </p>
+          </section>
+
+          <div class="section-divider"></div>
+
+          <!-- The Problem -->
+          <section id="the-problem" class="paper-section">
+            <h2>The Problem: Context Loss and the "Ghost Event"</h2>
+
+            <p>
+              <strong>Things happen at places.</strong> But digital memory is
+              usually detached from the physical world.
+            </p>
+
+            <p>
+              A first kiss. A perfect skate trick. A protest that changed
+              someone's life. A conversation that flipped a career. A hidden
+              cafe that felt like finding oxygen.
+            </p>
+
+            <p>Then the moment ends—and the meaning becomes invisible.</p>
+
+            <p>
+              <strong>Status quo:</strong> Someone stands at that place two
+              weeks later and sees... concrete. The emotion is gone. The story
+              exists somewhere in a cloud account, if at all. It's not "there."
+              It's nowhere.
+            </p>
+
+            <p>
+              <strong>The gap:</strong> We walk through a world full of
+              invisible meaning, unable to perceive the human layers that
+              already exist all around us.
+            </p>
+
+            <!-- Visual Quote Card -->
+            <div class="quote-card">
+              <p>
+                The emotion is gone. The story exists somewhere in a cloud
+                account, if at all. It's not "there." It's nowhere.
+              </p>
+            </div>
+          </section>
+
+          <div class="section-divider"></div>
+
+          <!-- The Solution -->
+          <section id="the-solution" class="paper-section">
+            <h2>The Solution: Persistent Emotional Anchoring</h2>
+
+            <p>CANVS makes moments <strong>spatially persistent</strong>.</p>
+
+            <p>
+              Not as a gimmick, but as a new medium:
+              <strong>Place becomes the index.</strong>
+            </p>
+
+            <p>CANVS enables:</p>
+
+            <ul>
+              <li>
+                <strong>Reality Time Capsules:</strong> content (text, audio,
+                video, 3D captures, sketches) pinned to real-world locations so
+                future visitors can "open" the moment where it happened.
+              </li>
+              <li>
+                <strong>Asynchronous presence:</strong> you can experience a
+                moment later, not by "watching a video," but by seeing the
+                memory <em>in situ</em>, aligned to the geometry of the world.
+              </li>
+            </ul>
+
+            <p>
+              This depends on a real technical foundation:
+              <strong>world-locked anchoring</strong>.
+            </p>
+
+            <ul>
+              <li>
+                GPS alone often breaks immersion due to drift and urban
+                multipath.
+              </li>
+              <li>
+                Modern stacks combine GPS with vision-based localization (VPS)
+                and mapping for stable placement.
+              </li>
+              <li>
+                Reliable persistence requires multi-tier anchoring,
+                re-localization, and confidence-aware rendering.
+              </li>
+            </ul>
+          </section>
+
+          <div class="section-divider"></div>
+
+          <!-- The Product Thesis -->
+          <section id="product-thesis" class="paper-section">
+            <h2>The Product Thesis: "The Spatial Social Layer"</h2>
+
+            <p>CANVS is not:</p>
+
+            <ul>
+              <li>a traditional social network (feed-first)</li>
+              <li>a maps app (utility-first)</li>
+              <li>a game (loop-first)</li>
+            </ul>
+
+            <p>
+              CANVS is a new primitive:
+              <strong>The world as a browsable interface.</strong>
+            </p>
+
+            <p>
+              A <strong>Spatial Browser</strong> that lets you "read" places the
+              way you read websites.
+            </p>
+
+            <!-- Side-by-side comparison: 90s Internet vs Spatial Internet -->
+            <div class="comparison-container">
+              <div class="comparison-side old">
+                <div class="comparison-label">1990s Internet</div>
+                <ul class="comparison-items">
+                  <li>Pages</li>
+                  <li>Links</li>
+                </ul>
+              </div>
+              <div class="comparison-side new">
+                <div class="comparison-label">Spatial Internet</div>
+                <ul class="comparison-items">
+                  <li>Places</li>
+                  <li>Anchors</li>
+                  <li>Layers</li>
+                  <li>Memories</li>
+                  <li>Paths</li>
+                  <li>Social context</li>
+                  <li>AI mediation</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <div class="section-divider"></div>
+
+          <!-- Core Experience -->
+          <section id="core-experience" class="paper-section">
+            <h2>Core Experience: The Spatial Browser</h2>
+
+            <h3>Three modes (one mental model)</h3>
+
+            <h4>1. AR Mode ("Magic Window / Glass View")</h4>
+            <p>
+              You look at the world and see location-anchored content where it
+              belongs.
+            </p>
+
+            <h4>2. Map Mode ("Spatial Radar")</h4>
+            <p>
+              You see nearby layers, hotspots, and trails. Map is not the
+              product—it's the minimap.
+            </p>
+
+            <h4>3. Time Mode ("Temporal Scrub")</h4>
+            <p>
+              Slide through time to see what happened here: yesterday, last
+              summer, 10 years ago.
+            </p>
+
+            <!-- Visual: Feature Strip -->
+            <div class="feature-strip">
+              <div class="feature-strip-item">
+                <span class="number">3</span>
+                <span class="label">Viewing Modes</span>
+              </div>
+              <div class="feature-strip-item">
+                <span class="number">7</span>
+                <span class="label">Spatial Primitives</span>
+              </div>
+              <div class="feature-strip-item">
+                <span class="number">∞</span>
+                <span class="label">Places to Explore</span>
+              </div>
+            </div>
+
+            <h3>The fundamental interaction: "Look - Understand - Act"</h3>
+
+            <p>CANVS is built around "micro-encounters":</p>
+
+            <ul>
+              <li>see a story</li>
+              <li>feel something</li>
+              <li>reply, add context, or create your own layer</li>
+              <li>move on, carrying the place with you</li>
+            </ul>
+
+            <p>
+              The goal is not infinite consumption. The goal is
+              <strong>meaningful place interactions</strong>.
+            </p>
+
+            <p>
+              <strong>North Star metric proposal:</strong> MPI/week = Meaningful
+              Place Interactions per user per week (Opening a capsule, leaving a
+              voice note, contributing to a utility marker, participating in a
+              local thread, etc.)
+            </p>
+          </section>
+
+          <div class="section-divider"></div>
+
+          <!-- Spatial Primitives -->
+          <section id="spatial-primitives" class="paper-section">
+            <h2>Core Building Blocks: Spatial Primitives</h2>
+
+            <h4>A. Pins</h4>
+            <p>
+              Simple anchors: notes, photos, audio, links, "hidden menu" tips,
+              warnings, micro-stories.
+            </p>
+
+            <h4>B. Bubbles (Group Memory Objects)</h4>
+            <p>
+              A shared container anchored to a place. Examples: "We used to meet
+              here every Friday." "This bench is where she told me yes." "We
+              found this spot during our first week in this city."
+            </p>
+
+            <h4>C. Time Capsules</h4>
+            <p>Richer artifacts: multi-media + 3D capture + timeline.</p>
+
+            <h4>D. Trails</h4>
+            <p>
+              A sequence of anchors that forms a narrative route: "My break-up
+              walk." "Best street art within 12 minutes." "The city through
+              immigrant food." "A grief trail for remembrance."
+            </p>
+
+            <h4>E. Drops (Geo-fenced Releases)</h4>
+            <p>
+              Music, artwork, collectibles, or messages that only unlock at a
+              location and time.
+            </p>
+
+            <h4>F. Portals</h4>
+            <p>
+              A place anchored to another place via story logic: "If you liked
+              this, go to that." "This spot is the sibling of that spot."
+            </p>
+          </section>
+
+          <div class="section-divider"></div>
+
+          <!-- Deep-Tech Foundation -->
+          <section id="deep-tech" class="paper-section">
+            <h2>Deep-Tech Foundation: How This Becomes Real</h2>
+
+            <h3>World-scale localization: GPS is not enough</h3>
+            <p>
+              <strong>Reality:</strong> GPS drift breaks immersion. Modern AR
+              stacks solve this via <strong>visual localization</strong> and
+              mapping.
+            </p>
+
+            <p>
+              <strong>Design implication for CANVS:</strong> Build a
+              <strong>multi-tier anchoring strategy</strong>:
+            </p>
+
+            <!-- Tech Stack Visual -->
+            <div class="tech-stack">
+              <div class="tech-layer" style="--layer-color: var(--ink-lighter)">
+                <span class="tech-layer-num">1</span>
+                <div class="tech-layer-content">
+                  <strong>Coarse Localization</strong>
+                  <span>GPS / map alignment</span>
+                </div>
+              </div>
+              <div class="tech-layer" style="--layer-color: var(--sage)">
+                <span class="tech-layer-num">2</span>
+                <div class="tech-layer-content">
+                  <strong>VPS Localization</strong>
+                  <span>Visual world alignment</span>
+                </div>
+              </div>
+              <div class="tech-layer" style="--layer-color: var(--terracotta)">
+                <span class="tech-layer-num">3</span>
+                <div class="tech-layer-content">
+                  <strong>Local SLAM</strong>
+                  <span>Low-jitter session anchoring</span>
+                </div>
+              </div>
+              <div class="tech-layer" style="--layer-color: var(--highlighter)">
+                <span class="tech-layer-num">4</span>
+                <div class="tech-layer-content">
+                  <strong>Re-localization</strong>
+                  <span>Cross-device persistence</span>
+                </div>
+              </div>
+            </div>
+
+            <h3>The "AR Cloud" is the macro concept</h3>
+            <p>
+              The "AR Cloud" describes a persistent, spatially accurate digital
+              copy of the world (a "digital twin") that enables shared AR
+              experiences across users and time.
+            </p>
+
+            <p>
+              <strong>CANVS interpretation:</strong> We don't need to own the
+              entire AR Cloud. We need to own the
+              <strong>social meaning layer</strong> that lives on top of it.
+            </p>
+
+            <h3>Positioning abstraction: "Anchor Runtime"</h3>
+            <p>
+              In practice, CANVS should treat positioning vendors as
+              interchangeable backends. CANVS creates its own stable concept:
+            </p>
+
+            <ul>
+              <li>
+                <strong>CANVS Anchor ID</strong> (a persistent identifier)
+              </li>
+              <li>
+                <strong>Anchor bundles</strong> (multi-representation:
+                lat/long/alt + visual features + local map fragments +
+                constraints)
+              </li>
+              <li>
+                <strong>Confidence-aware rendering</strong> (content fades in
+                only when tracking confidence is sufficient)
+              </li>
+            </ul>
+
+            <h3>3D capture becomes a native media type</h3>
+            <p>
+              To "freeze" moments, CANVS should support
+              <strong>spatial capture formats</strong>: Quick scan (phone LiDAR
+              / photogrammetry), "Spatial clips" (short 3D snapshots), and
+              high-fidelity capture for creators.
+            </p>
+
+            <p>
+              <strong>Product implication:</strong> Time capsules evolve from
+              "video pinned to a spot" into "walkable memory fragments."
+            </p>
+
+            <h3>Hardware agnosticism is not optional</h3>
+            <p>
+              Spatial computing hardware is diversifying. CANVS should architect
+              for <strong>portable XR</strong>: Use standards where possible.
+              Treat the phone as the bootstrapping device, but maintain a
+              "glass-first" UX philosophy.
+            </p>
+          </section>
+
+          <div class="section-divider"></div>
+
+          <!-- LLM Agents -->
+          <section id="llm-agents" class="paper-section">
+            <h2>LLM Agents as the "Reality Filter"</h2>
+
+            <p>
+              In a world where every place can hold content, the core product is
+              not creation—it's <strong>filtering</strong>.
+            </p>
+
+            <p>
+              CANVS needs a personal AI layer that feels like: "my taste," "my
+              friends," "my values," "my mental state," "my intent right now."
+            </p>
+
+            <h3>The Agent's job</h3>
+            <ul>
+              <li>Summarize the layer you're in</li>
+              <li>Surface what matters</li>
+              <li>Prevent overwhelm</li>
+              <li>Prevent harm</li>
+              <li>Turn raw spatial data into <em>felt relevance</em></li>
+            </ul>
+
+            <h3>Example features (agent-native)</h3>
+            <ul>
+              <li>
+                <strong>Friend-memory surfacing:</strong> "Your friend left a
+                note here 3 years ago."
+              </li>
+              <li>
+                <strong>Emotion search:</strong> "Show me places where people
+                reported feeling calm."
+              </li>
+              <li>
+                <strong>Context compression:</strong> Turn 400 nearby anchors
+                into 5 meaningful options.
+              </li>
+              <li>
+                <strong>Path generation:</strong> "Give me a 30-minute walk that
+                ends somewhere optimistic."
+              </li>
+            </ul>
+
+            <h3>Safety-aware personalization</h3>
+            <p>
+              The agent is also a safety filter: suppress stalking-like
+              patterns, reduce accidental over-sharing, warn if a user is about
+              to publish to a sensitive location context.
+            </p>
+          </section>
+
+          <div class="section-divider"></div>
+
+          <!-- Use Cases -->
+          <section id="use-cases" class="paper-section">
+            <h2>Emotional & Social Use Cases: Re-enchanting Reality</h2>
+
+            <h3>Category 1: Shared Memories (Emotional Layer)</h3>
+            <div class="use-case-grid">
+              <div
+                class="use-case-card"
+                style="--card-color: var(--terracotta)"
+              >
+                <h5>The Skating Bubble</h5>
+                <p>
+                  Friends leave a group bubble at the rink. Years later, someone
+                  returns and opens it—hearing laughter aligned to the ice.
+                </p>
+              </div>
+              <div
+                class="use-case-card"
+                style="--card-color: var(--terracotta)"
+              >
+                <h5>Sunset Stories</h5>
+                <p>
+                  A global atlas of romance: "Sit here at 19:42. Perfect angle."
+                </p>
+              </div>
+              <div
+                class="use-case-card"
+                style="--card-color: var(--terracotta)"
+              >
+                <h5>Grief & Remembrance</h5>
+                <p>
+                  Digital candles and memories anchored to meaningful
+                  places—lasting, revisitable, shareable.
+                </p>
+              </div>
+              <div
+                class="use-case-card"
+                style="--card-color: var(--terracotta)"
+              >
+                <h5>Letters to Future Me</h5>
+                <p>A capsule you can only open when you physically return.</p>
+              </div>
+            </div>
+
+            <h3>Category 2: Hyper-Local Utility (Useful Layer)</h3>
+            <div class="use-case-grid">
+              <div class="use-case-card" style="--card-color: var(--sage)">
+                <h5>Surf Intelligence</h5>
+                <p>AR markers: hazards, entry points, wind advice.</p>
+              </div>
+              <div class="use-case-card" style="--card-color: var(--sage)">
+                <h5>Hidden Menu Layer</h5>
+                <p>
+                  Recommendations pinned to a specific table: "Order it this
+                  way."
+                </p>
+              </div>
+              <div class="use-case-card" style="--card-color: var(--sage)">
+                <h5>Accessibility Layer</h5>
+                <p>
+                  User-generated notes: step-free entrances, quiet hours, safe
+                  seating.
+                </p>
+              </div>
+            </div>
+
+            <h3>Category 3: Urban Culture & Play (Creative Layer)</h3>
+            <div class="use-case-grid">
+              <div
+                class="use-case-card"
+                style="--card-color: var(--highlighter)"
+              >
+                <h5>Street Art Living Threads</h5>
+                <p>
+                  Discussions float in front of murals—timelines, artist
+                  credits, community response.
+                </p>
+              </div>
+              <div
+                class="use-case-card"
+                style="--card-color: var(--highlighter)"
+              >
+                <h5>Location Drops</h5>
+                <p>
+                  Exclusive content appears when a place "activates" at a time.
+                </p>
+              </div>
+              <div
+                class="use-case-card"
+                style="--card-color: var(--highlighter)"
+              >
+                <h5>Civic Layer</h5>
+                <p>Hazards, mutual aid requests, neighborhood alerts.</p>
+              </div>
+            </div>
+          </section>
+
+          <div class="section-divider"></div>
+
+          <!-- Societal Impact -->
+          <section id="impact" class="paper-section">
+            <h2>Societal Impact: Why the World Needs This</h2>
+
+            <h3>Movement and "Touching Grass"</h3>
+            <p>
+              Location-based AR can drive real-world activity. CANVS generalizes
+              that mechanism beyond a single game loop: content requires
+              presence, presence requires movement, movement increases
+              serendipity and social contact.
+            </p>
+
+            <h3>Economic revitalization</h3>
+            <p>
+              Location-anchored digital layers can improve discovery and drive
+              attention to local businesses. CANVS can become the "local
+              discovery layer" that is emotional, not transactional.
+            </p>
+
+            <h3>The map data itself becomes strategic</h3>
+            <p>
+              Planet-scale spatial mapping is increasingly viewed as a core
+              asset for future devices like smart glasses and robots. CANVS
+              rides that wave—while specializing in the
+              <strong>human meaning graph</strong>.
+            </p>
+          </section>
+
+          <div class="section-divider"></div>
+
+          <!-- Trust, Safety, and Governance -->
+          <section id="safety" class="paper-section">
+            <h2>Trust, Safety, and Governance</h2>
+
+            <p>
+              A spatial social layer amplifies both beauty and risk. The design
+              must assume adversarial use.
+            </p>
+
+            <h3>Location privacy is high stakes</h3>
+            <p>
+              Location data can enable re-identification, inference of sensitive
+              information, and physical threats.
+            </p>
+            <p>
+              <strong>CANVS principle:</strong> Precision is a privilege, not a
+              default.
+            </p>
+
+            <h3>Anti-stalking posture (non-negotiable)</h3>
+            <p>
+              CANVS must implement: private-by-default creation modes, audience
+              controls (self / friends / groups / public), proximity-based
+              visibility limits, strong reporting and rapid takedown, "shadow
+              banning" for suspicious behavioral patterns, location obfuscation
+              options ("near here" instead of exact), hard blocks that prevent
+              re-appearance in shared spaces.
+            </p>
+
+            <h3>Property, nuisance, and crowd externalities</h3>
+            <p>
+              Location-based experiences can generate real-world conflict. CANVS
+              mitigation model includes: Private Space Shield (strong exclusion
+              zones and owner claims), Noise budgets (limit
+              visibility/activation of high-traffic anchors), Event throttles
+              (prevent "stampede mechanics" near residences), Local governance
+              (trusted community moderators, verified stewards), "Good citizen"
+              design (discourage congregating mechanics in sensitive places).
+            </p>
+
+            <h3>Moderation needs to be spatially aware</h3>
+            <p>
+              Unlike a feed, harmful content in CANVS is
+              <strong>attached to a place</strong>. Moderation needs: geofenced
+              rules (schools, hospitals, memorial sites), content type
+              constraints by zone, age gating, contextual integrity (e.g.,
+              memorial vs nightlife area).
+            </p>
+          </section>
+
+          <div class="section-divider"></div>
+
+          <!-- Monetization -->
+          <section id="monetization" class="paper-section">
+            <h2>Monetization: Non-Intrusive, Spatial-Native, Opt-In</h2>
+
+            <p>
+              CANVS monetizes <em>without becoming a billboard apocalypse</em>.
+            </p>
+
+            <h3>Spatial-native brand objects</h3>
+            <p>
+              Not popups. <strong>Objects with physical logic</strong>:
+              collectibles, AR mini-experiences, limited drops, "try before you
+              buy" overlays, "story objects" that belong to a location.
+            </p>
+
+            <h3>Local business toolkit (the "Digital Footfall Engine")</h3>
+            <p>
+              Claim your place, publish offers as spatial objects, enable
+              "community moments" (e.g., secret menu, local trivia), get
+              aggregated analytics (privacy-preserving).
+            </p>
+
+            <h3>Events as high-intensity loops</h3>
+            <p>
+              CANVS can enable "micro-events" at neighborhood scale and
+              "macro-events" for cities.
+            </p>
+
+            <h3>Premium</h3>
+            <p>
+              Personal memory vaults, high-fidelity time capsules, private group
+              spaces, advanced AI filters, creator tools (capture, editing,
+              moderation features).
+            </p>
+          </section>
+
+          <div class="section-divider"></div>
+
+          <!-- Strategic Roadmap -->
+          <section id="roadmap" class="paper-section">
+            <h2>Strategic Roadmap (2026-2030)</h2>
+
+            <!-- Visual Timeline -->
+            <div class="timeline-visual">
+              <div class="timeline-node">2026</div>
+              <div class="timeline-node">2028</div>
+              <div class="timeline-node">2030</div>
+            </div>
+
+            <div class="roadmap-item">
+              <h4>2026: Build the Core Loop (Phone-first, World-locked)</h4>
+              <ul>
+                <li>MVP Spatial Browser (AR + map + time)</li>
+                <li>Core primitives: pins, bubbles, capsules</li>
+                <li>
+                  Anchor runtime v1 (multi-provider; confidence-aware rendering)
+                </li>
+                <li>
+                  Safety foundations (private by default, exclusions, rapid
+                  reporting)
+                </li>
+                <li>
+                  Pilot city strategy focused on areas with strong localization
+                  support
+                </li>
+              </ul>
+              <p>
+                <strong>Success looks like:</strong> People revisit places
+                because CANVS <em>changes what the place feels like</em>.
+              </p>
+            </div>
+
+            <div class="roadmap-item">
+              <h4>2027: Scale the Meaning Graph (LLM + social)</h4>
+              <ul>
+                <li>
+                  AI "Reality Filter" v1: summarization, semantic search,
+                  friend-memory surfacing
+                </li>
+                <li>Trails, drops, portals</li>
+                <li>Local business claims + creator marketplace</li>
+                <li>
+                  Web-native sharing for certain experiences (link opens AR
+                  view)
+                </li>
+              </ul>
+            </div>
+
+            <div class="roadmap-item">
+              <h4>2028: Glass-Native Transition</h4>
+              <ul>
+                <li>Early integrations for spatial computing platforms</li>
+                <li>
+                  Always-on lightweight layer UX ("glanceable place context")
+                </li>
+                <li>Spatial audio cues, hands-free capture</li>
+                <li>Shared experiences in co-located sessions</li>
+              </ul>
+            </div>
+
+            <div class="roadmap-item">
+              <h4>2029: Platformization</h4>
+              <ul>
+                <li>Public SDK for "place apps" (third-party layers)</li>
+                <li>Verified civic layers (cities, museums, campuses)</li>
+                <li>Standards alignment (portable XR workflows)</li>
+              </ul>
+            </div>
+
+            <div class="roadmap-item">
+              <h4>2030: The Spatial Social OS</h4>
+              <ul>
+                <li>
+                  CANVS becomes the default "meaning layer" across devices
+                </li>
+                <li>
+                  Places become queryable, navigable, and emotionally legible
+                </li>
+                <li>The feed is obsolete as a primary social interface</li>
+              </ul>
+            </div>
+          </section>
+
+          <div class="section-divider"></div>
+
+          <!-- Big Opportunity -->
+          <section id="opportunity" class="paper-section">
+            <h2>The Big Opportunity</h2>
+
+            <p>The social internet has had multiple eras:</p>
+
+            <ol>
+              <li><strong>Web pages</strong> (static)</li>
+              <li>
+                <strong>Feeds</strong> (social graphs + algorithmic
+                distribution)
+              </li>
+              <li><strong>Messaging</strong> (private networks)</li>
+              <li><strong>Spatial</strong> (place as interface)</li>
+            </ol>
+
+            <p>CANVS is built for the spatial era.</p>
+
+            <p>
+              The infrastructure is converging: AR anchoring stacks exist across
+              major ecosystems, the AR Cloud concept supports persistent shared
+              experiences, spatial computing devices are accelerating beyond
+              labs, and location-based AR has demonstrated real-world behavior
+              change at scale.
+            </p>
+
+            <p>
+              This creates a window where a "spatial social layer" can become:
+            </p>
+
+            <ul>
+              <li>
+                <strong>the default discovery interface for cities</strong>
+              </li>
+              <li>
+                <strong>the default memory interface for human life</strong>
+              </li>
+              <li>
+                <strong>the default coordination layer for communities</strong>
+              </li>
+              <li><strong>the default canvas for creators</strong></li>
+              <li><strong>the default AR layer for glasses</strong></li>
+            </ul>
+          </section>
+
+          <div class="section-divider"></div>
+
+          <!-- Conclusion -->
+          <section id="conclusion" class="paper-section">
+            <h2>Conclusion: Build the Layer</h2>
+
+            <div class="highlight-box">
+              <p>CANVS is not "another app."</p>
+              <p>
+                It is a bet that the next interface is not a rectangle, not a
+                feed, not a timeline.
+              </p>
+              <p><strong>It's the world.</strong></p>
+              <p>
+                A world where no moment is lost—because the place remembers.
+              </p>
+            </div>
+          </section>
+
+          <!-- Cross-links to main page -->
+          <div class="cross-links">
+            <p class="cross-links-title">Continue Exploring</p>
+            <div class="cross-links-grid">
+              <a href="index.html#manifesto" class="cross-link">
+                <span class="cross-link-label">Read the</span>
+                <span class="cross-link-title">Manifesto</span>
+              </a>
+              <a href="index.html#experience" class="cross-link">
+                <span class="cross-link-label">Discover the</span>
+                <span class="cross-link-title">Experience</span>
+              </a>
+              <a href="index.html#impact" class="cross-link">
+                <span class="cross-link-label">See the</span>
+                <span class="cross-link-title">Use Cases</span>
+              </a>
+              <a href="index.html#roadmap" class="cross-link">
+                <span class="cross-link-label">View the</span>
+                <span class="cross-link-title">Roadmap</span>
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer role="contentinfo">
+      <div class="footer-logo">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <!-- Infinity-heart symbol -->
+          <path
+            d="M50,85 C35,70 10,50 10,35 C10,20 25,15 40,30 C45,35 48,38 50,40 C52,38 55,35 60,30 C75,15 90,20 90,35 C90,50 65,70 50,85 Z"
+          />
+          <path d="M40,30 C30,40 25,50 35,55 C45,60 55,55 50,40" />
+          <path d="M60,30 C70,40 75,50 65,55 C55,60 45,55 50,40" />
+        </svg>
+        <span class="serif" style="font-size: 20px">CANVS</span>
+      </div>
+
+      <p class="footer-text">
+        The end of the feed. The beginning of the world.
+      </p>
+
+      <p class="footer-meta">Designed by Stoffy with love.</p>
+    </footer>
+
+    <script>
+      // ========================================
+      // SCROLL PROGRESS BAR
+      // ========================================
+      const scrollProgress = document.querySelector(".scroll-progress");
+
+      function updateScrollProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight =
+          document.documentElement.scrollHeight - window.innerHeight;
+        const progress = (scrollTop / docHeight) * 100;
+        scrollProgress.style.width = progress + "%";
+      }
+
+      window.addEventListener("scroll", updateScrollProgress, {
+        passive: true,
+      });
+
+      // ========================================
+      // NAVIGATION SCROLL STATE
+      // ========================================
+      const nav = document.querySelector("nav");
+
+      function updateNavState() {
+        const scrollY = window.scrollY;
+        nav.classList.toggle("scrolled", scrollY > 100);
+      }
+
+      window.addEventListener("scroll", updateNavState, { passive: true });
+
+      // ========================================
+      // TOC ACTIVE STATE
+      // ========================================
+      const tocLinks = document.querySelectorAll(".toc-link");
+      const sections = document.querySelectorAll(".paper-section[id]");
+
+      function updateTocActive() {
+        const scrollY = window.scrollY + 150;
+
+        sections.forEach((section) => {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.offsetHeight;
+          const sectionId = section.getAttribute("id");
+
+          if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+            tocLinks.forEach((link) => {
+              link.classList.remove("active");
+              if (link.getAttribute("href") === "#" + sectionId) {
+                link.classList.add("active");
+              }
+            });
+          }
+        });
+      }
+
+      window.addEventListener("scroll", updateTocActive, { passive: true });
+      updateTocActive();
+
+      // ========================================
+      // MOBILE MENU
+      // ========================================
+      const mobileMenuBtn = document.querySelector(".mobile-menu-btn");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const mobileMenuLinks = document.querySelectorAll(".mobile-menu-link");
+
+      function toggleMobileMenu() {
+        mobileMenuBtn.classList.toggle("active");
+        mobileMenu.classList.toggle("active");
+        const isExpanded = mobileMenuBtn.classList.contains("active");
+        mobileMenuBtn.setAttribute("aria-expanded", isExpanded);
+        document.body.style.overflow = isExpanded ? "hidden" : "";
+      }
+
+      mobileMenuBtn.addEventListener("click", toggleMobileMenu);
+
+      // Close mobile menu when clicking a link
+      mobileMenuLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileMenuBtn.classList.remove("active");
+          mobileMenu.classList.remove("active");
+          mobileMenuBtn.setAttribute("aria-expanded", "false");
+          document.body.style.overflow = "";
+        });
+      });
+
+      // ========================================
+      // PERFORMANCE: RAF THROTTLING
+      // ========================================
+      let ticking = false;
+
+      function handleScroll() {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            updateNavState();
+            updateScrollProgress();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }
+
+      window.addEventListener("scroll", handleScroll, { passive: true });
+    </script>
+  </body>
+</html>

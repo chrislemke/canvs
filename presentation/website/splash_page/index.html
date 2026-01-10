@@ -1,0 +1,2839 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CANVS — The World is a Blank Page | The Spatial Social Layer</title>
+    <meta
+      name="description"
+      content="CANVS is building the Internet of Places. Not a feed that scrolls forever, but a layer of meaning that stays where you leave it."
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="CANVS — The Spatial Social Layer" />
+    <meta
+      property="og:description"
+      content="The end of the feed. The beginning of the world."
+    />
+    <meta property="og:type" content="website" />
+
+    <!-- Preconnect for fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ========================================
+           CSS CUSTOM PROPERTIES
+           ======================================== */
+      :root {
+        --alabaster: #f0efea;
+        --ink: #1a1a18;
+        --terracotta: #d97757;
+        --sage: #8da399;
+        --highlighter: #eedc5b;
+        --ink-light: rgba(26, 26, 24, 0.6);
+        --ink-lighter: rgba(26, 26, 24, 0.15);
+        --ink-subtle: rgba(26, 26, 24, 0.08);
+        --alabaster-translucent: rgba(240, 239, 234, 0.95);
+
+        --font-serif: "Newsreader", Georgia, serif;
+        --font-sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+
+        --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+        --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+        --duration-fast: 0.2s;
+        --duration-normal: 0.4s;
+        --duration-slow: 0.8s;
+        --duration-slower: 1.2s;
+      }
+
+      /* ========================================
+           RESET & BASE
+           ======================================== */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        background-color: var(--alabaster);
+        color: var(--ink);
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* Paper texture overlay */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 9999;
+      }
+
+      .serif {
+        font-family: var(--font-serif);
+      }
+      .sans {
+        font-family: var(--font-sans);
+      }
+
+      /* ========================================
+           SKIP LINK (Accessibility)
+           ======================================== */
+      .skip-link {
+        position: absolute;
+        top: -100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--ink);
+        color: var(--alabaster);
+        padding: 12px 24px;
+        border-radius: 0 0 8px 8px;
+        z-index: 10001;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: top var(--duration-fast) ease;
+      }
+
+      .skip-link:focus {
+        top: 0;
+        outline: none;
+      }
+
+      /* ========================================
+           SCROLL PROGRESS BAR
+           ======================================== */
+      .scroll-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          var(--terracotta),
+          var(--sage),
+          var(--highlighter)
+        );
+        z-index: 10000;
+        transition: width 0.1s linear;
+      }
+
+      /* ========================================
+           CURSOR FOLLOWER
+           ======================================== */
+      .cursor-follower {
+        position: fixed;
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--terracotta);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9998;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+        transition:
+          opacity var(--duration-normal) ease,
+          transform var(--duration-normal) var(--ease-out-expo);
+        mix-blend-mode: difference;
+      }
+
+      .cursor-follower.visible {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      .cursor-follower.hovering {
+        transform: translate(-50%, -50%) scale(2);
+        border-color: var(--sage);
+      }
+
+      @media (hover: none) {
+        .cursor-follower {
+          display: none;
+        }
+      }
+
+      /* ========================================
+           NAVIGATION
+           ======================================== */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 20px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+        background: linear-gradient(
+          to bottom,
+          var(--alabaster) 60%,
+          transparent
+        );
+        transition: all var(--duration-normal) var(--ease-out-quart);
+      }
+
+      nav.scrolled {
+        background: var(--alabaster-translucent);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--ink-lighter);
+        padding: 16px 40px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .logo-icon {
+        width: 42px;
+        height: 42px;
+        position: relative;
+      }
+
+      .logo-icon svg {
+        fill: none;
+        stroke: var(--terracotta);
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        filter: drop-shadow(0 0 2px rgba(217, 119, 87, 0.3));
+        transition: filter var(--duration-normal) ease;
+      }
+
+      .logo:hover .logo-icon svg {
+        filter: drop-shadow(0 0 8px rgba(217, 119, 87, 0.5));
+      }
+
+      .logo-text {
+        font-family: var(--font-serif);
+        font-size: 26px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+      }
+
+      .logo-slogan {
+        font-family: var(--font-serif);
+        font-size: 14px;
+        font-style: italic;
+        color: var(--ink-light);
+        margin-left: 8px;
+        padding-left: 12px;
+        border-left: 1px solid var(--ink-lighter);
+      }
+
+      @media (max-width: 768px) {
+        .logo-slogan {
+          display: none;
+        }
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 32px;
+      }
+
+      .nav-link {
+        color: var(--ink-light);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        transition: all var(--duration-normal) ease;
+        position: relative;
+        padding: 4px 0;
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--terracotta);
+        transition: width var(--duration-normal) var(--ease-out-quart);
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        color: var(--terracotta);
+      }
+
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        width: 100%;
+      }
+
+      .nav-link:focus-visible {
+        outline: 2px solid var(--terracotta);
+        outline-offset: 4px;
+        border-radius: 2px;
+      }
+
+      /* ========================================
+           BUTTONS
+           ======================================== */
+      .btn-scribble {
+        background: transparent;
+        border: 2px solid var(--ink);
+        border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+        padding: 14px 32px;
+        font-family: var(--font-sans);
+        font-weight: 500;
+        font-size: 13px;
+        letter-spacing: 0.04em;
+        color: var(--ink);
+        cursor: pointer;
+        transition: all var(--duration-normal) var(--ease-out-quart);
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .btn-scribble::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(217, 119, 87, 0.1),
+          transparent
+        );
+        transition: left var(--duration-slow) var(--ease-out-expo);
+      }
+
+      .btn-scribble:hover::before {
+        left: 100%;
+      }
+
+      .btn-scribble:hover {
+        background: var(--terracotta);
+        color: var(--alabaster);
+        border-color: var(--terracotta);
+        transform: translateY(-3px) rotate(-1deg);
+        box-shadow: 4px 4px 0 var(--ink);
+      }
+
+      .btn-scribble:active {
+        transform: translateY(-1px) rotate(-0.5deg);
+        box-shadow: 2px 2px 0 var(--ink);
+      }
+
+      .btn-scribble.secondary {
+        border-color: var(--terracotta);
+        color: var(--terracotta);
+      }
+
+      .btn-scribble.secondary:hover {
+        background: var(--terracotta);
+        color: var(--alabaster);
+      }
+
+      .btn-scribble:focus-visible {
+        outline: 2px solid var(--terracotta);
+        outline-offset: 4px;
+      }
+
+      /* ========================================
+           HERO SECTION
+           ======================================== */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 120px 80px 80px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-content {
+        max-width: 900px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .hero-tagline {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--terracotta);
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeUp 0.8s var(--ease-out-expo) 0.2s forwards;
+      }
+
+      .hero-tagline::before {
+        content: "";
+        width: 40px;
+        height: 2px;
+        background: var(--terracotta);
+      }
+
+      .hero h1 {
+        font-family: var(--font-serif);
+        font-size: clamp(3.5rem, 8vw, 7rem);
+        font-weight: 300;
+        line-height: 1.05;
+        margin-bottom: 32px;
+        letter-spacing: -0.02em;
+        opacity: 0;
+        transform: translateY(40px);
+        animation: fadeUp 1s var(--ease-out-expo) 0.4s forwards;
+      }
+
+      .hero h1 em {
+        font-style: italic;
+        color: var(--terracotta);
+        position: relative;
+      }
+
+      .hero h1 em::after {
+        content: "";
+        position: absolute;
+        bottom: 0.1em;
+        left: 0;
+        width: 0;
+        height: 0.08em;
+        background: var(--terracotta);
+        animation: underlineExpand 1s var(--ease-out-expo) 1.2s forwards;
+      }
+
+      @keyframes underlineExpand {
+        to {
+          width: 100%;
+        }
+      }
+
+      .hero-description {
+        font-size: 1.25rem;
+        color: var(--ink-light);
+        max-width: 600px;
+        margin-bottom: 48px;
+        font-weight: 300;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeUp 0.8s var(--ease-out-expo) 0.6s forwards;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeUp 0.8s var(--ease-out-expo) 0.8s forwards;
+      }
+
+      /* Hero decoration - animated circles */
+      .hero-decoration {
+        position: absolute;
+        right: 5%;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 500px;
+        height: 500px;
+        opacity: 0.12;
+        z-index: 1;
+      }
+
+      .hero-decoration svg {
+        width: 100%;
+        height: 100%;
+        stroke: var(--terracotta);
+        stroke-width: 1;
+        fill: none;
+      }
+
+      .hero-decoration circle {
+        animation: pulse 6s ease-in-out infinite;
+      }
+
+      .hero-decoration circle:nth-child(2) {
+        animation-delay: -2s;
+      }
+
+      .hero-decoration path {
+        animation: pulse 8s ease-in-out infinite;
+        animation-delay: -4s;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.3;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.6;
+          transform: scale(1.02);
+        }
+      }
+
+      /* Floating cards */
+      .floating-card {
+        position: absolute;
+        background: white;
+        padding: 24px;
+        border-radius: 4px;
+        box-shadow: 0 8px 40px rgba(26, 26, 24, 0.08);
+        border: 1px solid rgba(26, 26, 24, 0.05);
+        max-width: 280px;
+        z-index: 3;
+        opacity: 0;
+        transition:
+          transform 0.3s var(--ease-out-quart),
+          box-shadow var(--duration-normal) ease;
+        will-change: transform;
+      }
+
+      .floating-card.visible {
+        opacity: 1;
+      }
+
+      .floating-card:hover {
+        box-shadow: 0 16px 60px rgba(26, 26, 24, 0.12);
+      }
+
+      .floating-card.card-1 {
+        right: 10%;
+        top: 25%;
+        transform: rotate(3deg);
+        animation: fadeInCard 1s var(--ease-out-expo) 1s forwards;
+      }
+
+      .floating-card.card-2 {
+        right: 25%;
+        bottom: 20%;
+        transform: rotate(-2deg);
+        animation: fadeInCard 1s var(--ease-out-expo) 1.3s forwards;
+      }
+
+      @keyframes fadeInCard {
+        to {
+          opacity: 1;
+        }
+      }
+
+      .floating-card .card-label {
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--terracotta);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .floating-card .card-label::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        background: var(--sage);
+        border-radius: 50%;
+        animation: blink 2s ease-in-out infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+
+      .floating-card .card-text {
+        font-family: var(--font-serif);
+        font-size: 1.1rem;
+        font-style: italic;
+        line-height: 1.5;
+        color: var(--ink);
+      }
+
+      .floating-card .card-meta {
+        margin-top: 12px;
+        font-size: 10px;
+        color: var(--ink-light);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .floating-card .card-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--sage);
+        border-radius: 50%;
+      }
+
+      /* ========================================
+           SECTION STYLING
+           ======================================== */
+      section {
+        padding: 120px 80px;
+        position: relative;
+      }
+
+      .section-header {
+        max-width: 800px;
+        margin-bottom: 80px;
+      }
+
+      .section-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--terracotta);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .section-label::before {
+        content: "";
+        width: 24px;
+        height: 2px;
+        background: var(--terracotta);
+      }
+
+      .section-title {
+        font-family: var(--font-serif);
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 400;
+        line-height: 1.15;
+        margin-bottom: 24px;
+        letter-spacing: -0.01em;
+      }
+
+      .section-description {
+        font-size: 1.15rem;
+        color: var(--ink-light);
+        max-width: 600px;
+        font-weight: 300;
+      }
+
+      /* Highlight effect */
+      .highlight {
+        background: linear-gradient(
+          180deg,
+          transparent 60%,
+          var(--highlighter) 60%
+        );
+        padding: 0 4px;
+        transition: background-position var(--duration-slow) ease;
+      }
+
+      /* ========================================
+           SCROLL REVEAL ANIMATIONS (disabled for immediate visibility)
+           ======================================== */
+      .reveal {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .reveal-stagger > * {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .reveal-stagger.visible > *:nth-child(1) {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .reveal-stagger.visible > *:nth-child(2) {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .reveal-stagger.visible > *:nth-child(3) {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .reveal-stagger.visible > *:nth-child(4) {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .reveal-stagger.visible > *:nth-child(5) {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .reveal-stagger.visible > *:nth-child(6) {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @keyframes fadeUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ========================================
+           MANIFESTO / PROBLEM SECTION
+           ======================================== */
+      .problem-section {
+        background: linear-gradient(
+          180deg,
+          var(--alabaster) 0%,
+          rgba(141, 163, 153, 0.08) 100%
+        );
+      }
+
+      .problem-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+      }
+
+      .problem-visual {
+        position: relative;
+        height: 500px;
+      }
+
+      .ghost-illustration {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .problem-decoration {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+      }
+
+      .problem-decoration svg {
+        width: 100%;
+        height: auto;
+        animation: subtleRotate 30s linear infinite;
+      }
+
+      @keyframes subtleRotate {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes ghostFloat {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      .problem-content {
+        padding-left: 40px;
+      }
+
+      .problem-quote {
+        font-family: var(--font-serif);
+        font-size: 1.8rem;
+        font-style: italic;
+        line-height: 1.4;
+        margin-bottom: 32px;
+        position: relative;
+        padding-left: 24px;
+        border-left: 3px solid var(--terracotta);
+      }
+
+      .problem-text {
+        font-size: 1.05rem;
+        color: var(--ink-light);
+        margin-bottom: 20px;
+        font-weight: 300;
+      }
+
+      .manifesto-block {
+        background: white;
+        border-left: 4px solid var(--terracotta);
+        padding: 40px;
+        margin: 60px 0;
+        box-shadow: 0 8px 40px rgba(26, 26, 24, 0.06);
+        transform: rotate(-0.3deg);
+        transition: transform var(--duration-normal) var(--ease-out-quart);
+      }
+
+      .manifesto-block:hover {
+        transform: rotate(0deg) translateX(4px);
+      }
+
+      .manifesto-block p {
+        font-family: var(--font-serif);
+        font-size: 1.4rem;
+        font-style: italic;
+        line-height: 1.6;
+        color: var(--ink);
+      }
+
+      .manifesto-block p + p {
+        margin-top: 16px;
+      }
+
+      .manifesto-block strong {
+        color: var(--terracotta);
+        font-style: normal;
+      }
+
+      /* ========================================
+           SOLUTION SECTION
+           ======================================== */
+      .solution-section {
+        background: var(--ink);
+        color: var(--alabaster);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .solution-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--terracotta),
+          var(--sage),
+          transparent
+        );
+      }
+
+      .solution-section .section-label {
+        color: var(--sage);
+      }
+
+      .solution-section .section-label::before {
+        background: var(--sage);
+      }
+
+      .solution-section .section-description {
+        color: rgba(240, 239, 234, 0.7);
+      }
+
+      .solution-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+        margin-top: 60px;
+      }
+
+      .solution-card {
+        background: rgba(240, 239, 234, 0.03);
+        border: 1px solid rgba(240, 239, 234, 0.08);
+        border-radius: 8px;
+        padding: 40px 32px;
+        transition: all var(--duration-normal) var(--ease-out-quart);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .solution-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, var(--terracotta), var(--sage));
+        opacity: 0;
+        transition: opacity var(--duration-normal) ease;
+      }
+
+      .solution-card:hover {
+        background: rgba(240, 239, 234, 0.06);
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      }
+
+      .solution-card:hover::before {
+        opacity: 1;
+      }
+
+      .solution-icon {
+        width: 56px;
+        height: 56px;
+        margin-bottom: 24px;
+      }
+
+      .solution-icon svg {
+        width: 100%;
+        height: 100%;
+        stroke: var(--terracotta);
+        stroke-width: 1.5;
+        fill: none;
+      }
+
+      .solution-card h3 {
+        font-family: var(--font-serif);
+        font-size: 1.5rem;
+        font-weight: 500;
+        margin-bottom: 16px;
+      }
+
+      .solution-card p {
+        font-size: 0.95rem;
+        color: rgba(240, 239, 234, 0.6);
+        line-height: 1.7;
+      }
+
+      /* ========================================
+           EXPERIENCE SECTION
+           ======================================== */
+      .experience-section {
+        overflow: hidden;
+      }
+
+      .experience-modes {
+        display: flex;
+        gap: 0;
+        margin-top: 80px;
+      }
+
+      .mode-card {
+        flex: 1;
+        padding: 60px 48px;
+        border: 1px solid var(--ink-lighter);
+        border-right: none;
+        transition: all 0.5s var(--ease-out-expo);
+        position: relative;
+        cursor: pointer;
+        overflow: hidden;
+      }
+
+      .mode-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: white;
+        opacity: 0;
+        transition: opacity var(--duration-normal) ease;
+        z-index: 0;
+      }
+
+      .mode-card:last-child {
+        border-right: 1px solid var(--ink-lighter);
+      }
+
+      .mode-card:hover {
+        z-index: 2;
+      }
+
+      .mode-card:hover::before {
+        opacity: 1;
+      }
+
+      .mode-card.no-expand:hover {
+        flex: 1;
+      }
+
+      .mode-card > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .mode-card:hover {
+        box-shadow: 0 20px 60px rgba(26, 26, 24, 0.08);
+      }
+
+      .mode-number {
+        font-family: var(--font-serif);
+        font-size: 4rem;
+        font-weight: 300;
+        color: var(--ink-lighter);
+        line-height: 1;
+        margin-bottom: 24px;
+        transition: color var(--duration-normal) ease;
+      }
+
+      .mode-card:hover .mode-number {
+        color: var(--terracotta);
+      }
+
+      .mode-title {
+        font-family: var(--font-serif);
+        font-size: 1.6rem;
+        font-weight: 500;
+        margin-bottom: 12px;
+      }
+
+      .mode-subtitle {
+        font-size: 0.85rem;
+        color: var(--terracotta);
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        margin-bottom: 20px;
+      }
+
+      .mode-description {
+        font-size: 0.95rem;
+        color: var(--ink-light);
+        line-height: 1.7;
+        opacity: 0.7;
+        transition: opacity var(--duration-normal) ease;
+      }
+
+      .mode-card:hover .mode-description {
+        opacity: 1;
+      }
+
+      /* ========================================
+           PRIMITIVES SECTION
+           ======================================== */
+      .primitives-section {
+        background: linear-gradient(
+          135deg,
+          rgba(217, 119, 87, 0.04) 0%,
+          var(--alabaster) 50%,
+          rgba(141, 163, 153, 0.06) 100%
+        );
+      }
+
+      .primitives-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        margin-top: 60px;
+      }
+
+      .primitive-card {
+        background: white;
+        border: 1px solid rgba(26, 26, 24, 0.06);
+        border-radius: 6px;
+        padding: 36px 28px;
+        transition: all var(--duration-normal) var(--ease-out-quart);
+        position: relative;
+      }
+
+      .primitive-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border: 2px solid transparent;
+        border-radius: 6px;
+        transition: border-color var(--duration-normal) ease;
+        pointer-events: none;
+      }
+
+      .primitive-card:hover {
+        transform: translateY(-6px) rotate(-0.5deg);
+        box-shadow: 8px 12px 40px rgba(26, 26, 24, 0.08);
+      }
+
+      .primitive-card:hover::after {
+        border-color: var(--terracotta);
+      }
+
+      .primitive-icon {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 20px;
+      }
+
+      .primitive-icon svg {
+        width: 100%;
+        height: 100%;
+        stroke: var(--ink);
+        stroke-width: 1.5;
+        fill: none;
+        transition: stroke var(--duration-normal) ease;
+      }
+
+      .primitive-card:hover .primitive-icon svg {
+        stroke: var(--terracotta);
+      }
+
+      .primitive-card h3 {
+        font-family: var(--font-serif);
+        font-size: 1.3rem;
+        font-weight: 500;
+        margin-bottom: 10px;
+      }
+
+      .primitive-card p {
+        font-size: 0.9rem;
+        color: var(--ink-light);
+        line-height: 1.6;
+      }
+
+      .primitive-example {
+        margin-top: 16px;
+        padding: 12px;
+        background: rgba(238, 220, 91, 0.15);
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-style: italic;
+        color: var(--ink);
+        border-left: 2px solid var(--highlighter);
+      }
+
+      /* ========================================
+           USE CASES SECTION
+           ======================================== */
+      .usecases-section {
+        background: white;
+      }
+
+      .usecase-categories {
+        display: flex;
+        flex-direction: column;
+        gap: 80px;
+        margin-top: 60px;
+      }
+
+      .usecase-category {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 60px;
+        align-items: start;
+      }
+
+      .category-header {
+        position: sticky;
+        top: 120px;
+      }
+
+      .category-icon {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 20px;
+        background: var(--alabaster);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform var(--duration-normal) var(--ease-out-quart);
+      }
+
+      .category-icon svg {
+        width: 32px;
+        height: 32px;
+        stroke: var(--terracotta);
+        stroke-width: 1.5;
+        fill: none;
+      }
+
+      .usecase-category:hover .category-icon {
+        transform: scale(1.1) rotate(-5deg);
+      }
+
+      .category-title {
+        font-family: var(--font-serif);
+        font-size: 1.8rem;
+        font-weight: 500;
+        margin-bottom: 12px;
+      }
+
+      .category-description {
+        font-size: 0.95rem;
+        color: var(--ink-light);
+        line-height: 1.6;
+      }
+
+      .usecase-items {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+
+      .usecase-item {
+        padding: 28px;
+        border: 1px solid var(--ink-lighter);
+        border-radius: 4px;
+        transition: all var(--duration-normal) ease;
+      }
+
+      .usecase-item:hover {
+        background: var(--alabaster);
+        border-color: var(--sage);
+        transform: translateX(4px);
+      }
+
+      .usecase-item h4 {
+        font-family: var(--font-serif);
+        font-size: 1.15rem;
+        font-weight: 500;
+        margin-bottom: 10px;
+      }
+
+      .usecase-item p {
+        font-size: 0.9rem;
+        color: var(--ink-light);
+        line-height: 1.6;
+      }
+
+      /* ========================================
+           IMPACT SECTION
+           ======================================== */
+      .impact-section {
+        background: linear-gradient(
+          180deg,
+          var(--alabaster) 0%,
+          rgba(141, 163, 153, 0.1) 100%
+        );
+      }
+
+      .impact-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 48px;
+        margin-top: 60px;
+      }
+
+      .impact-card {
+        text-align: center;
+        padding: 48px 32px;
+      }
+
+      .impact-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 24px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 30px rgba(26, 26, 24, 0.06);
+        transition:
+          transform var(--duration-normal) var(--ease-out-quart),
+          box-shadow var(--duration-normal) ease;
+      }
+
+      .impact-icon svg {
+        width: 40px;
+        height: 40px;
+        stroke: var(--terracotta);
+        stroke-width: 1.5;
+        fill: none;
+      }
+
+      .impact-card:hover .impact-icon {
+        transform: scale(1.1) translateY(-4px);
+        box-shadow: 0 12px 40px rgba(26, 26, 24, 0.1);
+      }
+
+      .impact-card h3 {
+        font-family: var(--font-serif);
+        font-size: 1.4rem;
+        font-weight: 500;
+        margin-bottom: 12px;
+      }
+
+      .impact-card p {
+        font-size: 0.95rem;
+        color: var(--ink-light);
+        line-height: 1.6;
+      }
+
+      /* ========================================
+           ROADMAP SECTION
+           ======================================== */
+      .roadmap-section {
+        background: var(--ink);
+        color: var(--alabaster);
+        overflow: hidden;
+      }
+
+      .roadmap-section .section-label {
+        color: var(--highlighter);
+      }
+
+      .roadmap-section .section-label::before {
+        background: var(--highlighter);
+      }
+
+      .roadmap-section .section-description {
+        color: rgba(240, 239, 234, 0.6);
+      }
+
+      .roadmap-timeline {
+        display: flex;
+        gap: 0;
+        margin-top: 80px;
+        position: relative;
+      }
+
+      .roadmap-timeline::before {
+        content: "";
+        position: absolute;
+        top: 40px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--terracotta),
+          var(--sage),
+          var(--highlighter)
+        );
+      }
+
+      .roadmap-year {
+        flex: 1;
+        padding: 80px 32px 40px;
+        position: relative;
+        transition: transform var(--duration-normal) var(--ease-out-quart);
+      }
+
+      .roadmap-year:hover {
+        transform: translateY(-8px);
+      }
+
+      .roadmap-year::before {
+        content: "";
+        position: absolute;
+        top: 32px;
+        left: 32px;
+        width: 16px;
+        height: 16px;
+        background: var(--alabaster);
+        border-radius: 50%;
+        border: 3px solid var(--terracotta);
+        transition: transform var(--duration-normal) var(--ease-out-quart);
+      }
+
+      .roadmap-year:hover::before {
+        transform: scale(1.3);
+      }
+
+      .year-label {
+        font-family: var(--font-serif);
+        font-size: 2.5rem;
+        font-weight: 300;
+        color: var(--terracotta);
+        margin-bottom: 16px;
+      }
+
+      .year-title {
+        font-family: var(--font-serif);
+        font-size: 1.3rem;
+        font-weight: 500;
+        margin-bottom: 16px;
+      }
+
+      .year-items {
+        list-style: none;
+      }
+
+      .year-items li {
+        font-size: 0.9rem;
+        color: rgba(240, 239, 234, 0.6);
+        margin-bottom: 10px;
+        padding-left: 16px;
+        position: relative;
+      }
+
+      .year-items li::before {
+        content: "—";
+        position: absolute;
+        left: 0;
+        color: var(--sage);
+      }
+
+      /* ========================================
+           CTA SECTION
+           ======================================== */
+      .cta-section {
+        padding: 160px 80px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .cta-decoration {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 800px;
+        height: 800px;
+        opacity: 0.05;
+        z-index: 0;
+        animation: rotate 60s linear infinite;
+      }
+
+      @keyframes rotate {
+        to {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
+
+      .cta-decoration svg {
+        width: 100%;
+        height: 100%;
+        stroke: var(--ink);
+        stroke-width: 0.5;
+        fill: none;
+      }
+
+      .cta-content {
+        position: relative;
+        z-index: 1;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      .cta-title {
+        font-family: var(--font-serif);
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 400;
+        line-height: 1.2;
+        margin-bottom: 24px;
+      }
+
+      .cta-title em {
+        font-style: italic;
+        color: var(--terracotta);
+      }
+
+      .cta-description {
+        font-size: 1.15rem;
+        color: var(--ink-light);
+        margin-bottom: 48px;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .cta-actions {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      /* ========================================
+           FOOTER
+           ======================================== */
+      footer {
+        padding: 60px 80px;
+        border-top: 1px solid var(--ink-lighter);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .footer-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .footer-logo svg {
+        width: 32px;
+        height: 32px;
+        stroke: var(--terracotta);
+        stroke-width: 2.5;
+        fill: none;
+      }
+
+      .footer-text {
+        font-size: 0.85rem;
+        color: var(--ink-light);
+      }
+
+      .footer-meta {
+        font-size: 0.8rem;
+        color: var(--ink-lighter);
+      }
+
+      /* ========================================
+           MOBILE MENU
+           ======================================== */
+      .mobile-menu-btn {
+        display: none;
+        width: 40px;
+        height: 40px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        position: relative;
+        z-index: 101;
+      }
+
+      .mobile-menu-btn span {
+        display: block;
+        width: 24px;
+        height: 2px;
+        background: var(--ink);
+        margin: 6px auto;
+        transition: all var(--duration-normal) ease;
+      }
+
+      .mobile-menu-btn.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+
+      .mobile-menu-btn.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .mobile-menu-btn.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(6px, -6px);
+      }
+
+      /* Mobile Menu Overlay */
+      .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: var(--alabaster);
+        z-index: 99;
+        padding: 100px 24px 40px;
+        flex-direction: column;
+        gap: 8px;
+        overflow-y: auto;
+      }
+
+      .mobile-menu.active {
+        display: flex;
+      }
+
+      .mobile-menu-link {
+        display: block;
+        padding: 16px 0;
+        font-family: var(--font-serif);
+        font-size: 1.5rem;
+        color: var(--ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--ink-lighter);
+        transition: color 0.2s ease;
+      }
+
+      .mobile-menu-link:hover {
+        color: var(--terracotta);
+      }
+
+      /* ========================================
+           RESPONSIVE
+           ======================================== */
+      @media (max-width: 1200px) {
+        .solution-cards {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .primitives-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 900px) {
+        section {
+          padding: 80px 40px;
+        }
+
+        .hero {
+          padding: 100px 40px 60px;
+          min-height: auto;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .problem-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .problem-visual {
+          display: none;
+        }
+
+        .problem-content {
+          padding-left: 0;
+        }
+
+        .solution-cards {
+          grid-template-columns: 1fr;
+        }
+
+        .experience-modes {
+          flex-direction: column;
+        }
+
+        .mode-card {
+          border-right: 1px solid var(--ink-lighter);
+          border-bottom: none;
+        }
+
+        .mode-card:last-child {
+          border-bottom: 1px solid var(--ink-lighter);
+        }
+
+        .mode-card:hover {
+          flex: 1;
+        }
+
+        .primitives-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .usecase-category {
+          grid-template-columns: 1fr;
+        }
+
+        .category-header {
+          position: relative;
+          top: 0;
+        }
+
+        .usecase-items {
+          grid-template-columns: 1fr;
+        }
+
+        .roadmap-timeline {
+          flex-direction: column;
+        }
+
+        .roadmap-timeline::before {
+          display: none;
+        }
+
+        .impact-grid {
+          grid-template-columns: 1fr;
+        }
+
+        /* Floating cards on mobile - repositioned AFTER hero content */
+        .floating-card {
+          position: relative !important;
+          right: auto !important;
+          left: 0 !important;
+          top: auto !important;
+          bottom: auto !important;
+          transform: none !important;
+          max-width: calc(100% - 48px);
+          width: calc(100% - 48px);
+          margin: 0 24px 20px 24px;
+          opacity: 1;
+          animation: none !important;
+        }
+
+        .floating-card.card-1,
+        .floating-card.card-2 {
+          transform: none !important;
+        }
+
+        /* Hero content comes FIRST, floating cards come AFTER */
+        .hero-content {
+          order: 1;
+        }
+
+        .floating-card.card-1 {
+          order: 2;
+          margin-top: 48px;
+        }
+
+        .floating-card.card-2 {
+          order: 3;
+        }
+
+        .hero-decoration {
+          display: none;
+        }
+
+        nav {
+          padding: 16px 24px;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .mobile-menu-btn {
+          display: block;
+        }
+
+        footer {
+          flex-direction: column;
+          gap: 24px;
+          text-align: center;
+          padding: 40px 24px;
+        }
+
+        .lang-toggle {
+          top: 16px;
+          right: 70px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        section {
+          padding: 60px 24px;
+        }
+
+        .hero {
+          padding: 80px 24px 40px;
+        }
+
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+
+        .hero-description {
+          font-size: 1rem;
+        }
+
+        .section-title {
+          font-size: 2rem;
+        }
+
+        .cta-section {
+          padding: 80px 24px;
+        }
+      }
+
+      /* ========================================
+           REDUCED MOTION
+           ======================================== */
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+
+        html {
+          scroll-behavior: auto;
+        }
+      }
+
+      /* ========================================
+           FOCUS VISIBLE
+           ======================================== */
+      :focus:not(:focus-visible) {
+        outline: none;
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--terracotta);
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Skip Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" aria-hidden="true"></div>
+
+    <!-- Cursor Follower -->
+    <div class="cursor-follower" aria-hidden="true"></div>
+
+    <!-- Navigation -->
+    <nav role="navigation" aria-label="Main navigation">
+      <a href="#" class="logo" aria-label="CANVS Home">
+        <div class="logo-icon">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <!-- Infinity-heart symbol -->
+            <path
+              d="M50,85 C35,70 10,50 10,35 C10,20 25,15 40,30 C45,35 48,38 50,40 C52,38 55,35 60,30 C75,15 90,20 90,35 C90,50 65,70 50,85 Z"
+            />
+            <path d="M40,30 C30,40 25,50 35,55 C45,60 55,55 50,40" />
+            <path d="M60,30 C70,40 75,50 65,55 C55,60 45,55 50,40" />
+          </svg>
+        </div>
+        <span class="logo-text">CANVS</span>
+        <span class="logo-slogan">It's the world</span>
+      </a>
+
+      <div class="nav-links">
+        <a href="#manifesto" class="nav-link">Manifesto</a>
+        <a href="#experience" class="nav-link">Experience</a>
+        <a href="#impact" class="nav-link">Impact</a>
+        <a href="#roadmap" class="nav-link">Roadmap</a>
+      </div>
+
+      <button
+        class="mobile-menu-btn"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="#manifesto" class="mobile-menu-link">Manifesto</a>
+      <a href="#experience" class="mobile-menu-link">Experience</a>
+      <a href="#impact" class="mobile-menu-link">Impact</a>
+      <a href="#roadmap" class="mobile-menu-link">Roadmap</a>
+      <a href="paper.html" class="mobile-menu-link">Read the Paper</a>
+    </div>
+
+    <!-- Main Content -->
+    <main id="main-content">
+      <!-- Hero Section -->
+      <section class="hero" aria-labelledby="hero-heading">
+        <div class="hero-decoration" aria-hidden="true">
+          <svg viewBox="0 0 400 400">
+            <circle cx="200" cy="200" r="150" stroke-dasharray="4 8" />
+            <circle cx="200" cy="200" r="100" stroke-dasharray="2 6" />
+            <path
+              d="M50,200 Q200,50 350,200 Q200,350 50,200"
+              stroke-dasharray="8 4"
+            />
+          </svg>
+        </div>
+
+        <div class="floating-card card-1" aria-hidden="true">
+          <div class="card-label">Memory</div>
+          <p class="card-text">"This is where I had my first coffee in Berlin together with Sophie."</p>
+          <div class="card-meta">
+            <span class="card-dot"></span>
+            <span>Placed 2 hours ago</span>
+          </div>
+        </div>
+
+        <div class="floating-card card-2" aria-hidden="true">
+          <div class="card-label">Trail</div>
+          <p class="card-text">
+            "My favorite route through the old town—every corner has a story."
+          </p>
+          <div class="card-meta">
+            <span class="card-dot" style="background: var(--terracotta)"></span>
+            <span>12 stops · 45 min</span>
+          </div>
+        </div>
+
+        <div class="hero-content">
+          <div class="hero-tagline">Spatial Social Layer · 2026–2030</div>
+
+          <h1 id="hero-heading">The world is<br /><em>a blank page.</em></h1>
+
+          <p class="hero-description">
+            We are building the Internet of Places. Not a feed that scrolls
+            forever, but a layer of meaning that stays where you leave it.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#experience" class="btn-scribble">Explore the Vision</a>
+            <a href="paper.html" class="btn-scribble secondary"
+              >Read the Paper</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- Manifesto Section -->
+      <section
+        id="manifesto"
+        class="problem-section"
+        aria-labelledby="manifesto-heading"
+      >
+        <div class="section-header reveal">
+          <div class="section-label">The Problem</div>
+
+          <h2 id="manifesto-heading" class="section-title">
+            We walk through a world full of
+            <span class="highlight">invisible meaning</span>
+          </h2>
+        </div>
+
+        <div class="problem-grid">
+          <div class="problem-visual reveal">
+            <div class="problem-decoration" aria-hidden="true">
+              <svg viewBox="0 0 300 300">
+                <!-- Simple concentric circles like CTA section -->
+                <circle
+                  cx="150"
+                  cy="150"
+                  r="120"
+                  stroke="var(--ink-lighter)"
+                  stroke-width="1"
+                  fill="none"
+                  stroke-dasharray="4 8"
+                />
+                <circle
+                  cx="150"
+                  cy="150"
+                  r="90"
+                  stroke="var(--ink-lighter)"
+                  stroke-width="1"
+                  fill="none"
+                  stroke-dasharray="2 6"
+                />
+                <circle
+                  cx="150"
+                  cy="150"
+                  r="60"
+                  stroke="var(--ink-lighter)"
+                  stroke-width="1"
+                  fill="none"
+                  stroke-dasharray="6 4"
+                />
+                <circle
+                  cx="150"
+                  cy="150"
+                  r="30"
+                  stroke="var(--terracotta)"
+                  stroke-width="1.5"
+                  fill="none"
+                  stroke-dasharray="3 3"
+                  opacity="0.6"
+                />
+
+                <!-- Subtle walking path -->
+                <path
+                  d="M30 250 Q80 200 150 180 Q220 160 270 120"
+                  stroke="var(--sage)"
+                  stroke-width="1.5"
+                  fill="none"
+                  stroke-dasharray="8 4"
+                  opacity="0.5"
+                />
+
+                <!-- Simple pin markers -->
+                <circle
+                  cx="150"
+                  cy="150"
+                  r="4"
+                  fill="var(--terracotta)"
+                  opacity="0.7"
+                />
+                <circle
+                  cx="80"
+                  cy="200"
+                  r="3"
+                  fill="var(--sage)"
+                  opacity="0.5"
+                />
+                <circle
+                  cx="220"
+                  cy="130"
+                  r="3"
+                  fill="var(--sage)"
+                  opacity="0.5"
+                />
+
+                <!-- Person silhouette - very simple -->
+                <circle cx="100" cy="220" r="5" fill="var(--ink-lighter)" />
+                <line
+                  x1="100"
+                  y1="225"
+                  x2="100"
+                  y2="240"
+                  stroke="var(--ink-lighter)"
+                  stroke-width="1.5"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <div class="problem-content reveal">
+            <blockquote class="problem-quote">
+              "Things happen at places. But digital memory is detached from the
+              physical world."
+            </blockquote>
+
+            <p class="problem-text">
+              A first kiss. A perfect skate trick. A protest that changed
+              someone's life. A conversation that flipped a career. A hidden
+              café that felt like finding oxygen.
+            </p>
+
+            <p class="problem-text">
+              Then the moment ends—and the meaning becomes
+              <strong>invisible</strong>. Someone stands at that place two weeks
+              later and sees… concrete. The emotion is gone.
+            </p>
+
+            <p class="problem-text" style="font-weight: 500; color: var(--ink)">
+              It's not "there." It's nowhere.
+            </p>
+          </div>
+        </div>
+
+        <div class="manifesto-block reveal">
+          <p><strong>The feed is not the home screen.</strong> The world is.</p>
+          <p>
+            <strong>Content is not something you "go find."</strong> It's
+            something you encounter, because you are there.
+          </p>
+          <p>
+            <strong>Meaning is not manufactured by engagement hacks.</strong>
+            Meaning is in context.
+          </p>
+        </div>
+      </section>
+
+      <!-- Solution Section -->
+      <section class="solution-section" aria-labelledby="solution-heading">
+        <div class="section-header reveal">
+          <div class="section-label">The Solution</div>
+
+          <h2 id="solution-heading" class="section-title">
+            Persistent Emotional Anchoring
+          </h2>
+
+          <p class="section-description">
+            CANVS makes moments spatially persistent. Not as a gimmick, but as a
+            new medium: <em class="serif">Place becomes the index.</em>
+          </p>
+        </div>
+
+        <div class="solution-cards reveal-stagger">
+          <div class="solution-card">
+            <div class="solution-icon">
+              <svg viewBox="0 0 50 50" aria-hidden="true">
+                <circle cx="25" cy="20" r="12" />
+                <path d="M25,32 L25,45" />
+                <path d="M15,45 L35,45" />
+              </svg>
+            </div>
+            <h3>Reality Time Capsules</h3>
+            <p>
+              Content—text, audio, video, 3D captures, sketches—pinned to
+              real-world locations so future visitors can "open" the moment
+              where it happened.
+            </p>
+          </div>
+
+          <div class="solution-card">
+            <div class="solution-icon">
+              <svg viewBox="0 0 50 50" aria-hidden="true">
+                <path d="M10,25 Q25,10 40,25 Q25,40 10,25" />
+                <circle cx="25" cy="25" r="5" />
+              </svg>
+            </div>
+            <h3>Asynchronous Presence</h3>
+            <p>
+              Experience a moment later, not by "watching a video," but by
+              seeing the memory <em>in situ</em>, aligned to the geometry of the
+              world.
+            </p>
+          </div>
+
+          <div class="solution-card">
+            <div class="solution-icon">
+              <svg viewBox="0 0 50 50" aria-hidden="true">
+                <rect
+                  x="8"
+                  y="8"
+                  width="14"
+                  height="14"
+                  rx="2"
+                  transform="rotate(15 15 15)"
+                />
+                <rect
+                  x="28"
+                  y="28"
+                  width="14"
+                  height="14"
+                  rx="2"
+                  transform="rotate(-10 35 35)"
+                />
+                <path d="M20,20 L30,30" stroke-dasharray="2 2" />
+              </svg>
+            </div>
+            <h3>World-Locked Anchoring</h3>
+            <p>
+              Modern AR stacks combine GPS with vision-based localization for
+              stable, multi-tier anchoring that persists across time and
+              devices.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Experience Section -->
+      <section
+        id="experience"
+        class="experience-section"
+        aria-labelledby="experience-heading"
+      >
+        <div class="section-header reveal">
+          <div class="section-label">The Experience</div>
+
+          <h2 id="experience-heading" class="section-title">
+            The Spatial Browser
+          </h2>
+
+          <p class="section-description">
+            A browser that lets you "read" places the way you read websites.
+            Three modes, one mental model.
+          </p>
+        </div>
+
+        <div class="experience-modes reveal-stagger">
+          <article class="mode-card no-expand" tabindex="0" role="article">
+            <div class="mode-number">01</div>
+            <h3 class="mode-title">AR Mode</h3>
+            <div class="mode-subtitle">"Magic Window"</div>
+            <p class="mode-description">
+              Look at the world and see location-anchored content where it
+              belongs. Stories float exactly where they happened.
+            </p>
+          </article>
+
+          <article class="mode-card no-expand" tabindex="0" role="article">
+            <div class="mode-number">02</div>
+            <h3 class="mode-title">Map Mode</h3>
+            <div class="mode-subtitle">"Spatial Radar"</div>
+            <p class="mode-description">
+              See nearby layers, hotspots, and trails. The map is not the
+              product—it's the minimap for the real world.
+            </p>
+          </article>
+
+          <article class="mode-card no-expand" tabindex="0" role="article">
+            <div class="mode-number">03</div>
+            <h3 class="mode-title">Time Mode</h3>
+            <div class="mode-subtitle">"Temporal Scrub"</div>
+            <p class="mode-description">
+              Slide through time to see what happened here: yesterday, last
+              summer, 10 years ago. Places remember.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Primitives Section -->
+      <section class="primitives-section" aria-labelledby="primitives-heading">
+        <div class="section-header reveal">
+          <div class="section-label">Building Blocks</div>
+
+          <h2 id="primitives-heading" class="section-title">
+            Spatial Primitives
+          </h2>
+
+          <p class="section-description">
+            The fundamental objects that make up the meaning layer. Each one
+            anchored to the world.
+          </p>
+        </div>
+
+        <div class="primitives-grid reveal-stagger">
+          <article class="primitive-card">
+            <div class="primitive-icon">
+              <svg viewBox="0 0 50 50" aria-hidden="true">
+                <circle cx="25" cy="18" r="10" />
+                <path d="M25,28 L25,42" />
+                <circle cx="25" cy="42" r="3" />
+              </svg>
+            </div>
+            <h3>Pins</h3>
+            <p>
+              Simple anchors: notes, photos, audio, links, tips, warnings,
+              micro-stories.
+            </p>
+            <div class="primitive-example">
+              "Best espresso in the city—trust me."
+            </div>
+          </article>
+
+          <article class="primitive-card">
+            <div class="primitive-icon">
+              <svg viewBox="0 0 50 50" aria-hidden="true">
+                <circle cx="25" cy="25" r="18" stroke-dasharray="4 2" />
+                <circle cx="18" cy="22" r="4" />
+                <circle cx="32" cy="22" r="4" />
+                <circle cx="25" cy="32" r="4" />
+              </svg>
+            </div>
+            <h3>Bubbles</h3>
+            <p>
+              Shared containers anchored to places—group memories, collective
+              stories.
+            </p>
+            <div class="primitive-example">
+              "We used to meet here every Friday."
+            </div>
+          </article>
+
+          <article class="primitive-card">
+            <div class="primitive-icon">
+              <svg viewBox="0 0 50 50" aria-hidden="true">
+                <rect x="10" y="15" width="30" height="25" rx="3" />
+                <path d="M10,22 L25,32 L40,22" />
+                <circle cx="25" cy="10" r="5" />
+              </svg>
+            </div>
+            <h3>Time Capsules</h3>
+            <p>
+              Rich artifacts: multi-media + 3D capture + timeline. Walkable
+              memory fragments.
+            </p>
+            <div class="primitive-example">
+              "Open in 5 years, at this exact spot."
+            </div>
+          </article>
+
+          <article class="primitive-card">
+            <div class="primitive-icon">
+              <svg viewBox="0 0 50 50" aria-hidden="true">
+                <path d="M10,40 Q15,20 25,25 Q35,30 40,10" />
+                <circle cx="10" cy="40" r="4" />
+                <circle cx="25" cy="25" r="4" />
+                <circle cx="40" cy="10" r="4" />
+              </svg>
+            </div>
+            <h3>Trails</h3>
+            <p>
+              A sequence of anchors forming a narrative route—curated walks,
+              emotional journeys.
+            </p>
+            <div class="primitive-example">
+              "The city through immigrant food."
+            </div>
+          </article>
+
+          <article class="primitive-card">
+            <div class="primitive-icon">
+              <svg viewBox="0 0 50 50" aria-hidden="true">
+                <path d="M25,10 L25,20" />
+                <circle cx="25" cy="30" r="12" />
+                <path d="M20,28 L25,33 L30,28" />
+              </svg>
+            </div>
+            <h3>Drops</h3>
+            <p>
+              Geo-fenced releases: music, artwork, collectibles that only unlock
+              at a location and time.
+            </p>
+            <div class="primitive-example">"Available here, tonight only."</div>
+          </article>
+
+          <article class="primitive-card">
+            <div class="primitive-icon">
+              <svg viewBox="0 0 50 50" aria-hidden="true">
+                <ellipse cx="15" cy="25" rx="10" ry="15" />
+                <ellipse cx="35" cy="25" rx="10" ry="15" />
+                <path d="M25,15 L25,35" stroke-dasharray="3 3" />
+              </svg>
+            </div>
+            <h3>Portals</h3>
+            <p>
+              Places anchored to other places via story logic—connections across
+              geography.
+            </p>
+            <div class="primitive-example">
+              "This spot is the sibling of that spot."
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Use Cases Section -->
+      <section class="usecases-section" aria-labelledby="usecases-heading">
+        <div class="section-header reveal">
+          <div class="section-label">Use Cases</div>
+
+          <h2 id="usecases-heading" class="section-title">
+            Re-enchanting Reality
+          </h2>
+        </div>
+
+        <div class="usecase-categories">
+          <!-- Emotional Layer -->
+          <div class="usecase-category reveal">
+            <div class="category-header">
+              <div class="category-icon">
+                <svg viewBox="0 0 50 50" aria-hidden="true">
+                  <path
+                    d="M25,45 C18,35 8,25 8,16 C8,8 16,4 25,14 C34,4 42,8 42,16 C42,25 32,35 25,45"
+                  />
+                </svg>
+              </div>
+              <h3 class="category-title">Emotional Layer</h3>
+              <p class="category-description">
+                Shared memories, personal stories, moments that matter.
+              </p>
+            </div>
+
+            <div class="usecase-items">
+              <article class="usecase-item">
+                <h4>The Skating Bubble</h4>
+                <p>
+                  Friends leave a group bubble at the rink. Years later, someone
+                  returns alone and opens it—hearing laughter and seeing spatial
+                  clips aligned to the ice.
+                </p>
+              </article>
+              <article class="usecase-item">
+                <h4>Sunset Stories</h4>
+                <p>
+                  A global atlas of romance: "Sit here at 19:42. Perfect angle."
+                  The world becomes a map of beautiful moments.
+                </p>
+              </article>
+              <article class="usecase-item">
+                <h4>Celebration Spots</h4>
+                <p>
+                  Mark your favorite places for birthdays, anniversaries, and
+                  milestones. Return each year and see how the memories grow.
+                </p>
+              </article>
+              <article class="usecase-item">
+                <h4>Letters to Future Me</h4>
+                <p>
+                  A capsule you can only open when you physically return. Time +
+                  place as the key.
+                </p>
+              </article>
+            </div>
+          </div>
+
+          <!-- Utility Layer -->
+          <div class="usecase-category reveal">
+            <div class="category-header">
+              <div class="category-icon">
+                <svg viewBox="0 0 50 50" aria-hidden="true">
+                  <circle cx="25" cy="25" r="18" />
+                  <path d="M25,12 L25,25 L35,25" />
+                </svg>
+              </div>
+              <h3 class="category-title">Utility Layer</h3>
+              <p class="category-description">
+                Hyper-local knowledge, practical wisdom, community intelligence.
+              </p>
+            </div>
+
+            <div class="usecase-items">
+              <article class="usecase-item">
+                <h4>Hidden Menu Layer</h4>
+                <p>
+                  Recommendations pinned to a specific table or counter: "Order
+                  it this way." Local secrets, openly shared.
+                </p>
+              </article>
+              <article class="usecase-item">
+                <h4>Cafe Secrets</h4>
+                <p>
+                  Discover the best seat for working, the quietest corner for
+                  reading, or which barista makes the perfect latte. Local
+                  knowledge, shared.
+                </p>
+              </article>
+              <article class="usecase-item">
+                <h4>Place Stories</h4>
+                <p>
+                  Restaurants and venues share their history, today's specials,
+                  or stories behind the menu—pinned right where you're standing.
+                </p>
+              </article>
+              <article class="usecase-item">
+                <h4>Trail Conditions</h4>
+                <p>
+                  Real-time hiking intel anchored to trail segments: "Muddy
+                  after the bridge" or "Best wildflowers at this bend in May."
+                </p>
+              </article>
+            </div>
+          </div>
+
+          <!-- Creative Layer -->
+          <div class="usecase-category reveal">
+            <div class="category-header">
+              <div class="category-icon">
+                <svg viewBox="0 0 50 50" aria-hidden="true">
+                  <polygon
+                    points="25,5 30,20 45,20 33,30 38,45 25,35 12,45 17,30 5,20 20,20"
+                  />
+                </svg>
+              </div>
+              <h3 class="category-title">Creative Layer</h3>
+              <p class="category-description">
+                Urban culture, play, art that lives where it belongs.
+              </p>
+            </div>
+
+            <div class="usecase-items">
+              <article class="usecase-item">
+                <h4>Street Art Threads</h4>
+                <p>
+                  Discussions float in front of murals—timelines, artist
+                  credits, community response—without touching the wall.
+                </p>
+              </article>
+              <article class="usecase-item">
+                <h4>Location Drops</h4>
+                <p>
+                  Exclusive content appears when a place "activates" at a time.
+                  Artists release where their art lives.
+                </p>
+              </article>
+              <article class="usecase-item">
+                <h4>Invisible Galleries</h4>
+                <p>
+                  AR art installations that exist only in specific locations.
+                  Turn any corner into a canvas, any park into a sculpture
+                  garden.
+                </p>
+              </article>
+              <article class="usecase-item">
+                <h4>Sound Walks</h4>
+                <p>
+                  Location-triggered audio experiences: ambient soundscapes,
+                  narrated histories, or musical compositions that unfold as you
+                  move.
+                </p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Impact Section -->
+      <section
+        id="impact"
+        class="impact-section"
+        aria-labelledby="impact-heading"
+      >
+        <div class="section-header reveal">
+          <div class="section-label">Societal Impact</div>
+
+          <h2 id="impact-heading" class="section-title">
+            Why the World Needs This
+          </h2>
+        </div>
+
+        <div class="impact-grid reveal-stagger">
+          <article class="impact-card">
+            <div class="impact-icon">
+              <svg viewBox="0 0 50 50" aria-hidden="true">
+                <path d="M10,40 L20,30 L30,35 L40,20" />
+                <circle cx="40" cy="20" r="5" />
+                <path d="M5,45 L45,45" />
+              </svg>
+            </div>
+            <h3>Movement & Presence</h3>
+            <p>
+              Content requires presence. Presence requires movement. Movement
+              increases serendipity and real human contact.
+            </p>
+          </article>
+
+          <article class="impact-card">
+            <div class="impact-icon">
+              <svg viewBox="0 0 50 50" aria-hidden="true">
+                <rect x="12" y="20" width="10" height="20" />
+                <rect x="28" y="10" width="10" height="30" />
+                <path d="M5,42 L45,42" />
+              </svg>
+            </div>
+            <h3>Local Revival</h3>
+            <p>
+              Location-anchored layers drive discovery and attention to local
+              businesses. Emotional, not transactional.
+            </p>
+          </article>
+
+          <article class="impact-card">
+            <div class="impact-icon">
+              <svg viewBox="0 0 50 50" aria-hidden="true">
+                <circle cx="25" cy="25" r="18" />
+                <path d="M25,10 L25,25" />
+                <path d="M25,25 L35,30" />
+                <circle cx="15" cy="20" r="3" />
+                <circle cx="35" cy="20" r="3" />
+                <circle cx="20" cy="35" r="3" />
+              </svg>
+            </div>
+            <h3>Human Meaning Graph</h3>
+            <p>
+              Planet-scale spatial mapping becomes strategic. CANVS specializes
+              in the human layer—stories, not just coordinates.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Roadmap Section -->
+      <section
+        id="roadmap"
+        class="roadmap-section"
+        aria-labelledby="roadmap-heading"
+      >
+        <div class="section-header reveal">
+          <div class="section-label">Strategic Roadmap</div>
+
+          <h2 id="roadmap-heading" class="section-title">2026 — 2030</h2>
+
+          <p class="section-description">
+            From phone-first MVP to the spatial social operating system.
+          </p>
+        </div>
+
+        <div class="roadmap-timeline reveal-stagger">
+          <article class="roadmap-year">
+            <div class="year-label">2026</div>
+            <h3 class="year-title">Build the Core Loop</h3>
+            <ul class="year-items">
+              <li>MVP Spatial Browser (AR + map + time)</li>
+              <li>Core primitives: pins, bubbles, capsules</li>
+              <li>Anchor runtime v1</li>
+            </ul>
+          </article>
+
+          <article class="roadmap-year">
+            <div class="year-label">2027</div>
+            <h3 class="year-title">Scale the Meaning Graph</h3>
+            <ul class="year-items">
+              <li>AI "Reality Filter" v1</li>
+              <li>Trails, drops, portals</li>
+              <li>Local business tools</li>
+            </ul>
+          </article>
+
+          <article class="roadmap-year">
+            <div class="year-label">2028</div>
+            <h3 class="year-title">Glass-Native Transition</h3>
+            <ul class="year-items">
+              <li>Spatial computing integrations</li>
+              <li>Always-on lightweight layer</li>
+              <li>Spatial audio cues</li>
+            </ul>
+          </article>
+
+          <article class="roadmap-year">
+            <div class="year-label">2029</div>
+            <h3 class="year-title">Platformization</h3>
+            <ul class="year-items">
+              <li>Public SDK for "place apps"</li>
+              <li>Verified civic layers</li>
+              <li>Standards alignment</li>
+            </ul>
+          </article>
+
+          <article class="roadmap-year">
+            <div class="year-label">2030</div>
+            <h3 class="year-title">The Spatial Social OS</h3>
+            <ul class="year-items">
+              <li>Default meaning layer across devices</li>
+              <li>Places become queryable</li>
+              <li>The feed is obsolete</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="cta-section" aria-labelledby="cta-heading">
+        <div class="cta-decoration" aria-hidden="true">
+          <svg viewBox="0 0 400 400">
+            <circle cx="200" cy="200" r="180" stroke-dasharray="2 8" />
+            <circle cx="200" cy="200" r="140" stroke-dasharray="4 6" />
+            <circle cx="200" cy="200" r="100" stroke-dasharray="6 4" />
+            <circle cx="200" cy="200" r="60" stroke-dasharray="8 2" />
+          </svg>
+        </div>
+
+        <div class="cta-content reveal">
+          <h2 id="cta-heading" class="cta-title">
+            Build the <em>layer</em> with us
+          </h2>
+
+          <p class="cta-description">
+            CANVS is not "another app." It's a bet that the next interface is
+            not a rectangle, not a feed, not a timeline. It's the world.
+          </p>
+
+          <div class="cta-actions">
+            <a href="paper.html" class="btn-scribble">Read the Paper</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer role="contentinfo">
+      <div class="footer-logo">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <!-- Infinity-heart symbol -->
+          <path
+            d="M50,85 C35,70 10,50 10,35 C10,20 25,15 40,30 C45,35 48,38 50,40 C52,38 55,35 60,30 C75,15 90,20 90,35 C90,50 65,70 50,85 Z"
+          />
+          <path d="M40,30 C30,40 25,50 35,55 C45,60 55,55 50,40" />
+          <path d="M60,30 C70,40 75,50 65,55 C55,60 45,55 50,40" />
+        </svg>
+        <span class="serif" style="font-size: 20px">CANVS</span>
+      </div>
+
+      <p class="footer-text">
+        The end of the feed. The beginning of the world.
+      </p>
+
+      <p class="footer-meta">Designed by Stoffy with love.</p>
+    </footer>
+
+    <script>
+      // ========================================
+      // SCROLL PROGRESS BAR
+      // ========================================
+      const scrollProgress = document.querySelector(".scroll-progress");
+
+      function updateScrollProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight =
+          document.documentElement.scrollHeight - window.innerHeight;
+        const progress = (scrollTop / docHeight) * 100;
+        scrollProgress.style.width = progress + "%";
+      }
+
+      window.addEventListener("scroll", updateScrollProgress, {
+        passive: true,
+      });
+
+      // ========================================
+      // NAVIGATION SCROLL STATE
+      // ========================================
+      const nav = document.querySelector("nav");
+      const navLinks = document.querySelectorAll(".nav-link");
+      const sections = document.querySelectorAll("section[id]");
+
+      function updateNavState() {
+        const scrollY = window.scrollY;
+
+        // Nav background
+        nav.classList.toggle("scrolled", scrollY > 100);
+
+        // Active link
+        let current = "";
+        sections.forEach((section) => {
+          const sectionTop = section.offsetTop - 150;
+          if (scrollY >= sectionTop) {
+            current = section.getAttribute("id");
+          }
+        });
+
+        navLinks.forEach((link) => {
+          link.classList.remove("active");
+          if (link.getAttribute("href") === `#${current}`) {
+            link.classList.add("active");
+          }
+        });
+      }
+
+      window.addEventListener("scroll", updateNavState, { passive: true });
+
+      // ========================================
+      // SMOOTH SCROLL FOR ANCHOR LINKS
+      // ========================================
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          const href = this.getAttribute("href");
+          if (href === "#") return;
+
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) {
+            const offset = 80;
+            const targetPosition = target.offsetTop - offset;
+            window.scrollTo({
+              top: targetPosition,
+              behavior: "smooth",
+            });
+          }
+        });
+      });
+
+      // ========================================
+      // SCROLL REVEAL ANIMATIONS
+      // ========================================
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      };
+
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll(".reveal, .reveal-stagger").forEach((el) => {
+        revealObserver.observe(el);
+      });
+
+      // ========================================
+      // CURSOR FOLLOWER
+      // ========================================
+      const cursorFollower = document.querySelector(".cursor-follower");
+      let cursorX = 0,
+        cursorY = 0;
+      let followerX = 0,
+        followerY = 0;
+
+      document.addEventListener("mousemove", (e) => {
+        cursorX = e.clientX;
+        cursorY = e.clientY;
+        cursorFollower.classList.add("visible");
+      });
+
+      document.addEventListener("mouseleave", () => {
+        cursorFollower.classList.remove("visible");
+      });
+
+      // Smooth cursor following
+      function animateCursor() {
+        const speed = 0.15;
+        followerX += (cursorX - followerX) * speed;
+        followerY += (cursorY - followerY) * speed;
+        cursorFollower.style.left = followerX + "px";
+        cursorFollower.style.top = followerY + "px";
+        requestAnimationFrame(animateCursor);
+      }
+      animateCursor();
+
+      // Cursor hover states
+      const hoverElements = document.querySelectorAll(
+        "a, button, .mode-card, .solution-card, .primitive-card",
+      );
+      hoverElements.forEach((el) => {
+        el.addEventListener("mouseenter", () =>
+          cursorFollower.classList.add("hovering"),
+        );
+        el.addEventListener("mouseleave", () =>
+          cursorFollower.classList.remove("hovering"),
+        );
+      });
+
+      // ========================================
+      // MOBILE MENU
+      // ========================================
+      const mobileMenuBtn = document.querySelector(".mobile-menu-btn");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const mobileMenuLinks = document.querySelectorAll(".mobile-menu-link");
+
+      function toggleMobileMenu() {
+        mobileMenuBtn.classList.toggle("active");
+        mobileMenu.classList.toggle("active");
+        const isExpanded = mobileMenuBtn.classList.contains("active");
+        mobileMenuBtn.setAttribute("aria-expanded", isExpanded);
+        document.body.style.overflow = isExpanded ? "hidden" : "";
+      }
+
+      mobileMenuBtn.addEventListener("click", toggleMobileMenu);
+
+      // Close mobile menu when clicking a link
+      mobileMenuLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileMenuBtn.classList.remove("active");
+          mobileMenu.classList.remove("active");
+          mobileMenuBtn.setAttribute("aria-expanded", "false");
+          document.body.style.overflow = "";
+        });
+      });
+
+      // ========================================
+      // KEYBOARD NAVIGATION FOR MODE CARDS
+      // ========================================
+      document.querySelectorAll(".mode-card").forEach((card) => {
+        card.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            card.click();
+          }
+        });
+      });
+
+      // ========================================
+      // REDUCED MOTION CHECK
+      // ========================================
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      );
+
+      if (prefersReducedMotion.matches) {
+        // Disable cursor follower for reduced motion
+        cursorFollower.style.display = "none";
+      }
+
+      // ========================================
+      // PERFORMANCE: RAF THROTTLING
+      // ========================================
+      let ticking = false;
+
+      function handleScroll() {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            updateNavState();
+            updateScrollProgress();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }
+
+      window.addEventListener("scroll", handleScroll, { passive: true });
+    </script>
+  </body>
+</html>
