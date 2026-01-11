@@ -1,270 +1,432 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CANVS: The Humanist Interface</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;1,6..72,400&display=swap"
+      rel="stylesheet"
+    />
 
     <style>
-        :root {
-            /* Palette Definition */
-            --bg-paper: #F0EFEA;
-            --ink: #1A1A18;
-            --terracotta: #D97757;
-            --sage: #8DA399;
-            --highlighter: #EEDC5B;
-        }
+      :root {
+        /* Palette Definition */
+        --bg-paper: #f0efea;
+        --ink: #1a1a18;
+        --terracotta: #d97757;
+        --sage: #8da399;
+        --highlighter: #eedc5b;
+      }
 
-        /* 1. Paper Texture Implementation (Digital Humanism) */
-        /* Adds a subtle grain over the flat color to mimic cold press paper */
-        .bg-noise {
-            background-color: var(--bg-paper);
-            position: relative;
-        }
-        .bg-noise::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 50;
-        }
+      /* 1. Paper Texture Implementation (Digital Humanism) */
+      /* Adds a subtle grain over the flat color to mimic cold press paper */
+      .bg-noise {
+        background-color: var(--bg-paper);
+        position: relative;
+      }
+      .bg-noise::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 50;
+      }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            color: var(--ink);
-            -webkit-font-smoothing: antialiased;
-        }
+      body {
+        font-family: "Inter", sans-serif;
+        color: var(--ink);
+        -webkit-font-smoothing: antialiased;
+      }
 
-        h1, h2, h3, .serif {
-            font-family: 'Newsreader', serif;
-        }
+      h1,
+      h2,
+      h3,
+      .serif {
+        font-family: "Newsreader", serif;
+      }
 
-        /* 2. The Weaver's Knot Logo Style */
-        .weaver-knot {
-            fill: none;
-            stroke: var(--terracotta);
-            stroke-width: 2.5;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            /* Simulates ink bleeding into paper */
-            filter: drop-shadow(0px 0px 1px rgba(217, 119, 87, 0.3));
-        }
+      /* 2. The Weaver's Knot Logo Style */
+      .weaver-knot {
+        fill: none;
+        stroke: var(--terracotta);
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        /* Simulates ink bleeding into paper */
+        filter: drop-shadow(0px 0px 1px rgba(217, 119, 87, 0.3));
+      }
 
-        /* Hand-drawn button style */
-        .btn-scribble {
-            background: transparent;
-            border: 2px solid var(--ink);
-            /* Asymmetric corners to look hand-cut */
-            border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-            padding: 12px 32px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 500;
-            color: var(--ink);
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            position: relative;
-            overflow: hidden;
-        }
+      /* Hand-drawn button style */
+      .btn-scribble {
+        background: transparent;
+        border: 2px solid var(--ink);
+        /* Asymmetric corners to look hand-cut */
+        border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+        padding: 12px 32px;
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        color: var(--ink);
+        transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        position: relative;
+        overflow: hidden;
+      }
 
-        .btn-scribble:hover {
-            background-color: var(--terracotta);
-            color: #F0EFEA;
-            border-color: var(--terracotta);
-            transform: translateY(-2px) rotate(-1deg);
-            box-shadow: 3px 3px 0px var(--ink);
-        }
+      .btn-scribble:hover {
+        background-color: var(--terracotta);
+        color: #f0efea;
+        border-color: var(--terracotta);
+        transform: translateY(-2px) rotate(-1deg);
+        box-shadow: 3px 3px 0px var(--ink);
+      }
 
-        /* Card Style - Physical Paper Metaphor */
-        .paper-card {
-            background-color: white;
-            border: 1px solid rgba(26, 26, 24, 0.08);
-            border-radius: 4px; /* Sharper corners like cut paper */
-            box-shadow: 0 4px 20px -2px rgba(26, 26, 24, 0.08);
-            transition: transform 0.3s ease;
-        }
-        .paper-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--terracotta);
-        }
+      /* Card Style - Physical Paper Metaphor */
+      .paper-card {
+        background-color: white;
+        border: 1px solid rgba(26, 26, 24, 0.08);
+        border-radius: 4px; /* Sharper corners like cut paper */
+        box-shadow: 0 4px 20px -2px rgba(26, 26, 24, 0.08);
+        transition: transform 0.3s ease;
+      }
+      .paper-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--terracotta);
+      }
 
-        /* SVG Draw Animation */
-        .path-draw {
-            stroke-dasharray: 250;
-            stroke-dashoffset: 250;
-            animation: draw 2.5s cubic-bezier(0.45, 0, 0.55, 1) forwards;
-        }
+      /* SVG Draw Animation */
+      .path-draw {
+        stroke-dasharray: 250;
+        stroke-dashoffset: 250;
+        animation: draw 2.5s cubic-bezier(0.45, 0, 0.55, 1) forwards;
+      }
 
-        @keyframes draw {
-            to { stroke-dashoffset: 0; }
+      @keyframes draw {
+        to {
+          stroke-dashoffset: 0;
         }
+      }
 
-        ::selection {
-            background: var(--terracotta);
-            color: white;
-        }
+      ::selection {
+        background: var(--terracotta);
+        color: white;
+      }
 
-        /* Utility classes for the variables */
-        .text-terracotta { color: var(--terracotta); }
-        .bg-terracotta { background-color: var(--terracotta); }
-        .bg-sage { background-color: var(--sage); }
-        .bg-ink { background-color: var(--ink); }
+      /* Utility classes for the variables */
+      .text-terracotta {
+        color: var(--terracotta);
+      }
+      .bg-terracotta {
+        background-color: var(--terracotta);
+      }
+      .bg-sage {
+        background-color: var(--sage);
+      }
+      .bg-ink {
+        background-color: var(--ink);
+      }
     </style>
-</head>
-<body class="bg-noise min-h-screen flex flex-col overflow-x-hidden">
+  </head>
+  <body class="bg-noise min-h-screen flex flex-col overflow-x-hidden">
+    <nav
+      class="w-full px-8 py-6 flex justify-between items-center sticky top-0 z-[60] backdrop-blur-md bg-[#F0EFEA]/90 border-b border-[#1A1A18]/5"
+    >
+      <div class="flex items-center gap-3 group cursor-pointer">
+        <svg
+          width="42"
+          height="42"
+          viewBox="0 0 100 100"
+          class="weaver-knot transition-transform duration-500 group-hover:scale-110"
+        >
+          <path
+            class="path-draw"
+            d="M50,90 C42,78 20,55 20,38 C20,20 38,15 50,32 C62,15 80,20 80,38 C80,55 58,78 50,90 Z M50,32 C50,32 50,45 50,45"
+          />
+        </svg>
+        <span class="serif text-2xl font-semibold tracking-tight text-[#1A1A18]"
+          >CANVS</span
+        >
+      </div>
 
-    <nav class="w-full px-8 py-6 flex justify-between items-center sticky top-0 z-[60] backdrop-blur-md bg-[#F0EFEA]/90 border-b border-[#1A1A18]/5">
-        <div class="flex items-center gap-3 group cursor-pointer">
-            <svg width="42" height="42" viewBox="0 0 100 100" class="weaver-knot transition-transform duration-500 group-hover:scale-110">
-                <path class="path-draw" d="M50,90 C42,78 20,55 20,38 C20,20 38,15 50,32 C62,15 80,20 80,38 C80,55 58,78 50,90 Z M50,32 C50,32 50,45 50,45" />
-            </svg>
-            <span class="serif text-2xl font-semibold tracking-tight text-[#1A1A18]">CANVS</span>
-        </div>
+      <div class="hidden md:flex gap-8 text-sm font-medium text-[#1A1A18]/60">
+        <a
+          href="#"
+          class="hover:text-[var(--terracotta)] hover:underline decoration-1 underline-offset-4 transition-all"
+          >Manifesto</a
+        >
+        <a
+          href="#"
+          class="hover:text-[var(--terracotta)] hover:underline decoration-1 underline-offset-4 transition-all"
+          >Technology</a
+        >
+        <a
+          href="#"
+          class="hover:text-[var(--terracotta)] hover:underline decoration-1 underline-offset-4 transition-all"
+          >Values</a
+        >
+      </div>
 
-        <div class="hidden md:flex gap-8 text-sm font-medium text-[#1A1A18]/60">
-            <a href="#" class="hover:text-[var(--terracotta)] hover:underline decoration-1 underline-offset-4 transition-all">Manifesto</a>
-            <a href="#" class="hover:text-[var(--terracotta)] hover:underline decoration-1 underline-offset-4 transition-all">Technology</a>
-            <a href="#" class="hover:text-[var(--terracotta)] hover:underline decoration-1 underline-offset-4 transition-all">Values</a>
-        </div>
-
-        <button class="btn-scribble text-xs tracking-wider uppercase">
-            Request Access
-        </button>
+      <button class="btn-scribble text-xs tracking-wider uppercase">
+        Request Access
+      </button>
     </nav>
 
-    <main class="flex-grow max-w-7xl mx-auto px-6 py-20 w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+    <main
+      class="flex-grow max-w-7xl mx-auto px-6 py-20 w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10"
+    >
+      <div class="relative">
+        <svg
+          class="absolute -top-12 -left-12 w-40 h-40 -z-10 opacity-30"
+          viewBox="0 0 200 200"
+        >
+          <path
+            d="M40,160 Q20,20 160,40 T180,150"
+            fill="none"
+            stroke="#D97757"
+            stroke-width="4"
+            stroke-linecap="round"
+          />
+        </svg>
 
-        <div class="relative">
-            <svg class="absolute -top-12 -left-12 w-40 h-40 -z-10 opacity-30" viewBox="0 0 200 200">
-                <path d="M40,160 Q20,20 160,40 T180,150" fill="none" stroke="#D97757" stroke-width="4" stroke-linecap="round"/>
+        <h1
+          class="text-5xl md:text-7xl font-light mb-8 leading-[1.05] text-[#1A1A18] serif"
+        >
+          The world is<br />
+          <span class="italic text-terracotta">a blank page.</span>
+        </h1>
+        <p
+          class="text-lg md:text-xl text-[#1A1A18]/80 leading-relaxed mb-10 max-w-lg font-light"
+        >
+          We are building the internet of places. Not a feed that scrolls
+          forever, but a layer of meaning that stays where you leave it.
+        </p>
+
+        <div class="flex gap-4">
+          <div class="flex flex-col gap-2">
+            <span
+              class="text-[10px] font-bold uppercase tracking-widest text-[#1A1A18]/40"
+              >Concept</span
+            >
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 rounded-full bg-terracotta"></div>
+              <span class="font-medium text-sm">Digital Humanism</span>
+            </div>
+          </div>
+          <div class="w-px h-10 bg-[#1A1A18]/10 mx-4"></div>
+          <div class="flex flex-col gap-2">
+            <span
+              class="text-[10px] font-bold uppercase tracking-widest text-[#1A1A18]/40"
+              >Visuals</span
+            >
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 rounded-full bg-sage"></div>
+              <span class="font-medium text-sm">Tactile Artifacts</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-6 relative">
+        <div class="paper-card col-span-2 p-8">
+          <div class="flex justify-between items-start mb-6">
+            <div>
+              <h3 class="serif text-2xl mb-1 text-[#1A1A18]">The Palette</h3>
+              <p
+                class="text-xs font-mono text-[#1A1A18]/50 uppercase tracking-widest"
+              >
+                Natural Materials
+              </p>
+            </div>
+            <svg width="30" height="30" viewBox="0 0 50 50">
+              <circle
+                cx="25"
+                cy="25"
+                r="20"
+                fill="none"
+                stroke="#D97757"
+                stroke-width="2"
+              />
+              <path
+                d="M15,25 Q25,35 35,25"
+                fill="none"
+                stroke="#D97757"
+                stroke-width="2"
+              />
             </svg>
+          </div>
 
-            <h1 class="text-5xl md:text-7xl font-light mb-8 leading-[1.05] text-[#1A1A18] serif">
-                The world is<br>
-                <span class="italic text-terracotta">a blank page.</span>
-            </h1>
-            <p class="text-lg md:text-xl text-[#1A1A18]/80 leading-relaxed mb-10 max-w-lg font-light">
-                We are building the internet of places. Not a feed that scrolls forever, but a layer of meaning that stays where you leave it.
-            </p>
-
-            <div class="flex gap-4">
-                <div class="flex flex-col gap-2">
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-[#1A1A18]/40">Concept</span>
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 rounded-full bg-terracotta"></div>
-                        <span class="font-medium text-sm">Digital Humanism</span>
-                    </div>
-                </div>
-                <div class="w-px h-10 bg-[#1A1A18]/10 mx-4"></div>
-                <div class="flex flex-col gap-2">
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-[#1A1A18]/40">Visuals</span>
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 rounded-full bg-sage"></div>
-                        <span class="font-medium text-sm">Tactile Artifacts</span>
-                    </div>
-                </div>
+          <div class="grid grid-cols-4 gap-4 h-24">
+            <div
+              class="rounded bg-[#F0EFEA] border border-black/5 flex flex-col justify-end p-2 transition-transform hover:-translate-y-1"
+            >
+              <span class="text-[10px] opacity-50">Alabaster</span>
             </div>
+            <div
+              class="rounded bg-ink text-[#F0EFEA] flex flex-col justify-end p-2 transition-transform hover:-translate-y-1"
+            >
+              <span class="text-[10px] opacity-50">Ink</span>
+            </div>
+            <div
+              class="rounded bg-terracotta text-white flex flex-col justify-end p-2 transition-transform hover:-translate-y-1"
+            >
+              <span class="text-[10px] opacity-90">Terra</span>
+            </div>
+            <div
+              class="rounded bg-sage text-white flex flex-col justify-end p-2 transition-transform hover:-translate-y-1"
+            >
+              <span class="text-[10px] opacity-90">Sage</span>
+            </div>
+          </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-6 relative">
-
-            <div class="paper-card col-span-2 p-8">
-                <div class="flex justify-between items-start mb-6">
-                    <div>
-                        <h3 class="serif text-2xl mb-1 text-[#1A1A18]">The Palette</h3>
-                        <p class="text-xs font-mono text-[#1A1A18]/50 uppercase tracking-widest">Natural Materials</p>
-                    </div>
-                    <svg width="30" height="30" viewBox="0 0 50 50">
-                        <circle cx="25" cy="25" r="20" fill="none" stroke="#D97757" stroke-width="2" />
-                        <path d="M15,25 Q25,35 35,25" fill="none" stroke="#D97757" stroke-width="2" />
-                    </svg>
-                </div>
-
-                <div class="grid grid-cols-4 gap-4 h-24">
-                    <div class="rounded bg-[#F0EFEA] border border-black/5 flex flex-col justify-end p-2 transition-transform hover:-translate-y-1"><span class="text-[10px] opacity-50">Alabaster</span></div>
-                    <div class="rounded bg-ink text-[#F0EFEA] flex flex-col justify-end p-2 transition-transform hover:-translate-y-1"><span class="text-[10px] opacity-50">Ink</span></div>
-                    <div class="rounded bg-terracotta text-white flex flex-col justify-end p-2 transition-transform hover:-translate-y-1"><span class="text-[10px] opacity-90">Terra</span></div>
-                    <div class="rounded bg-sage text-white flex flex-col justify-end p-2 transition-transform hover:-translate-y-1"><span class="text-[10px] opacity-90">Sage</span></div>
-                </div>
-            </div>
-
-            <div class="paper-card p-6 flex flex-col items-center justify-center text-center group">
-                <div class="mb-4 relative transition-transform duration-500 group-hover:scale-110">
-                    <svg width="60" height="60" viewBox="0 0 100 100" style="fill: none; stroke: #1A1A18; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;">
-                         <path d="M50,15 C30,15 20,35 20,50 C20,75 50,90 50,90 C50,90 80,75 80,50 C80,35 70,15 50,15" />
-                        <path d="M35,35 Q50,60 65,35" style="stroke: #D97757;" />
-                    </svg>
-                </div>
-                <h4 class="font-bold text-sm mb-1 serif">The Knot</h4>
-                <p class="text-xs text-[#1A1A18]/60">Threads of memory woven into place.</p>
-            </div>
-
-            <div class="paper-card p-6 flex flex-col items-center justify-center">
-                <button class="btn-scribble text-xs w-full mb-2">
-                    Explore Area
-                </button>
-                <div class="text-[9px] text-[#1A1A18]/30 mt-2 font-mono uppercase">
-                    Status: Alpha
-                </div>
-            </div>
-
+        <div
+          class="paper-card p-6 flex flex-col items-center justify-center text-center group"
+        >
+          <div
+            class="mb-4 relative transition-transform duration-500 group-hover:scale-110"
+          >
+            <svg
+              width="60"
+              height="60"
+              viewBox="0 0 100 100"
+              style="
+                fill: none;
+                stroke: #1a1a18;
+                stroke-width: 2;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+              "
+            >
+              <path
+                d="M50,15 C30,15 20,35 20,50 C20,75 50,90 50,90 C50,90 80,75 80,50 C80,35 70,15 50,15"
+              />
+              <path d="M35,35 Q50,60 65,35" style="stroke: #d97757" />
+            </svg>
+          </div>
+          <h4 class="font-bold text-sm mb-1 serif">The Knot</h4>
+          <p class="text-xs text-[#1A1A18]/60">
+            Threads of memory woven into place.
+          </p>
         </div>
+
+        <div class="paper-card p-6 flex flex-col items-center justify-center">
+          <button class="btn-scribble text-xs w-full mb-2">Explore Area</button>
+          <div class="text-[9px] text-[#1A1A18]/30 mt-2 font-mono uppercase">
+            Status: Alpha
+          </div>
+        </div>
+      </div>
     </main>
 
     <div class="w-full h-px bg-[#1A1A18]/10 max-w-7xl mx-auto"></div>
 
     <section class="py-24 relative overflow-hidden">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-terracotta/5 rounded-full blur-3xl -z-10"></div>
+      <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-terracotta/5 rounded-full blur-3xl -z-10"
+      ></div>
 
-        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
-            <h2 class="serif text-3xl mb-4">The Digital Overlay</h2>
-            <p class="text-[#1A1A18]/70 mb-12 max-w-xl mx-auto font-light">
-                No holograms. No neon. Just digital paper cards overlaid on reality, designed to reduce anxiety and increase presence.
-            </p>
+      <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+        <h2 class="serif text-3xl mb-4">The Digital Overlay</h2>
+        <p class="text-[#1A1A18]/70 mb-12 max-w-xl mx-auto font-light">
+          No holograms. No neon. Just digital paper cards overlaid on reality,
+          designed to reduce anxiety and increase presence.
+        </p>
 
-            <div class="mx-auto w-[300px] h-[600px] bg-[#1A1A18] rounded-[45px] p-3 shadow-2xl relative transform transition-transform hover:scale-[1.01]">
-                <div class="w-full h-full bg-[#F0EFEA] rounded-[35px] overflow-hidden relative border border-[#1A1A18]/20">
+        <div
+          class="mx-auto w-[300px] h-[600px] bg-[#1A1A18] rounded-[45px] p-3 shadow-2xl relative transform transition-transform hover:scale-[1.01]"
+        >
+          <div
+            class="w-full h-full bg-[#F0EFEA] rounded-[35px] overflow-hidden relative border border-[#1A1A18]/20"
+          >
+            <div
+              class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1595113316349-9fa4eb24f884?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-30 grayscale contrast-125"
+            ></div>
 
-                    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1595113316349-9fa4eb24f884?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-30 grayscale contrast-125"></div>
-
-                    <div class="absolute inset-0 p-6 flex flex-col justify-between">
-
-                        <div class="flex justify-between items-center">
-                            <div class="bg-[#F0EFEA]/90 backdrop-blur px-3 py-1 rounded-full border border-[#1A1A18]/10 shadow-sm">
-                                <span class="text-[10px] font-bold tracking-widest text-terracotta">LIVE FEED</span>
-                            </div>
-                        </div>
-
-                        <div class="relative h-full">
-                            <div class="absolute top-24 left-2 w-48 bg-[#F0EFEA] p-4 rounded-md shadow-lg border border-black/5 transform -rotate-1 cursor-pointer hover:z-50 hover:scale-105 transition-all">
-                                <p class="serif text-lg italic mb-2 text-ink leading-tight">"The light hits this wall perfectly at 5pm."</p>
-                                <div class="flex items-center gap-2 text-[9px] text-[#1A1A18]/50 font-mono uppercase">
-                                    <span class="text-terracotta font-bold">● Memory</span>
-                                    <span>2h ago</span>
-                                </div>
-                                <div class="absolute -bottom-8 left-1/2 w-0.5 h-8 bg-terracotta/50 origin-top transform rotate-12"></div>
-                                <div class="absolute -bottom-9 left-10 w-2 h-2 rounded-full bg-terracotta"></div>
-                            </div>
-                        </div>
-
-                        <div class="bg-[#F0EFEA]/95 backdrop-blur rounded-2xl p-4 shadow-xl border border-[#1A1A18]/5">
-                            <div class="flex justify-around items-center">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A1A18" stroke-width="1.5"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-
-                                <div class="w-14 h-14 bg-terracotta rounded-full flex items-center justify-center -mt-10 border-[6px] border-[#F0EFEA] text-white shadow-lg transition-transform hover:scale-110 cursor-pointer">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-                                </div>
-
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A1A18" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                            </div>
-                        </div>
-
-                    </div>
+            <div class="absolute inset-0 p-6 flex flex-col justify-between">
+              <div class="flex justify-between items-center">
+                <div
+                  class="bg-[#F0EFEA]/90 backdrop-blur px-3 py-1 rounded-full border border-[#1A1A18]/10 shadow-sm"
+                >
+                  <span
+                    class="text-[10px] font-bold tracking-widest text-terracotta"
+                    >LIVE FEED</span
+                  >
                 </div>
-            </div>
-        </div>
-    </section>
+              </div>
 
-</body>
+              <div class="relative h-full">
+                <div
+                  class="absolute top-24 left-2 w-48 bg-[#F0EFEA] p-4 rounded-md shadow-lg border border-black/5 transform -rotate-1 cursor-pointer hover:z-50 hover:scale-105 transition-all"
+                >
+                  <p class="serif text-lg italic mb-2 text-ink leading-tight">
+                    "The light hits this wall perfectly at 5pm."
+                  </p>
+                  <div
+                    class="flex items-center gap-2 text-[9px] text-[#1A1A18]/50 font-mono uppercase"
+                  >
+                    <span class="text-terracotta font-bold">● Memory</span>
+                    <span>2h ago</span>
+                  </div>
+                  <div
+                    class="absolute -bottom-8 left-1/2 w-0.5 h-8 bg-terracotta/50 origin-top transform rotate-12"
+                  ></div>
+                  <div
+                    class="absolute -bottom-9 left-10 w-2 h-2 rounded-full bg-terracotta"
+                  ></div>
+                </div>
+              </div>
+
+              <div
+                class="bg-[#F0EFEA]/95 backdrop-blur rounded-2xl p-4 shadow-xl border border-[#1A1A18]/5"
+              >
+                <div class="flex justify-around items-center">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#1A1A18"
+                    stroke-width="1.5"
+                  >
+                    <path d="M3 12h18M3 6h18M3 18h18" />
+                  </svg>
+
+                  <div
+                    class="w-14 h-14 bg-terracotta rounded-full flex items-center justify-center -mt-10 border-[6px] border-[#F0EFEA] text-white shadow-lg transition-transform hover:scale-110 cursor-pointer"
+                  >
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M12 5v14M5 12h14" />
+                    </svg>
+                  </div>
+
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#1A1A18"
+                    stroke-width="1.5"
+                  >
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="M21 21l-4.35-4.35" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
 </html>

@@ -1,13 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CANVS: The Spatial Social Layer | Vision & Roadmap</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.24.1/plotly.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Chosen Palette: "Urban Warmth & Digital Aether" -->
     <!-- Backgrounds: Stone-50 (Warm Neutral/Physical World), White (Cards) -->
@@ -35,448 +38,726 @@
     -->
 
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #FAFAF9; /* stone-50 */
-            color: #1C1917; /* stone-900 */
-            overflow-x: hidden;
-        }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #fafaf9; /* stone-50 */
+        color: #1c1917; /* stone-900 */
+        overflow-x: hidden;
+      }
 
-        h1, h2, h3, h4, .serif-font {
-            font-family: 'Lora', serif;
-        }
+      h1,
+      h2,
+      h3,
+      h4,
+      .serif-font {
+        font-family: "Lora", serif;
+      }
 
-        .gradient-text {
-            background: linear-gradient(135deg, #4F46E5, #EA580C);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+      .gradient-text {
+        background: linear-gradient(135deg, #4f46e5, #ea580c);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
 
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
-            height: 400px;
-            max-height: 500px;
-        }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        height: 400px;
+        max-height: 500px;
+      }
 
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-        }
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+      }
 
-        /* Custom Scrollbar for horizontal lists */
-        .hide-scroll::-webkit-scrollbar {
-            display: none;
-        }
-        .hide-scroll {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+      /* Custom Scrollbar for horizontal lists */
+      .hide-scroll::-webkit-scrollbar {
+        display: none;
+      }
+      .hide-scroll {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
 
-        .active-tab {
-            background-color: #1C1917;
-            color: white;
-        }
-        .inactive-tab {
-            background-color: transparent;
-            color: #57534E;
-            border: 1px solid #E7E5E4;
-        }
+      .active-tab {
+        background-color: #1c1917;
+        color: white;
+      }
+      .inactive-tab {
+        background-color: transparent;
+        color: #57534e;
+        border: 1px solid #e7e5e4;
+      }
 
-        .primitive-card {
-            transition: all 0.3s ease;
-        }
-        .primitive-card:hover {
-            transform: translateY(-5px);
-            border-color: #4F46E5;
-            box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.1);
-        }
+      .primitive-card {
+        transition: all 0.3s ease;
+      }
+      .primitive-card:hover {
+        transform: translateY(-5px);
+        border-color: #4f46e5;
+        box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.1);
+      }
 
-        .feature-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            display: inline-block;
-        }
+      .feature-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        display: inline-block;
+      }
     </style>
-</head>
-<body class="antialiased selection:bg-indigo-100 selection:text-indigo-900">
-
+  </head>
+  <body class="antialiased selection:bg-indigo-100 selection:text-indigo-900">
     <!-- Navigation -->
     <nav class="fixed top-0 w-full z-50 glass-panel border-b border-stone-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 bg-gradient-to-br from-indigo-600 to-orange-500 rounded-lg flex items-center justify-center text-white font-bold font-serif text-xl">C</div>
-                    <span class="font-bold text-xl tracking-tight text-stone-900">CANVS</span>
-                </div>
-                <div class="hidden md:flex space-x-8 text-sm font-medium text-stone-600">
-                    <a href="#vision" class="hover:text-indigo-600 transition">Vision</a>
-                    <a href="#design" class="hover:text-indigo-600 transition">Design</a>
-                    <a href="#primitives" class="hover:text-indigo-600 transition">Primitives</a>
-                    <a href="#roadmap" class="hover:text-indigo-600 transition">Roadmap</a>
-                    <a href="#usecases" class="hover:text-indigo-600 transition">Impact</a>
-                </div>
-                <button class="bg-stone-900 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-stone-800 transition shadow-lg shadow-stone-900/10">
-                    Join Alpha
-                </button>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center space-x-2">
+            <div
+              class="w-8 h-8 bg-gradient-to-br from-indigo-600 to-orange-500 rounded-lg flex items-center justify-center text-white font-bold font-serif text-xl"
+            >
+              C
             </div>
+            <span class="font-bold text-xl tracking-tight text-stone-900"
+              >CANVS</span
+            >
+          </div>
+          <div
+            class="hidden md:flex space-x-8 text-sm font-medium text-stone-600"
+          >
+            <a href="#vision" class="hover:text-indigo-600 transition"
+              >Vision</a
+            >
+            <a href="#design" class="hover:text-indigo-600 transition"
+              >Design</a
+            >
+            <a href="#primitives" class="hover:text-indigo-600 transition"
+              >Primitives</a
+            >
+            <a href="#roadmap" class="hover:text-indigo-600 transition"
+              >Roadmap</a
+            >
+            <a href="#usecases" class="hover:text-indigo-600 transition"
+              >Impact</a
+            >
+          </div>
+          <button
+            class="bg-stone-900 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-stone-800 transition shadow-lg shadow-stone-900/10"
+          >
+            Join Alpha
+          </button>
         </div>
+      </div>
     </nav>
 
     <!-- Hero Section -->
-    <section id="vision" class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div class="text-center max-w-3xl mx-auto mb-16">
-            <div class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-indigo-600 uppercase bg-indigo-50 rounded-full border border-indigo-100">
-                Product Vision 2026–2030
-            </div>
-            <h1 class="text-5xl sm:text-7xl font-bold tracking-tight mb-6 text-stone-900 leading-tight">
-                The End of the Feed.<br>
-                <span class="serif-font italic gradient-text">The Beginning of the World.</span>
-            </h1>
-            <p class="text-xl text-stone-600 leading-relaxed mb-10">
-                CANVS is a persistent, AR-native social layer anchored to physical places. We are turning the planet into an addressable surface for memory, knowledge, and art.
-            </p>
-
-            <!-- Interactive Comparison -->
-            <div class="glass-panel p-1 rounded-2xl max-w-lg mx-auto flex mb-12 relative">
-                <div id="mode-bg" class="absolute top-1 left-1 w-[calc(50%-4px)] h-[calc(100%-8px)] bg-white rounded-xl shadow-sm transition-all duration-300"></div>
-                <button onclick="toggleVision('legacy')" class="relative z-10 w-1/2 py-3 text-sm font-semibold rounded-xl transition-colors duration-300 text-stone-900" id="btn-legacy">
-                    Legacy (The Feed)
-                </button>
-                <button onclick="toggleVision('canvs')" class="relative z-10 w-1/2 py-3 text-sm font-semibold rounded-xl transition-colors duration-300 text-stone-500" id="btn-canvs">
-                    CANVS (The World)
-                </button>
-            </div>
-
-            <div id="vision-content" class="bg-white rounded-3xl p-8 md:p-12 shadow-xl shadow-stone-200/50 border border-stone-100 transition-all duration-500 min-h-[300px] flex items-center justify-center">
-                <!-- JS will inject content here -->
-            </div>
+    <section
+      id="vision"
+      class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto"
+    >
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <div
+          class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-indigo-600 uppercase bg-indigo-50 rounded-full border border-indigo-100"
+        >
+          Product Vision 2026–2030
         </div>
+        <h1
+          class="text-5xl sm:text-7xl font-bold tracking-tight mb-6 text-stone-900 leading-tight"
+        >
+          The End of the Feed.<br />
+          <span class="serif-font italic gradient-text"
+            >The Beginning of the World.</span
+          >
+        </h1>
+        <p class="text-xl text-stone-600 leading-relaxed mb-10">
+          CANVS is a persistent, AR-native social layer anchored to physical
+          places. We are turning the planet into an addressable surface for
+          memory, knowledge, and art.
+        </p>
+
+        <!-- Interactive Comparison -->
+        <div
+          class="glass-panel p-1 rounded-2xl max-w-lg mx-auto flex mb-12 relative"
+        >
+          <div
+            id="mode-bg"
+            class="absolute top-1 left-1 w-[calc(50%-4px)] h-[calc(100%-8px)] bg-white rounded-xl shadow-sm transition-all duration-300"
+          ></div>
+          <button
+            onclick="toggleVision('legacy')"
+            class="relative z-10 w-1/2 py-3 text-sm font-semibold rounded-xl transition-colors duration-300 text-stone-900"
+            id="btn-legacy"
+          >
+            Legacy (The Feed)
+          </button>
+          <button
+            onclick="toggleVision('canvs')"
+            class="relative z-10 w-1/2 py-3 text-sm font-semibold rounded-xl transition-colors duration-300 text-stone-500"
+            id="btn-canvs"
+          >
+            CANVS (The World)
+          </button>
+        </div>
+
+        <div
+          id="vision-content"
+          class="bg-white rounded-3xl p-8 md:p-12 shadow-xl shadow-stone-200/50 border border-stone-100 transition-all duration-500 min-h-[300px] flex items-center justify-center"
+        >
+          <!-- JS will inject content here -->
+        </div>
+      </div>
     </section>
 
     <!-- Context: Introduction to Design -->
     <section class="max-w-4xl mx-auto px-4 mb-10 text-center">
-        <h2 class="text-3xl font-bold mb-4">The Design Concept</h2>
-        <p class="text-stone-600">
-            To realize the vision of an "Internet of Places," the visual language must be understated, organic, and subservient to the physical world. The interface is glass—it only exists to reveal what is already there.
-        </p>
+      <h2 class="text-3xl font-bold mb-4">The Design Concept</h2>
+      <p class="text-stone-600">
+        To realize the vision of an "Internet of Places," the visual language
+        must be understated, organic, and subservient to the physical world. The
+        interface is glass—it only exists to reveal what is already there.
+      </p>
     </section>
 
     <!-- Design System / iOS Concept -->
     <section id="design" class="py-16 bg-white border-y border-stone-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <!-- Design Specs -->
+          <div>
+            <h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
+              <span
+                class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-sm"
+                >A</span
+              >
+              Visual Identity
+            </h3>
 
-                <!-- Design Specs -->
-                <div>
-                    <h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
-                        <span class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-sm">A</span>
-                        Visual Identity
-                    </h3>
-
-                    <div class="space-y-8">
-                        <div>
-                            <h4 class="text-sm font-semibold text-stone-400 uppercase tracking-wider mb-3">Color Palette: "Earth & Aether"</h4>
-                            <div class="flex space-x-4">
-                                <div class="space-y-2 text-center">
-                                    <div class="w-16 h-16 rounded-2xl bg-[#FAFAF9] border border-stone-200 shadow-sm"></div>
-                                    <p class="text-xs font-mono text-stone-500">Base</p>
-                                </div>
-                                <div class="space-y-2 text-center">
-                                    <div class="w-16 h-16 rounded-2xl bg-[#1C1917] shadow-sm"></div>
-                                    <p class="text-xs font-mono text-stone-500">Ink</p>
-                                </div>
-                                <div class="space-y-2 text-center">
-                                    <div class="w-16 h-16 rounded-2xl bg-[#4F46E5] shadow-lg shadow-indigo-200"></div>
-                                    <p class="text-xs font-mono text-stone-500">AR/Tech</p>
-                                </div>
-                                <div class="space-y-2 text-center">
-                                    <div class="w-16 h-16 rounded-2xl bg-[#EA580C] shadow-lg shadow-orange-200"></div>
-                                    <p class="text-xs font-mono text-stone-500">Emotion</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <h4 class="text-sm font-semibold text-stone-400 uppercase tracking-wider mb-3">Iconography & Typography</h4>
-                            <div class="p-6 bg-stone-50 rounded-2xl border border-stone-100">
-                                <p class="mb-4 font-serif text-2xl italic text-stone-800">"The world as a canvas."</p>
-                                <p class="text-sm text-stone-600 font-sans mb-4">
-                                    <strong>Primary Font (Inter):</strong> Used for UI, data, and navigation. High legibility.<br>
-                                    <strong>Secondary Font (Lora):</strong> Used for user memories, manifesto text, and "human" moments.
-                                </p>
-                                <div class="flex gap-4 text-2xl">
-                                    <span>📍</span><span>🫧</span><span>⏳</span><span>🏔️</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="space-y-8">
+              <div>
+                <h4
+                  class="text-sm font-semibold text-stone-400 uppercase tracking-wider mb-3"
+                >
+                  Color Palette: "Earth & Aether"
+                </h4>
+                <div class="flex space-x-4">
+                  <div class="space-y-2 text-center">
+                    <div
+                      class="w-16 h-16 rounded-2xl bg-[#FAFAF9] border border-stone-200 shadow-sm"
+                    ></div>
+                    <p class="text-xs font-mono text-stone-500">Base</p>
+                  </div>
+                  <div class="space-y-2 text-center">
+                    <div
+                      class="w-16 h-16 rounded-2xl bg-[#1C1917] shadow-sm"
+                    ></div>
+                    <p class="text-xs font-mono text-stone-500">Ink</p>
+                  </div>
+                  <div class="space-y-2 text-center">
+                    <div
+                      class="w-16 h-16 rounded-2xl bg-[#4F46E5] shadow-lg shadow-indigo-200"
+                    ></div>
+                    <p class="text-xs font-mono text-stone-500">AR/Tech</p>
+                  </div>
+                  <div class="space-y-2 text-center">
+                    <div
+                      class="w-16 h-16 rounded-2xl bg-[#EA580C] shadow-lg shadow-orange-200"
+                    ></div>
+                    <p class="text-xs font-mono text-stone-500">Emotion</p>
+                  </div>
                 </div>
+              </div>
 
-                <!-- Simulated iOS App Interface -->
-                <div class="relative mx-auto border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[600px] w-[300px] shadow-xl">
-                    <div class="h-[32px] w-[3px] bg-gray-800 absolute -left-[17px] top-[72px] rounded-l-lg"></div>
-                    <div class="h-[46px] w-[3px] bg-gray-800 absolute -left-[17px] top-[124px] rounded-l-lg"></div>
-                    <div class="h-[46px] w-[3px] bg-gray-800 absolute -left-[17px] top-[178px] rounded-l-lg"></div>
-                    <div class="h-[64px] w-[3px] bg-gray-800 absolute -right-[17px] top-[142px] rounded-r-lg"></div>
-                    <div class="rounded-[2rem] overflow-hidden w-full h-full bg-stone-900 relative">
-
-                        <!-- App Screen: AR View -->
-                        <div class="absolute inset-0 w-full h-full bg-gradient-to-b from-stone-800 to-stone-900 opacity-50 z-0">
-                            <!-- Simulated Camera Feed Placeholder -->
-                            <div class="w-full h-full flex items-center justify-center opacity-10">
-                                <div class="text-white text-9xl">📷</div>
-                            </div>
-                        </div>
-
-                        <!-- Top Bar -->
-                        <div class="absolute top-0 w-full px-6 py-4 flex justify-between items-center z-20 pt-12">
-                            <div class="flex flex-col">
-                                <span class="text-white font-bold text-lg">Berlin</span>
-                                <span class="text-white/60 text-xs flex items-center gap-1">📍 Alexanderplatz</span>
-                            </div>
-                            <div class="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white">
-                                👤
-                            </div>
-                        </div>
-
-                        <!-- AR Elements (Floating) -->
-                        <div class="absolute top-1/3 left-1/4 transform -translate-x-1/2 z-10 animate-bounce" style="animation-duration: 3s;">
-                            <div class="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl rounded-bl-none shadow-lg border border-white/50">
-                                <p class="text-xs font-serif italic text-stone-800">"First kiss here. 2018."</p>
-                                <div class="flex items-center gap-1 mt-1">
-                                    <div class="w-4 h-4 rounded-full bg-orange-500"></div>
-                                    <span class="text-[10px] text-stone-500">User89 • 2y ago</span>
-                                </div>
-                            </div>
-                            <div class="w-3 h-3 bg-white/90 absolute -bottom-1 left-0 transform rotate-45"></div>
-                        </div>
-
-                        <div class="absolute top-1/2 right-8 z-10 animate-pulse">
-                            <div class="w-12 h-12 rounded-full bg-indigo-600/80 backdrop-blur-md border border-indigo-400 flex items-center justify-center text-white text-xl shadow-lg shadow-indigo-500/30">
-                                ☕
-                            </div>
-                            <span class="absolute top-full mt-2 w-full text-center text-[10px] text-white font-medium bg-black/50 rounded px-1">Tip</span>
-                        </div>
-
-                        <!-- Bottom Sheet UI -->
-                        <div class="absolute bottom-0 w-full h-1/3 bg-white/95 backdrop-blur-xl rounded-t-3xl p-6 z-20 shadow-[0_-10px_40px_rgba(0,0,0,0.2)]">
-                            <div class="w-12 h-1 bg-stone-300 rounded-full mx-auto mb-6"></div>
-
-                            <div class="flex justify-between items-end mb-6">
-                                <div>
-                                    <h4 class="text-stone-900 font-bold text-xl">Nearby</h4>
-                                    <p class="text-stone-500 text-sm">12 memories, 3 drops</p>
-                                </div>
-                                <button class="w-12 h-12 bg-stone-900 rounded-full flex items-center justify-center text-white text-2xl shadow-lg">+</button>
-                            </div>
-
-                            <div class="flex gap-4 overflow-x-hidden">
-                                <div class="min-w-[100px] h-24 bg-stone-100 rounded-xl p-3 border border-stone-200">
-                                    <span class="text-xl">🫧</span>
-                                    <p class="text-xs mt-2 font-medium">Group Bubble</p>
-                                </div>
-                                <div class="min-w-[100px] h-24 bg-stone-100 rounded-xl p-3 border border-stone-200">
-                                    <span class="text-xl">⏳</span>
-                                    <p class="text-xs mt-2 font-medium">Time Capsule</p>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
+              <div>
+                <h4
+                  class="text-sm font-semibold text-stone-400 uppercase tracking-wider mb-3"
+                >
+                  Iconography & Typography
+                </h4>
+                <div
+                  class="p-6 bg-stone-50 rounded-2xl border border-stone-100"
+                >
+                  <p class="mb-4 font-serif text-2xl italic text-stone-800">
+                    "The world as a canvas."
+                  </p>
+                  <p class="text-sm text-stone-600 font-sans mb-4">
+                    <strong>Primary Font (Inter):</strong> Used for UI, data,
+                    and navigation. High legibility.<br />
+                    <strong>Secondary Font (Lora):</strong> Used for user
+                    memories, manifesto text, and "human" moments.
+                  </p>
+                  <div class="flex gap-4 text-2xl">
+                    <span>📍</span><span>🫧</span><span>⏳</span><span>🏔️</span>
+                  </div>
                 </div>
+              </div>
             </div>
+          </div>
+
+          <!-- Simulated iOS App Interface -->
+          <div
+            class="relative mx-auto border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[600px] w-[300px] shadow-xl"
+          >
+            <div
+              class="h-[32px] w-[3px] bg-gray-800 absolute -left-[17px] top-[72px] rounded-l-lg"
+            ></div>
+            <div
+              class="h-[46px] w-[3px] bg-gray-800 absolute -left-[17px] top-[124px] rounded-l-lg"
+            ></div>
+            <div
+              class="h-[46px] w-[3px] bg-gray-800 absolute -left-[17px] top-[178px] rounded-l-lg"
+            ></div>
+            <div
+              class="h-[64px] w-[3px] bg-gray-800 absolute -right-[17px] top-[142px] rounded-r-lg"
+            ></div>
+            <div
+              class="rounded-[2rem] overflow-hidden w-full h-full bg-stone-900 relative"
+            >
+              <!-- App Screen: AR View -->
+              <div
+                class="absolute inset-0 w-full h-full bg-gradient-to-b from-stone-800 to-stone-900 opacity-50 z-0"
+              >
+                <!-- Simulated Camera Feed Placeholder -->
+                <div
+                  class="w-full h-full flex items-center justify-center opacity-10"
+                >
+                  <div class="text-white text-9xl">📷</div>
+                </div>
+              </div>
+
+              <!-- Top Bar -->
+              <div
+                class="absolute top-0 w-full px-6 py-4 flex justify-between items-center z-20 pt-12"
+              >
+                <div class="flex flex-col">
+                  <span class="text-white font-bold text-lg">Berlin</span>
+                  <span class="text-white/60 text-xs flex items-center gap-1"
+                    >📍 Alexanderplatz</span
+                  >
+                </div>
+                <div
+                  class="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white"
+                >
+                  👤
+                </div>
+              </div>
+
+              <!-- AR Elements (Floating) -->
+              <div
+                class="absolute top-1/3 left-1/4 transform -translate-x-1/2 z-10 animate-bounce"
+                style="animation-duration: 3s"
+              >
+                <div
+                  class="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl rounded-bl-none shadow-lg border border-white/50"
+                >
+                  <p class="text-xs font-serif italic text-stone-800">
+                    "First kiss here. 2018."
+                  </p>
+                  <div class="flex items-center gap-1 mt-1">
+                    <div class="w-4 h-4 rounded-full bg-orange-500"></div>
+                    <span class="text-[10px] text-stone-500"
+                      >User89 • 2y ago</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="w-3 h-3 bg-white/90 absolute -bottom-1 left-0 transform rotate-45"
+                ></div>
+              </div>
+
+              <div class="absolute top-1/2 right-8 z-10 animate-pulse">
+                <div
+                  class="w-12 h-12 rounded-full bg-indigo-600/80 backdrop-blur-md border border-indigo-400 flex items-center justify-center text-white text-xl shadow-lg shadow-indigo-500/30"
+                >
+                  ☕
+                </div>
+                <span
+                  class="absolute top-full mt-2 w-full text-center text-[10px] text-white font-medium bg-black/50 rounded px-1"
+                  >Tip</span
+                >
+              </div>
+
+              <!-- Bottom Sheet UI -->
+              <div
+                class="absolute bottom-0 w-full h-1/3 bg-white/95 backdrop-blur-xl rounded-t-3xl p-6 z-20 shadow-[0_-10px_40px_rgba(0,0,0,0.2)]"
+              >
+                <div
+                  class="w-12 h-1 bg-stone-300 rounded-full mx-auto mb-6"
+                ></div>
+
+                <div class="flex justify-between items-end mb-6">
+                  <div>
+                    <h4 class="text-stone-900 font-bold text-xl">Nearby</h4>
+                    <p class="text-stone-500 text-sm">12 memories, 3 drops</p>
+                  </div>
+                  <button
+                    class="w-12 h-12 bg-stone-900 rounded-full flex items-center justify-center text-white text-2xl shadow-lg"
+                  >
+                    +
+                  </button>
+                </div>
+
+                <div class="flex gap-4 overflow-x-hidden">
+                  <div
+                    class="min-w-[100px] h-24 bg-stone-100 rounded-xl p-3 border border-stone-200"
+                  >
+                    <span class="text-xl">🫧</span>
+                    <p class="text-xs mt-2 font-medium">Group Bubble</p>
+                  </div>
+                  <div
+                    class="min-w-[100px] h-24 bg-stone-100 rounded-xl p-3 border border-stone-200"
+                  >
+                    <span class="text-xl">⏳</span>
+                    <p class="text-xs mt-2 font-medium">Time Capsule</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </section>
 
     <!-- Context: Introduction to Primitives -->
     <section class="max-w-4xl mx-auto px-4 mt-20 mb-8 text-center">
-        <h2 class="text-3xl font-bold mb-4">Spatial Primitives</h2>
-        <p class="text-stone-600">
-            CANVS isn't just a map; it's a browser for reality. We organize the world using new digital building blocks—primitives—that define how content anchors to place and time.
-        </p>
+      <h2 class="text-3xl font-bold mb-4">Spatial Primitives</h2>
+      <p class="text-stone-600">
+        CANVS isn't just a map; it's a browser for reality. We organize the
+        world using new digital building blocks—primitives—that define how
+        content anchors to place and time.
+      </p>
     </section>
 
     <!-- Primitives Grid -->
-    <section id="primitives" class="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mb-24">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Rendered by JS -->
-            <div class="primitive-card bg-white p-8 rounded-2xl shadow-sm border border-stone-100 cursor-pointer group" onclick="expandPrimitive('pins')">
-                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors">📍</div>
-                <h3 class="text-xl font-bold text-stone-900 mb-2">Pins</h3>
-                <p class="text-stone-500 text-sm">Simple anchors: notes, photos, audio, links, "hidden menu" tips.</p>
-            </div>
-
-            <div class="primitive-card bg-white p-8 rounded-2xl shadow-sm border border-stone-100 cursor-pointer group" onclick="expandPrimitive('bubbles')">
-                <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-orange-600 group-hover:text-white transition-colors">🫧</div>
-                <h3 class="text-xl font-bold text-stone-900 mb-2">Bubbles</h3>
-                <p class="text-stone-500 text-sm">Shared group containers. "We used to meet here every Friday."</p>
-            </div>
-
-            <div class="primitive-card bg-white p-8 rounded-2xl shadow-sm border border-stone-100 cursor-pointer group" onclick="expandPrimitive('capsules')">
-                <div class="w-12 h-12 bg-stone-100 text-stone-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-stone-800 group-hover:text-white transition-colors">⏳</div>
-                <h3 class="text-xl font-bold text-stone-900 mb-2">Time Capsules</h3>
-                <p class="text-stone-500 text-sm">Richer artifacts: multi-media + 3D capture + timeline scrub.</p>
-            </div>
-
-            <div class="primitive-card bg-white p-8 rounded-2xl shadow-sm border border-stone-100 cursor-pointer group" onclick="expandPrimitive('trails')">
-                <div class="w-12 h-12 bg-green-50 text-green-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-green-600 group-hover:text-white transition-colors">👣</div>
-                <h3 class="text-xl font-bold text-stone-900 mb-2">Trails</h3>
-                <p class="text-stone-500 text-sm">Narrative routes. "My break-up walk" or "Best street art."</p>
-            </div>
-
-            <div class="primitive-card bg-white p-8 rounded-2xl shadow-sm border border-stone-100 cursor-pointer group" onclick="expandPrimitive('drops')">
-                <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-purple-600 group-hover:text-white transition-colors">🎁</div>
-                <h3 class="text-xl font-bold text-stone-900 mb-2">Drops</h3>
-                <p class="text-stone-500 text-sm">Geo-fenced releases. Music/art that unlocks only at a location.</p>
-            </div>
-
-            <div class="primitive-card bg-white p-8 rounded-2xl shadow-sm border border-stone-100 cursor-pointer group" onclick="expandPrimitive('portals')">
-                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">🌀</div>
-                <h3 class="text-xl font-bold text-stone-900 mb-2">Portals</h3>
-                <p class="text-stone-500 text-sm">Story logic. "If you liked this spot, go to that spot."</p>
-            </div>
+    <section
+      id="primitives"
+      class="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mb-24"
+    >
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Rendered by JS -->
+        <div
+          class="primitive-card bg-white p-8 rounded-2xl shadow-sm border border-stone-100 cursor-pointer group"
+          onclick="expandPrimitive('pins')"
+        >
+          <div
+            class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors"
+          >
+            📍
+          </div>
+          <h3 class="text-xl font-bold text-stone-900 mb-2">Pins</h3>
+          <p class="text-stone-500 text-sm">
+            Simple anchors: notes, photos, audio, links, "hidden menu" tips.
+          </p>
         </div>
-        <!-- Detail view container -->
-        <div id="primitive-detail" class="mt-8 hidden bg-stone-900 text-white p-8 rounded-2xl shadow-2xl transition-all">
-            <div class="flex flex-col md:flex-row gap-8 items-center">
-                <div class="text-4xl" id="detail-icon"></div>
-                <div>
-                    <h4 class="text-2xl font-bold mb-2" id="detail-title"></h4>
-                    <p class="text-stone-300" id="detail-desc"></p>
-                </div>
-            </div>
+
+        <div
+          class="primitive-card bg-white p-8 rounded-2xl shadow-sm border border-stone-100 cursor-pointer group"
+          onclick="expandPrimitive('bubbles')"
+        >
+          <div
+            class="w-12 h-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-orange-600 group-hover:text-white transition-colors"
+          >
+            🫧
+          </div>
+          <h3 class="text-xl font-bold text-stone-900 mb-2">Bubbles</h3>
+          <p class="text-stone-500 text-sm">
+            Shared group containers. "We used to meet here every Friday."
+          </p>
         </div>
+
+        <div
+          class="primitive-card bg-white p-8 rounded-2xl shadow-sm border border-stone-100 cursor-pointer group"
+          onclick="expandPrimitive('capsules')"
+        >
+          <div
+            class="w-12 h-12 bg-stone-100 text-stone-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-stone-800 group-hover:text-white transition-colors"
+          >
+            ⏳
+          </div>
+          <h3 class="text-xl font-bold text-stone-900 mb-2">Time Capsules</h3>
+          <p class="text-stone-500 text-sm">
+            Richer artifacts: multi-media + 3D capture + timeline scrub.
+          </p>
+        </div>
+
+        <div
+          class="primitive-card bg-white p-8 rounded-2xl shadow-sm border border-stone-100 cursor-pointer group"
+          onclick="expandPrimitive('trails')"
+        >
+          <div
+            class="w-12 h-12 bg-green-50 text-green-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-green-600 group-hover:text-white transition-colors"
+          >
+            👣
+          </div>
+          <h3 class="text-xl font-bold text-stone-900 mb-2">Trails</h3>
+          <p class="text-stone-500 text-sm">
+            Narrative routes. "My break-up walk" or "Best street art."
+          </p>
+        </div>
+
+        <div
+          class="primitive-card bg-white p-8 rounded-2xl shadow-sm border border-stone-100 cursor-pointer group"
+          onclick="expandPrimitive('drops')"
+        >
+          <div
+            class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-purple-600 group-hover:text-white transition-colors"
+          >
+            🎁
+          </div>
+          <h3 class="text-xl font-bold text-stone-900 mb-2">Drops</h3>
+          <p class="text-stone-500 text-sm">
+            Geo-fenced releases. Music/art that unlocks only at a location.
+          </p>
+        </div>
+
+        <div
+          class="primitive-card bg-white p-8 rounded-2xl shadow-sm border border-stone-100 cursor-pointer group"
+          onclick="expandPrimitive('portals')"
+        >
+          <div
+            class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors"
+          >
+            🌀
+          </div>
+          <h3 class="text-xl font-bold text-stone-900 mb-2">Portals</h3>
+          <p class="text-stone-500 text-sm">
+            Story logic. "If you liked this spot, go to that spot."
+          </p>
+        </div>
+      </div>
+      <!-- Detail view container -->
+      <div
+        id="primitive-detail"
+        class="mt-8 hidden bg-stone-900 text-white p-8 rounded-2xl shadow-2xl transition-all"
+      >
+        <div class="flex flex-col md:flex-row gap-8 items-center">
+          <div class="text-4xl" id="detail-icon"></div>
+          <div>
+            <h4 class="text-2xl font-bold mb-2" id="detail-title"></h4>
+            <p class="text-stone-300" id="detail-desc"></p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Roadmap & Strategy -->
     <section id="roadmap" class="bg-white py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-stone-900 mb-4">Strategic Roadmap (2026–2030)</h2>
-                <p class="text-stone-500 max-w-2xl mx-auto">From phone-based AR discovery to a full "Glass-Native" operating system for the physical world.</p>
-            </div>
-
-            <!-- Chart Container -->
-            <div class="flex flex-col items-center">
-                 <div class="chart-container mb-8">
-                    <canvas id="roadmapChart"></canvas>
-                </div>
-                <p class="text-xs text-stone-400 italic mt-4 text-center w-full max-w-lg">
-                    *The graph illustrates the evolution of platform capabilities, moving from basic mobile AR loops to a ubiquitous spatial OS layer.
-                </p>
-            </div>
-
-            <!-- Textual Timeline fallback/supplement -->
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mt-12 border-t border-stone-100 pt-8">
-                <div class="p-4 hover:bg-stone-50 rounded-lg transition">
-                    <span class="text-indigo-600 font-bold text-sm block mb-1">2026</span>
-                    <h4 class="font-bold text-stone-900 mb-2">Core Loop</h4>
-                    <p class="text-xs text-stone-500">MVP Spatial Browser, Anchors, Safety Foundations.</p>
-                </div>
-                <div class="p-4 hover:bg-stone-50 rounded-lg transition">
-                    <span class="text-indigo-600 font-bold text-sm block mb-1">2027</span>
-                    <h4 class="font-bold text-stone-900 mb-2">Meaning Graph</h4>
-                    <p class="text-xs text-stone-500">AI Reality Filter, Trails, Creator Market.</p>
-                </div>
-                <div class="p-4 hover:bg-stone-50 rounded-lg transition">
-                    <span class="text-indigo-600 font-bold text-sm block mb-1">2028</span>
-                    <h4 class="font-bold text-stone-900 mb-2">Glass-Native</h4>
-                    <p class="text-xs text-stone-500">Always-on lightweight layer, spatial audio, hands-free.</p>
-                </div>
-                <div class="p-4 hover:bg-stone-50 rounded-lg transition">
-                    <span class="text-indigo-600 font-bold text-sm block mb-1">2029</span>
-                    <h4 class="font-bold text-stone-900 mb-2">Platformization</h4>
-                    <p class="text-xs text-stone-500">Public SDK, Civic Layers, Portable XR.</p>
-                </div>
-                <div class="p-4 hover:bg-stone-50 rounded-lg transition">
-                    <span class="text-indigo-600 font-bold text-sm block mb-1">2030</span>
-                    <h4 class="font-bold text-stone-900 mb-2">Spatial OS</h4>
-                    <p class="text-xs text-stone-500">Default meaning layer. The feed is obsolete.</p>
-                </div>
-            </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-stone-900 mb-4">
+            Strategic Roadmap (2026–2030)
+          </h2>
+          <p class="text-stone-500 max-w-2xl mx-auto">
+            From phone-based AR discovery to a full "Glass-Native" operating
+            system for the physical world.
+          </p>
         </div>
+
+        <!-- Chart Container -->
+        <div class="flex flex-col items-center">
+          <div class="chart-container mb-8">
+            <canvas id="roadmapChart"></canvas>
+          </div>
+          <p
+            class="text-xs text-stone-400 italic mt-4 text-center w-full max-w-lg"
+          >
+            *The graph illustrates the evolution of platform capabilities,
+            moving from basic mobile AR loops to a ubiquitous spatial OS layer.
+          </p>
+        </div>
+
+        <!-- Textual Timeline fallback/supplement -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-5 gap-4 mt-12 border-t border-stone-100 pt-8"
+        >
+          <div class="p-4 hover:bg-stone-50 rounded-lg transition">
+            <span class="text-indigo-600 font-bold text-sm block mb-1"
+              >2026</span
+            >
+            <h4 class="font-bold text-stone-900 mb-2">Core Loop</h4>
+            <p class="text-xs text-stone-500">
+              MVP Spatial Browser, Anchors, Safety Foundations.
+            </p>
+          </div>
+          <div class="p-4 hover:bg-stone-50 rounded-lg transition">
+            <span class="text-indigo-600 font-bold text-sm block mb-1"
+              >2027</span
+            >
+            <h4 class="font-bold text-stone-900 mb-2">Meaning Graph</h4>
+            <p class="text-xs text-stone-500">
+              AI Reality Filter, Trails, Creator Market.
+            </p>
+          </div>
+          <div class="p-4 hover:bg-stone-50 rounded-lg transition">
+            <span class="text-indigo-600 font-bold text-sm block mb-1"
+              >2028</span
+            >
+            <h4 class="font-bold text-stone-900 mb-2">Glass-Native</h4>
+            <p class="text-xs text-stone-500">
+              Always-on lightweight layer, spatial audio, hands-free.
+            </p>
+          </div>
+          <div class="p-4 hover:bg-stone-50 rounded-lg transition">
+            <span class="text-indigo-600 font-bold text-sm block mb-1"
+              >2029</span
+            >
+            <h4 class="font-bold text-stone-900 mb-2">Platformization</h4>
+            <p class="text-xs text-stone-500">
+              Public SDK, Civic Layers, Portable XR.
+            </p>
+          </div>
+          <div class="p-4 hover:bg-stone-50 rounded-lg transition">
+            <span class="text-indigo-600 font-bold text-sm block mb-1"
+              >2030</span
+            >
+            <h4 class="font-bold text-stone-900 mb-2">Spatial OS</h4>
+            <p class="text-xs text-stone-500">
+              Default meaning layer. The feed is obsolete.
+            </p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Use Cases Explorer -->
-    <section id="usecases" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-stone-50">
-        <div class="mb-10 flex flex-col md:flex-row justify-between items-end">
-            <div class="max-w-xl">
-                <h2 class="text-3xl font-bold mb-4">Re-enchanting Reality</h2>
-                <p class="text-stone-600">The application of CANVS spans three distinct layers of human experience. Filter to explore.</p>
-            </div>
-
-            <div class="flex space-x-2 mt-4 md:mt-0">
-                <button onclick="filterCases('all')" id="tab-all" class="active-tab px-4 py-2 rounded-full text-sm font-medium transition">All</button>
-                <button onclick="filterCases('emotional')" id="tab-emotional" class="inactive-tab px-4 py-2 rounded-full text-sm font-medium transition">Emotional</button>
-                <button onclick="filterCases('utility')" id="tab-utility" class="inactive-tab px-4 py-2 rounded-full text-sm font-medium transition">Utility</button>
-                <button onclick="filterCases('creative')" id="tab-creative" class="inactive-tab px-4 py-2 rounded-full text-sm font-medium transition">Creative</button>
-            </div>
+    <section
+      id="usecases"
+      class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-stone-50"
+    >
+      <div class="mb-10 flex flex-col md:flex-row justify-between items-end">
+        <div class="max-w-xl">
+          <h2 class="text-3xl font-bold mb-4">Re-enchanting Reality</h2>
+          <p class="text-stone-600">
+            The application of CANVS spans three distinct layers of human
+            experience. Filter to explore.
+          </p>
         </div>
 
-        <div id="cases-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Content injected by JS -->
+        <div class="flex space-x-2 mt-4 md:mt-0">
+          <button
+            onclick="filterCases('all')"
+            id="tab-all"
+            class="active-tab px-4 py-2 rounded-full text-sm font-medium transition"
+          >
+            All
+          </button>
+          <button
+            onclick="filterCases('emotional')"
+            id="tab-emotional"
+            class="inactive-tab px-4 py-2 rounded-full text-sm font-medium transition"
+          >
+            Emotional
+          </button>
+          <button
+            onclick="filterCases('utility')"
+            id="tab-utility"
+            class="inactive-tab px-4 py-2 rounded-full text-sm font-medium transition"
+          >
+            Utility
+          </button>
+          <button
+            onclick="filterCases('creative')"
+            id="tab-creative"
+            class="inactive-tab px-4 py-2 rounded-full text-sm font-medium transition"
+          >
+            Creative
+          </button>
         </div>
+      </div>
+
+      <div
+        id="cases-grid"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
+        <!-- Content injected by JS -->
+      </div>
     </section>
 
     <!-- Deep Tech Foundation -->
     <section class="py-20 bg-stone-900 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold mb-12 text-center">Deep-Tech Foundation: The Anchor Stack</h2>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold mb-12 text-center">
+          Deep-Tech Foundation: The Anchor Stack
+        </h2>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 text-center">
-                <div class="p-6 bg-stone-800 rounded-2xl border border-stone-700 hover:border-indigo-500 transition duration-300">
-                    <div class="text-indigo-400 text-4xl mb-4">📡</div>
-                    <h3 class="text-xl font-bold mb-2">1. Coarse Localization</h3>
-                    <p class="text-stone-400 text-sm">GPS & Map Alignment. Good for rough discovery, but drift breaks immersion.</p>
-                </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 text-center">
+          <div
+            class="p-6 bg-stone-800 rounded-2xl border border-stone-700 hover:border-indigo-500 transition duration-300"
+          >
+            <div class="text-indigo-400 text-4xl mb-4">📡</div>
+            <h3 class="text-xl font-bold mb-2">1. Coarse Localization</h3>
+            <p class="text-stone-400 text-sm">
+              GPS & Map Alignment. Good for rough discovery, but drift breaks
+              immersion.
+            </p>
+          </div>
 
-                <div class="relative p-6 bg-stone-800 rounded-2xl border border-indigo-500 shadow-2xl shadow-indigo-900/50 transform scale-105 z-10">
-                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">Core Tech</div>
-                    <div class="text-white text-4xl mb-4">👁️</div>
-                    <h3 class="text-xl font-bold mb-2">2. VPS (Visual Positioning)</h3>
-                    <p class="text-stone-300 text-sm">Matching camera feed to a 3D point cloud of the world. Enables sub-meter accuracy.</p>
-                </div>
-
-                <div class="p-6 bg-stone-800 rounded-2xl border border-stone-700 hover:border-indigo-500 transition duration-300">
-                    <div class="text-indigo-400 text-4xl mb-4">⚓</div>
-                    <h3 class="text-xl font-bold mb-2">3. Anchor Runtime</h3>
-                    <p class="text-stone-400 text-sm">Confidence-aware rendering. Content only fades in when tracking is locked.</p>
-                </div>
+          <div
+            class="relative p-6 bg-stone-800 rounded-2xl border border-indigo-500 shadow-2xl shadow-indigo-900/50 transform scale-105 z-10"
+          >
+            <div
+              class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider"
+            >
+              Core Tech
             </div>
+            <div class="text-white text-4xl mb-4">👁️</div>
+            <h3 class="text-xl font-bold mb-2">2. VPS (Visual Positioning)</h3>
+            <p class="text-stone-300 text-sm">
+              Matching camera feed to a 3D point cloud of the world. Enables
+              sub-meter accuracy.
+            </p>
+          </div>
 
-            <div class="mt-16 text-center">
-                <p class="text-stone-400 max-w-2xl mx-auto">
-                    "We don't need to own the entire AR Cloud. We need to own the <span class="text-white font-serif italic">social meaning layer</span> that lives on top of it."
-                </p>
-            </div>
+          <div
+            class="p-6 bg-stone-800 rounded-2xl border border-stone-700 hover:border-indigo-500 transition duration-300"
+          >
+            <div class="text-indigo-400 text-4xl mb-4">⚓</div>
+            <h3 class="text-xl font-bold mb-2">3. Anchor Runtime</h3>
+            <p class="text-stone-400 text-sm">
+              Confidence-aware rendering. Content only fades in when tracking is
+              locked.
+            </p>
+          </div>
         </div>
+
+        <div class="mt-16 text-center">
+          <p class="text-stone-400 max-w-2xl mx-auto">
+            "We don't need to own the entire AR Cloud. We need to own the
+            <span class="text-white font-serif italic"
+              >social meaning layer</span
+            >
+            that lives on top of it."
+          </p>
+        </div>
+      </div>
     </section>
 
     <!-- Footer -->
     <footer class="bg-white py-12 border-t border-stone-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-4 md:mb-0">
-                <span class="font-bold text-xl tracking-tight text-stone-900">CANVS</span>
-                <p class="text-stone-500 text-sm mt-1">The Spatial Social Layer.</p>
-            </div>
-            <div class="flex space-x-6 text-stone-400">
-                <a href="#" class="hover:text-stone-900">Privacy (Location First)</a>
-                <a href="#" class="hover:text-stone-900">Safety & Governance</a>
-                <a href="#" class="hover:text-stone-900">Contact</a>
-            </div>
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center"
+      >
+        <div class="mb-4 md:mb-0">
+          <span class="font-bold text-xl tracking-tight text-stone-900"
+            >CANVS</span
+          >
+          <p class="text-stone-500 text-sm mt-1">The Spatial Social Layer.</p>
         </div>
+        <div class="flex space-x-6 text-stone-400">
+          <a href="#" class="hover:text-stone-900">Privacy (Location First)</a>
+          <a href="#" class="hover:text-stone-900">Safety & Governance</a>
+          <a href="#" class="hover:text-stone-900">Contact</a>
+        </div>
+      </div>
     </footer>
 
     <script>
-        // Data Store
-        const visionContent = {
-            legacy: `
+      // Data Store
+      const visionContent = {
+        legacy: `
                 <div class="text-center animate-fade-in">
                     <div class="text-6xl mb-4 grayscale opacity-50">📱</div>
                     <h3 class="text-2xl font-bold text-stone-400 mb-2">The Feed (Status Quo)</h3>
@@ -491,7 +772,7 @@
                     </div>
                 </div>
             `,
-            canvs: `
+        canvs: `
                 <div class="text-center animate-fade-in">
                     <div class="text-6xl mb-4">🌏</div>
                     <h3 class="text-2xl font-bold text-stone-900 mb-2">The World (CANVS)</h3>
@@ -505,99 +786,180 @@
                          <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">Human Scale</span>
                     </div>
                 </div>
-            `
+            `,
+      };
+
+      const useCases = [
+        {
+          id: 1,
+          type: "emotional",
+          title: "The Skating Bubble",
+          icon: "⛸️",
+          desc: "Friends leave a group bubble at the rink. Years later, someone returns alone and opens it—hearing laughter.",
+        },
+        {
+          id: 2,
+          type: "emotional",
+          title: "Sunset Stories",
+          icon: "🌅",
+          desc: 'A global atlas of romance: "Sit here at 19:42. Perfect angle."',
+        },
+        {
+          id: 3,
+          type: "emotional",
+          title: "Grief & Remembrance",
+          icon: "🕯️",
+          desc: "Digital candles anchored to meaningful places—lasting, revisitable, shareable.",
+        },
+        {
+          id: 4,
+          type: "utility",
+          title: "Surf Intelligence",
+          icon: "🌊",
+          desc: "AR markers: hazards, entry points, wind advice pinned to the break.",
+        },
+        {
+          id: 5,
+          type: "utility",
+          title: "Hidden Menu Layer",
+          icon: "🍔",
+          desc: 'Recommendations pinned to a specific table: "Order it this way."',
+        },
+        {
+          id: 6,
+          type: "utility",
+          title: "Accessibility Layer",
+          icon: "♿",
+          desc: "User-generated notes: step-free entrances, quiet hours, safe seating.",
+        },
+        {
+          id: 7,
+          type: "creative",
+          title: "Street Art Threads",
+          icon: "🎨",
+          desc: "Discussions float in front of murals—timelines, artist credits—without touching the wall.",
+        },
+        {
+          id: 8,
+          type: "creative",
+          title: "Flashmob Drops",
+          icon: "⏱️",
+          desc: 'Exclusive content appears when a place "activates" at a specific time.',
+        },
+        {
+          id: 9,
+          type: "creative",
+          title: "Civic Layer",
+          icon: "📢",
+          desc: "Hazards, mutual aid requests, neighborhood alerts anchored to street corners.",
+        },
+      ];
+
+      // Core Functions
+      function toggleVision(mode) {
+        const container = document.getElementById("vision-content");
+        const bg = document.getElementById("mode-bg");
+        const btnLegacy = document.getElementById("btn-legacy");
+        const btnCanvs = document.getElementById("btn-canvs");
+
+        container.style.opacity = "0";
+
+        setTimeout(() => {
+          container.innerHTML = visionContent[mode];
+          container.style.opacity = "1";
+        }, 250);
+
+        if (mode === "legacy") {
+          bg.style.left = "4px";
+          btnLegacy.classList.add("text-stone-900");
+          btnLegacy.classList.remove("text-stone-500");
+          btnCanvs.classList.add("text-stone-500");
+          btnCanvs.classList.remove("text-stone-900");
+        } else {
+          bg.style.left = "calc(50% + 4px)";
+          btnCanvs.classList.add("text-stone-900");
+          btnCanvs.classList.remove("text-stone-500");
+          btnLegacy.classList.add("text-stone-500");
+          btnLegacy.classList.remove("text-stone-900");
+        }
+      }
+
+      function expandPrimitive(id) {
+        const detail = document.getElementById("primitive-detail");
+        const title = document.getElementById("detail-title");
+        const desc = document.getElementById("detail-desc");
+        const icon = document.getElementById("detail-icon");
+
+        const content = {
+          pins: {
+            t: "Pins",
+            i: "📍",
+            d: 'The atomic unit of CANVS. A pin creates a zero-dimensional anchor point for text, audio, or links. Perfect for "I was here" moments or specific localized tips.',
+          },
+          bubbles: {
+            t: "Bubbles",
+            i: "🫧",
+            d: "Bubbles represent shared social space. Unlike a pin (broadcast), a bubble is a container for group interaction, growing in size as more memories are added to the location.",
+          },
+          capsules: {
+            t: "Time Capsules",
+            i: "⏳",
+            d: "High-fidelity preservation. Uses LiDAR scans and 3D capture to freeze a moment geometrically. You can walk through the memory as if it were a hologram.",
+          },
+          trails: {
+            t: "Trails",
+            i: "👣",
+            d: "Linear narratives connecting multiple anchors. A curator can guide a user through a city, a hiking path, or a historical event sequence.",
+          },
+          drops: {
+            t: "Drops",
+            i: "🎁",
+            d: "Scarcity mechanics applied to place. A drop is invisible until specific conditions (time, user reputation) are met, unlocking digital goods.",
+          },
+          portals: {
+            t: "Portals",
+            i: "🌀",
+            d: "Non-Euclidean links. Walking through a portal at a coffee shop in Tokyo might transport your view to a partner coffee shop in Paris.",
+          },
         };
 
-        const useCases = [
-            { id: 1, type: 'emotional', title: 'The Skating Bubble', icon: '⛸️', desc: 'Friends leave a group bubble at the rink. Years later, someone returns alone and opens it—hearing laughter.' },
-            { id: 2, type: 'emotional', title: 'Sunset Stories', icon: '🌅', desc: 'A global atlas of romance: "Sit here at 19:42. Perfect angle."' },
-            { id: 3, type: 'emotional', title: 'Grief & Remembrance', icon: '🕯️', desc: 'Digital candles anchored to meaningful places—lasting, revisitable, shareable.' },
-            { id: 4, type: 'utility', title: 'Surf Intelligence', icon: '🌊', desc: 'AR markers: hazards, entry points, wind advice pinned to the break.' },
-            { id: 5, type: 'utility', title: 'Hidden Menu Layer', icon: '🍔', desc: 'Recommendations pinned to a specific table: "Order it this way."' },
-            { id: 6, type: 'utility', title: 'Accessibility Layer', icon: '♿', desc: 'User-generated notes: step-free entrances, quiet hours, safe seating.' },
-            { id: 7, type: 'creative', title: 'Street Art Threads', icon: '🎨', desc: 'Discussions float in front of murals—timelines, artist credits—without touching the wall.' },
-            { id: 8, type: 'creative', title: 'Flashmob Drops', icon: '⏱️', desc: 'Exclusive content appears when a place "activates" at a specific time.' },
-            { id: 9, type: 'creative', title: 'Civic Layer', icon: '📢', desc: 'Hazards, mutual aid requests, neighborhood alerts anchored to street corners.' }
-        ];
+        const data = content[id];
 
-        // Core Functions
-        function toggleVision(mode) {
-            const container = document.getElementById('vision-content');
-            const bg = document.getElementById('mode-bg');
-            const btnLegacy = document.getElementById('btn-legacy');
-            const btnCanvs = document.getElementById('btn-canvs');
+        // Simple visual feedback
+        detail.classList.remove("hidden");
+        detail.style.opacity = "0";
 
-            container.style.opacity = '0';
+        setTimeout(() => {
+          title.innerText = data.t;
+          icon.innerText = data.i;
+          desc.innerText = data.d;
+          detail.style.opacity = "1";
+        }, 100);
+      }
 
-            setTimeout(() => {
-                container.innerHTML = visionContent[mode];
-                container.style.opacity = '1';
-            }, 250);
+      function filterCases(type) {
+        const grid = document.getElementById("cases-grid");
+        const buttons = document.querySelectorAll('button[id^="tab-"]');
 
-            if (mode === 'legacy') {
-                bg.style.left = '4px';
-                btnLegacy.classList.add('text-stone-900');
-                btnLegacy.classList.remove('text-stone-500');
-                btnCanvs.classList.add('text-stone-500');
-                btnCanvs.classList.remove('text-stone-900');
-            } else {
-                bg.style.left = 'calc(50% + 4px)';
-                btnCanvs.classList.add('text-stone-900');
-                btnCanvs.classList.remove('text-stone-500');
-                btnLegacy.classList.add('text-stone-500');
-                btnLegacy.classList.remove('text-stone-900');
-            }
-        }
+        // Update tabs
+        buttons.forEach((btn) => {
+          if (btn.id === `tab-${type}`) {
+            btn.classList.remove("inactive-tab");
+            btn.classList.add("active-tab");
+          } else {
+            btn.classList.add("inactive-tab");
+            btn.classList.remove("active-tab");
+          }
+        });
 
-        function expandPrimitive(id) {
-            const detail = document.getElementById('primitive-detail');
-            const title = document.getElementById('detail-title');
-            const desc = document.getElementById('detail-desc');
-            const icon = document.getElementById('detail-icon');
+        // Filter data
+        const filtered =
+          type === "all" ? useCases : useCases.filter((c) => c.type === type);
 
-            const content = {
-                'pins': { t: 'Pins', i: '📍', d: 'The atomic unit of CANVS. A pin creates a zero-dimensional anchor point for text, audio, or links. Perfect for "I was here" moments or specific localized tips.' },
-                'bubbles': { t: 'Bubbles', i: '🫧', d: 'Bubbles represent shared social space. Unlike a pin (broadcast), a bubble is a container for group interaction, growing in size as more memories are added to the location.' },
-                'capsules': { t: 'Time Capsules', i: '⏳', d: 'High-fidelity preservation. Uses LiDAR scans and 3D capture to freeze a moment geometrically. You can walk through the memory as if it were a hologram.' },
-                'trails': { t: 'Trails', i: '👣', d: 'Linear narratives connecting multiple anchors. A curator can guide a user through a city, a hiking path, or a historical event sequence.' },
-                'drops': { t: 'Drops', i: '🎁', d: 'Scarcity mechanics applied to place. A drop is invisible until specific conditions (time, user reputation) are met, unlocking digital goods.' },
-                'portals': { t: 'Portals', i: '🌀', d: 'Non-Euclidean links. Walking through a portal at a coffee shop in Tokyo might transport your view to a partner coffee shop in Paris.' }
-            };
-
-            const data = content[id];
-
-            // Simple visual feedback
-            detail.classList.remove('hidden');
-            detail.style.opacity = '0';
-
-            setTimeout(() => {
-                title.innerText = data.t;
-                icon.innerText = data.i;
-                desc.innerText = data.d;
-                detail.style.opacity = '1';
-            }, 100);
-        }
-
-        function filterCases(type) {
-            const grid = document.getElementById('cases-grid');
-            const buttons = document.querySelectorAll('button[id^="tab-"]');
-
-            // Update tabs
-            buttons.forEach(btn => {
-                if(btn.id === `tab-${type}`) {
-                    btn.classList.remove('inactive-tab');
-                    btn.classList.add('active-tab');
-                } else {
-                    btn.classList.add('inactive-tab');
-                    btn.classList.remove('active-tab');
-                }
-            });
-
-            // Filter data
-            const filtered = type === 'all' ? useCases : useCases.filter(c => c.type === type);
-
-            // Render
-            grid.innerHTML = filtered.map(item => `
+        // Render
+        grid.innerHTML = filtered
+          .map(
+            (item) => `
                 <div class="bg-white p-6 rounded-xl border border-stone-200 hover:shadow-lg transition duration-300">
                     <div class="flex justify-between items-start mb-4">
                         <span class="text-3xl">${item.icon}</span>
@@ -606,103 +968,106 @@
                     <h3 class="font-bold text-lg mb-2 text-stone-800">${item.title}</h3>
                     <p class="text-stone-500 text-sm leading-relaxed">${item.desc}</p>
                 </div>
-            `).join('');
-        }
+            `,
+          )
+          .join("");
+      }
 
-        // Initialize Roadmap Chart
-        function initChart() {
-            const ctx = document.getElementById('roadmapChart').getContext('2d');
+      // Initialize Roadmap Chart
+      function initChart() {
+        const ctx = document.getElementById("roadmapChart").getContext("2d");
 
-            // Data points for the roadmap
-            const data = {
-                labels: ['2026', '2027', '2028', '2029', '2030'],
-                datasets: [
-                    {
-                        label: 'Immersion Level',
-                        data: [20, 45, 65, 85, 100],
-                        borderColor: '#4F46E5', // Indigo-600
-                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
-                        borderWidth: 3,
-                        tension: 0.4,
-                        fill: true,
-                        yAxisID: 'y'
-                    },
-                    {
-                        label: 'Hardware Maturity',
-                        data: [30, 40, 60, 80, 95], // Phone -> Glasses
-                        borderColor: '#EA580C', // Orange-600
-                        backgroundColor: 'transparent',
-                        borderWidth: 2,
-                        borderDash: [5, 5],
-                        tension: 0.2,
-                        yAxisID: 'y'
+        // Data points for the roadmap
+        const data = {
+          labels: ["2026", "2027", "2028", "2029", "2030"],
+          datasets: [
+            {
+              label: "Immersion Level",
+              data: [20, 45, 65, 85, 100],
+              borderColor: "#4F46E5", // Indigo-600
+              backgroundColor: "rgba(79, 70, 229, 0.1)",
+              borderWidth: 3,
+              tension: 0.4,
+              fill: true,
+              yAxisID: "y",
+            },
+            {
+              label: "Hardware Maturity",
+              data: [30, 40, 60, 80, 95], // Phone -> Glasses
+              borderColor: "#EA580C", // Orange-600
+              backgroundColor: "transparent",
+              borderWidth: 2,
+              borderDash: [5, 5],
+              tension: 0.2,
+              yAxisID: "y",
+            },
+          ],
+        };
+
+        new Chart(ctx, {
+          type: "line",
+          data: data,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "top",
+                labels: {
+                  font: { family: "Inter", size: 12 },
+                  color: "#57534E",
+                },
+              },
+              tooltip: {
+                backgroundColor: "#1C1917",
+                titleFont: { family: "Lora" },
+                bodyFont: { family: "Inter" },
+                padding: 12,
+                displayColors: false,
+                callbacks: {
+                  label: function (context) {
+                    const milestones = [
+                      "Phone-first MVP, Core Primitives",
+                      "AI Reality Filter, Creator Market",
+                      "Glass-Native Transition",
+                      "Public SDK, Civic Layers",
+                      "Spatial OS Default Interface",
+                    ];
+                    if (context.datasetIndex === 0) {
+                      return milestones[context.dataIndex];
                     }
-                ]
-            };
-
-            new Chart(ctx, {
-                type: 'line',
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                font: { family: 'Inter', size: 12 },
-                                color: '#57534E'
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#1C1917',
-                            titleFont: { family: 'Lora' },
-                            bodyFont: { family: 'Inter' },
-                            padding: 12,
-                            displayColors: false,
-                            callbacks: {
-                                label: function(context) {
-                                    const milestones = [
-                                        "Phone-first MVP, Core Primitives",
-                                        "AI Reality Filter, Creator Market",
-                                        "Glass-Native Transition",
-                                        "Public SDK, Civic Layers",
-                                        "Spatial OS Default Interface"
-                                    ];
-                                    if (context.datasetIndex === 0) {
-                                        return milestones[context.dataIndex];
-                                    }
-                                    return context.dataset.label + ': ' + context.parsed.y + '%';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 100,
-                            grid: { color: '#E7E5E4' },
-                            ticks: { display: false } // Abstract metric
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: {
-                                color: '#1C1917',
-                                font: { weight: 'bold' }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // Initialization
-        window.addEventListener('load', () => {
-            toggleVision('canvs');
-            filterCases('all');
-            initChart();
+                    return (
+                      context.dataset.label + ": " + context.parsed.y + "%"
+                    );
+                  },
+                },
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 100,
+                grid: { color: "#E7E5E4" },
+                ticks: { display: false }, // Abstract metric
+              },
+              x: {
+                grid: { display: false },
+                ticks: {
+                  color: "#1C1917",
+                  font: { weight: "bold" },
+                },
+              },
+            },
+          },
         });
+      }
 
+      // Initialization
+      window.addEventListener("load", () => {
+        toggleVision("canvs");
+        filterCases("all");
+        initChart();
+      });
     </script>
-</body>
+  </body>
 </html>

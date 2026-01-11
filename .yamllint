@@ -1,0 +1,25 @@
+---
+extends: default
+
+rules:
+  # Disable document-start for meta files and content
+  document-start: disable
+
+  # Disable line length for content files
+  line-length: disable
+
+  # Relax comment spacing for inline comments
+  comments:
+    min-spaces-from-content: 1
+
+  # Disable braces rule (allow spaces inside braces)
+  braces: disable
+
+  # Allow multiple blank lines
+  empty-lines:
+    max: 2
+
+  # Relax indentation
+  indentation:
+    spaces: 2
+    indent-sequences: consistent

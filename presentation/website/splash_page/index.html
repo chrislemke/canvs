@@ -36,6 +36,8 @@
       rel="stylesheet"
     />
 
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
     <style>
       /* ========================================
            CSS CUSTOM PROPERTIES
@@ -963,15 +965,17 @@
 
       .experience-modes {
         display: flex;
+        flex-direction: column;
         gap: 0;
-        margin-top: 80px;
+        margin-top: 0;
+        flex: 1;
       }
 
       .mode-card {
         flex: 1;
         padding: 60px 48px;
         border: 1px solid var(--ink-lighter);
-        border-right: none;
+        border-bottom: none;
         transition: all 0.5s var(--ease-out-expo);
         position: relative;
         cursor: pointer;
@@ -992,7 +996,7 @@
       }
 
       .mode-card:last-child {
-        border-right: 1px solid var(--ink-lighter);
+        border-bottom: 1px solid var(--ink-lighter);
       }
 
       .mode-card:hover {
@@ -1055,6 +1059,27 @@
 
       .mode-card:hover .mode-description {
         opacity: 1;
+      }
+
+      /* Spatial Browser Layout */
+      .experience-content {
+        display: flex;
+        gap: 60px;
+        align-items: flex-start;
+        margin-top: 60px;
+      }
+
+      .spatial-browser-showcase {
+        flex-shrink: 0;
+      }
+
+      .spatial-browser-image {
+        width: 280px;
+        height: auto;
+        border-radius: 24px;
+        box-shadow:
+          0 8px 32px rgba(26, 26, 24, 0.12),
+          0 2px 8px rgba(26, 26, 24, 0.08);
       }
 
       /* ========================================
@@ -1642,21 +1667,19 @@
           grid-template-columns: 1fr;
         }
 
-        .experience-modes {
+        .experience-content {
           flex-direction: column;
+          align-items: center;
+          gap: 40px;
         }
 
-        .mode-card {
-          border-right: 1px solid var(--ink-lighter);
-          border-bottom: none;
+        .experience-modes {
+          width: 100%;
         }
 
-        .mode-card:last-child {
-          border-bottom: 1px solid var(--ink-lighter);
-        }
-
-        .mode-card:hover {
-          flex: 1;
+        .spatial-browser-image {
+          width: 260px;
+          border-radius: 20px;
         }
 
         .primitives-grid {
@@ -1787,6 +1810,11 @@
         .problem-decoration img {
           width: 100%;
           height: auto;
+        }
+
+        .spatial-browser-image {
+          width: 220px;
+          border-radius: 18px;
         }
       }
 
@@ -1972,11 +2000,10 @@
       <div class="password-modal">
         <div class="password-modal-logo">
           <svg viewBox="0 0 100 100" aria-hidden="true">
+            <!-- Infinity Flourish -->
             <path
-              d="M50,85 C35,70 10,50 10,35 C10,20 25,15 40,30 C45,35 48,38 50,40 C52,38 55,35 60,30 C75,15 90,20 90,35 C90,50 65,70 50,85 Z"
+              d="M75,15 C60,22 35,28 22,18 C8,8 12,0 28,5 C45,10 52,30 50,50 C48,70 52,90 68,95 C82,100 90,90 75,80 C58,70 40,78 25,85"
             />
-            <path d="M40,30 C30,40 25,50 35,55 C45,60 55,55 50,40" />
-            <path d="M60,30 C70,40 75,50 65,55 C55,60 45,55 50,40" />
           </svg>
         </div>
         <h2>Welcome to CANVS</h2>
@@ -2014,12 +2041,10 @@
       <a href="#" class="logo" aria-label="CANVS Home">
         <div class="logo-icon">
           <svg viewBox="0 0 100 100" aria-hidden="true">
-            <!-- Infinity-heart symbol -->
+            <!-- Infinity Flourish -->
             <path
-              d="M50,85 C35,70 10,50 10,35 C10,20 25,15 40,30 C45,35 48,38 50,40 C52,38 55,35 60,30 C75,15 90,20 90,35 C90,50 65,70 50,85 Z"
+              d="M75,15 C60,22 35,28 22,18 C8,8 12,0 28,5 C45,10 52,30 50,50 C48,70 52,90 68,95 C82,100 90,90 75,80 C58,70 40,78 25,85"
             />
-            <path d="M40,30 C30,40 25,50 35,55 C45,60 55,55 50,40" />
-            <path d="M60,30 C70,40 75,50 65,55 C55,60 45,55 50,40" />
           </svg>
         </div>
         <span class="logo-text">CANVS</span>
@@ -2271,36 +2296,46 @@
           </p>
         </div>
 
-        <div class="experience-modes reveal-stagger">
-          <article class="mode-card no-expand" tabindex="0" role="article">
-            <div class="mode-number">01</div>
-            <h3 class="mode-title">AR Mode</h3>
-            <div class="mode-subtitle">"Magic Window"</div>
-            <p class="mode-description">
-              Look at the world and see location-anchored content where it
-              belongs. Stories float exactly where they happened.
-            </p>
-          </article>
+        <div class="experience-content">
+          <div class="spatial-browser-showcase">
+            <img
+              src="assets/images/spacial_browser.jpg"
+              alt="CANVS Spatial Browser app showing Time Mode interface at Caffè Sant'Eustachio in Rome"
+              class="spatial-browser-image"
+            />
+          </div>
 
-          <article class="mode-card no-expand" tabindex="0" role="article">
-            <div class="mode-number">02</div>
-            <h3 class="mode-title">Map Mode</h3>
-            <div class="mode-subtitle">"Spatial Radar"</div>
-            <p class="mode-description">
-              See nearby layers, hotspots, and trails. The map is not the
-              product—it's the minimap for the real world.
-            </p>
-          </article>
+          <div class="experience-modes reveal-stagger">
+            <article class="mode-card no-expand" tabindex="0" role="article">
+              <div class="mode-number">01</div>
+              <h3 class="mode-title">AR Mode</h3>
+              <div class="mode-subtitle">"Magic Window"</div>
+              <p class="mode-description">
+                Look at the world and see location-anchored content where it
+                belongs. Stories float exactly where they happened.
+              </p>
+            </article>
 
-          <article class="mode-card no-expand" tabindex="0" role="article">
-            <div class="mode-number">03</div>
-            <h3 class="mode-title">Time Mode</h3>
-            <div class="mode-subtitle">"Temporal Scrub"</div>
-            <p class="mode-description">
-              Slide through time to see what happened here: yesterday, last
-              summer, 10 years ago. Places remember.
-            </p>
-          </article>
+            <article class="mode-card no-expand" tabindex="0" role="article">
+              <div class="mode-number">02</div>
+              <h3 class="mode-title">Map Mode</h3>
+              <div class="mode-subtitle">"Spatial Radar"</div>
+              <p class="mode-description">
+                See nearby layers, hotspots, and trails. The map is not the
+                product—it's the minimap for the real world.
+              </p>
+            </article>
+
+            <article class="mode-card no-expand" tabindex="0" role="article">
+              <div class="mode-number">03</div>
+              <h3 class="mode-title">Time Mode</h3>
+              <div class="mode-subtitle">"Temporal Scrub"</div>
+              <p class="mode-description">
+                Slide through time to see what happened here: yesterday, last
+                summer, 10 years ago. Places remember.
+              </p>
+            </article>
+          </div>
         </div>
       </section>
 
@@ -2756,12 +2791,10 @@
     <footer role="contentinfo">
       <div class="footer-logo">
         <svg viewBox="0 0 100 100" aria-hidden="true">
-          <!-- Infinity-heart symbol -->
+          <!-- Infinity Flourish -->
           <path
-            d="M50,85 C35,70 10,50 10,35 C10,20 25,15 40,30 C45,35 48,38 50,40 C52,38 55,35 60,30 C75,15 90,20 90,35 C90,50 65,70 50,85 Z"
+            d="M75,15 C60,22 35,28 22,18 C8,8 12,0 28,5 C45,10 52,30 50,50 C48,70 52,90 68,95 C82,100 90,90 75,80 C58,70 40,78 25,85"
           />
-          <path d="M40,30 C30,40 25,50 35,55 C45,60 55,55 50,40" />
-          <path d="M60,30 C70,40 75,50 65,55 C55,60 45,55 50,40" />
         </svg>
         <span class="serif" style="font-size: 20px">CANVS</span>
       </div>
