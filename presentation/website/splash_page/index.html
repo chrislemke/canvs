@@ -17,6 +17,17 @@
     />
     <meta property="og:type" content="website" />
 
+    <!-- Block search engines and AI crawlers -->
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="googlebot" content="noindex, nofollow" />
+    <meta name="bingbot" content="noindex, nofollow" />
+    <meta name="GPTBot" content="noindex, nofollow" />
+    <meta name="ChatGPT-User" content="noindex, nofollow" />
+    <meta name="CCBot" content="noindex, nofollow" />
+    <meta name="anthropic-ai" content="noindex, nofollow" />
+    <meta name="Claude-Web" content="noindex, nofollow" />
+    <meta name="Google-Extended" content="noindex, nofollow" />
+
     <!-- Preconnect for fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -1606,7 +1617,21 @@
         }
 
         .problem-visual {
-          display: none;
+          height: auto;
+          margin-top: 30px;
+          display: block;
+        }
+
+        .problem-decoration {
+          display: block;
+          width: 100%;
+        }
+
+        .problem-decoration img {
+          display: block;
+          width: 100%;
+          height: auto;
+          max-width: 100%;
         }
 
         .problem-content {
@@ -1750,6 +1775,19 @@
         .cta-section {
           padding: 80px 24px;
         }
+
+        .problem-visual {
+          margin-top: 20px;
+        }
+
+        .problem-decoration {
+          width: 100%;
+        }
+
+        .problem-decoration img {
+          width: 100%;
+          height: auto;
+        }
       }
 
       /* ========================================
@@ -1780,9 +1818,188 @@
         outline: 2px solid var(--terracotta);
         outline-offset: 2px;
       }
+
+      /* ========================================
+           PASSWORD PROTECTION OVERLAY
+           ======================================== */
+      .password-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--alabaster);
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          opacity 0.5s var(--ease-out-quart),
+          visibility 0.5s;
+      }
+
+      .password-overlay.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .password-modal {
+        background: white;
+        padding: 48px 40px;
+        border-radius: 8px;
+        box-shadow: 0 20px 60px rgba(26, 26, 24, 0.12);
+        text-align: center;
+        max-width: 360px;
+        width: 90%;
+        border: 1px solid var(--ink-lighter);
+      }
+
+      .password-modal-logo {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 20px;
+      }
+
+      .password-modal-logo svg {
+        width: 100%;
+        height: 100%;
+        stroke: var(--terracotta);
+        stroke-width: 2.5;
+        fill: none;
+      }
+
+      .password-modal h2 {
+        font-family: var(--font-serif);
+        font-size: 1.5rem;
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: var(--ink);
+      }
+
+      .password-modal p {
+        font-size: 0.9rem;
+        color: var(--ink-light);
+        margin-bottom: 24px;
+      }
+
+      .password-input-wrapper {
+        position: relative;
+        margin-bottom: 16px;
+      }
+
+      .password-input {
+        width: 100%;
+        padding: 14px 16px;
+        border: 2px solid var(--ink-lighter);
+        border-radius: 6px;
+        font-family: var(--font-sans);
+        font-size: 1rem;
+        background: var(--alabaster);
+        color: var(--ink);
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .password-input:focus {
+        outline: none;
+        border-color: var(--terracotta);
+        box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.15);
+      }
+
+      .password-input.error {
+        border-color: #d9534f;
+        animation: shake 0.4s ease;
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20%,
+        60% {
+          transform: translateX(-6px);
+        }
+        40%,
+        80% {
+          transform: translateX(6px);
+        }
+      }
+
+      .password-submit {
+        width: 100%;
+        padding: 14px 24px;
+        background: var(--ink);
+        color: var(--alabaster);
+        border: none;
+        border-radius: 6px;
+        font-family: var(--font-sans);
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .password-submit:hover {
+        background: var(--terracotta);
+        transform: translateY(-2px);
+      }
+
+      .password-submit:active {
+        transform: translateY(0);
+      }
+
+      .password-error-msg {
+        font-size: 0.85rem;
+        color: #d9534f;
+        margin-top: 12px;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+
+      .password-error-msg.visible {
+        opacity: 1;
+      }
     </style>
   </head>
   <body>
+    <!-- Password Protection Overlay -->
+    <div class="password-overlay" id="password-overlay">
+      <div class="password-modal">
+        <div class="password-modal-logo">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <path
+              d="M50,85 C35,70 10,50 10,35 C10,20 25,15 40,30 C45,35 48,38 50,40 C52,38 55,35 60,30 C75,15 90,20 90,35 C90,50 65,70 50,85 Z"
+            />
+            <path d="M40,30 C30,40 25,50 35,55 C45,60 55,55 50,40" />
+            <path d="M60,30 C70,40 75,50 65,55 C55,60 45,55 50,40" />
+          </svg>
+        </div>
+        <h2>Welcome to CANVS</h2>
+        <p>This content is password protected.</p>
+        <form id="password-form">
+          <div class="password-input-wrapper">
+            <input
+              type="password"
+              class="password-input"
+              id="password-input"
+              placeholder="Enter password"
+              autocomplete="off"
+              autofocus
+            />
+          </div>
+          <button type="submit" class="password-submit">Enter</button>
+          <div class="password-error-msg" id="password-error">
+            Incorrect password. Please try again.
+          </div>
+        </form>
+      </div>
+    </div>
+
     <!-- Skip Link -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
@@ -1910,91 +2127,12 @@
 
         <div class="problem-grid">
           <div class="problem-visual reveal">
-            <div class="problem-decoration" aria-hidden="true">
-              <svg viewBox="0 0 300 300">
-                <!-- Simple concentric circles like CTA section -->
-                <circle
-                  cx="150"
-                  cy="150"
-                  r="120"
-                  stroke="var(--ink-lighter)"
-                  stroke-width="1"
-                  fill="none"
-                  stroke-dasharray="4 8"
-                />
-                <circle
-                  cx="150"
-                  cy="150"
-                  r="90"
-                  stroke="var(--ink-lighter)"
-                  stroke-width="1"
-                  fill="none"
-                  stroke-dasharray="2 6"
-                />
-                <circle
-                  cx="150"
-                  cy="150"
-                  r="60"
-                  stroke="var(--ink-lighter)"
-                  stroke-width="1"
-                  fill="none"
-                  stroke-dasharray="6 4"
-                />
-                <circle
-                  cx="150"
-                  cy="150"
-                  r="30"
-                  stroke="var(--terracotta)"
-                  stroke-width="1.5"
-                  fill="none"
-                  stroke-dasharray="3 3"
-                  opacity="0.6"
-                />
-
-                <!-- Subtle walking path -->
-                <path
-                  d="M30 250 Q80 200 150 180 Q220 160 270 120"
-                  stroke="var(--sage)"
-                  stroke-width="1.5"
-                  fill="none"
-                  stroke-dasharray="8 4"
-                  opacity="0.5"
-                />
-
-                <!-- Simple pin markers -->
-                <circle
-                  cx="150"
-                  cy="150"
-                  r="4"
-                  fill="var(--terracotta)"
-                  opacity="0.7"
-                />
-                <circle
-                  cx="80"
-                  cy="200"
-                  r="3"
-                  fill="var(--sage)"
-                  opacity="0.5"
-                />
-                <circle
-                  cx="220"
-                  cy="130"
-                  r="3"
-                  fill="var(--sage)"
-                  opacity="0.5"
-                />
-
-                <!-- Person silhouette - very simple -->
-                <circle cx="100" cy="220" r="5" fill="var(--ink-lighter)" />
-                <line
-                  x1="100"
-                  y1="225"
-                  x2="100"
-                  y2="240"
-                  stroke="var(--ink-lighter)"
-                  stroke-width="1.5"
-                />
-              </svg>
+            <div class="problem-decoration">
+              <img
+                src="assets/images/city_trip.jpg"
+                alt="Person walking through a city"
+                style="width: 100%; height: auto; border-radius: 8px"
+              />
             </div>
           </div>
 
@@ -2636,6 +2774,52 @@
     </footer>
 
     <script>
+      // ========================================
+      // PASSWORD PROTECTION
+      // ========================================
+      (function () {
+        const SITE_PASSWORD = "stoffy"; // Change this to your desired password
+        const STORAGE_KEY = "canvs_authenticated";
+
+        const overlay = document.getElementById("password-overlay");
+        const form = document.getElementById("password-form");
+        const input = document.getElementById("password-input");
+        const errorMsg = document.getElementById("password-error");
+
+        // Check if already authenticated in this session
+        if (sessionStorage.getItem(STORAGE_KEY) === "true") {
+          overlay.classList.add("hidden");
+        }
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          if (input.value === SITE_PASSWORD) {
+            // Correct password
+            sessionStorage.setItem(STORAGE_KEY, "true");
+            overlay.classList.add("hidden");
+          } else {
+            // Wrong password
+            input.classList.add("error");
+            errorMsg.classList.add("visible");
+
+            // Remove error state after animation
+            setTimeout(() => {
+              input.classList.remove("error");
+            }, 400);
+
+            // Clear input
+            input.value = "";
+            input.focus();
+          }
+        });
+
+        // Clear error when typing
+        input.addEventListener("input", function () {
+          errorMsg.classList.remove("visible");
+        });
+      })();
+
       // ========================================
       // SCROLL PROGRESS BAR
       // ========================================

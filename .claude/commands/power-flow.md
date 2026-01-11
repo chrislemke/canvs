@@ -1,45 +1,29 @@
 ---
 description: Claude Flow multi-agent orchestration with full MCP toolkit (87+ tools)
 allowed-tools: Task, Read, Write, Edit, MultiEdit, Bash(*), Glob, Grep, WebSearch, WebFetch, TodoRead, TodoWrite, mcp__claude-flow__*, mcp__ruv-swarm__*, mcp__flow-nexus__*
-argument-hint: <objective> [--strategy <strategy>] [--topology <topology>] [--agents <count>]
+argument-hint: <objective>
 ---
 
 # Claude Flow Multi-Agent Orchestration
 
 ## Objective
+
+Don't forget to use Claude Flow for this task.
 $ARGUMENTS
+You have all the resources you got. Use as many Claude flow agents,
+etc., and swarms as you want.
 
 ---
 
-## 🔒 CRITICAL: MCP Coordinates, Claude Code Executes
+## CRITICAL: MCP Coordinates, Claude Code Executes
 
-**ABSOLUTE RULE**: MCP tools coordinate strategy and orchestration. Claude Code tools (Task/Read/Write/Edit/Bash) perform ALL actual work.
+**ABSOLUTE RULE**: MCP tools coordinate strategy and orchestration.
+Claude Code tools (Task/Read/Write/Edit/Bash) perform ALL actual work.
 
-```
+```text
 MCP Tools = Brain (planning, coordination, monitoring)
 Claude Code = Hands (file operations, commands, tests)
 ```
-
----
-
-## Phase 0: MCP Connectivity Check (MANDATORY FIRST STEP)
-
-Before ANY orchestration, verify MCP server connectivity:
-
-```javascript
-// 1. Test connectivity with a simple call
-mcp__claude-flow__swarm_status({})
-
-// 2. If tools unavailable, guide user to connect:
-// Core server (required):
-//   claude mcp add claude-flow npx claude-flow@alpha mcp start
-// Enhanced (optional):
-//   claude mcp add ruv-swarm npx ruv-swarm mcp start
-// Cloud features (optional):
-//   claude mcp add flow-nexus npx flow-nexus@latest mcp start
-```
-
-If MCP tools fail, inform user and suggest running: `npx claude-flow@alpha init --force`
 
 ---
 
@@ -50,26 +34,28 @@ If MCP tools fail, inform user and suggest running: `npx claude-flow@alpha init 
 ```javascript
 mcp__claude-flow__swarm_init({
   topology: "mesh" | "hierarchical" | "ring" | "star",  // Required
-  strategy: "auto" | "research" | "development" | "analysis" | "testing" | "optimization" | "maintenance",
-  maxAgents: 8  // Adjust based on task complexity (3-5 simple, 8-12 complex, 15-20 enterprise)
+  strategy: "auto" | "research" | "development" | "analysis",
+  maxAgents: 8  // 3-5 simple, 8-12 complex, 15-20 enterprise
 })
 ```
 
 **Topology Selection Guide:**
-| Topology | Best For | Characteristics |
-|----------|----------|-----------------|
-| `mesh` | Collaborative tasks, research | Peer-to-peer, high communication |
-| `hierarchical` | Enterprise, complex projects | Queen-led, delegated work |
-| `ring` | Pipeline workflows | Sequential, ordered processing |
-| `star` | Centralized coordination | Hub-and-spoke, coordinator-centric |
+
+| Topology       | Best For            | Characteristics        |
+| -------------- | ------------------- | ---------------------- |
+| `mesh`         | Collaborative tasks | Peer-to-peer           |
+| `hierarchical` | Enterprise projects | Queen-led, delegated   |
+| `ring`         | Pipeline workflows  | Sequential processing  |
+| `star`         | Centralized control | Hub-and-spoke          |
 
 ### 1.2 Spawn Specialized Agents
 
 ```javascript
 // Core agent types (spawn based on task needs)
 mcp__claude-flow__agent_spawn({
-  type: "coordinator" | "researcher" | "coder" | "analyst" | "architect" |
-        "tester" | "reviewer" | "optimizer" | "documenter" | "monitor" | "specialist",
+  type: "coordinator" | "researcher" | "coder" | "analyst" |
+        "architect" | "tester" | "reviewer" | "optimizer" |
+        "documenter" | "monitor" | "specialist",
   name: "descriptive-agent-name",
   swarmId: "from-swarm-init",
   capabilities: ["specific", "skills", "array"]
@@ -78,14 +64,14 @@ mcp__claude-flow__agent_spawn({
 
 **Recommended Agent Compositions:**
 
-| Task Type | Agents to Spawn |
-|-----------|-----------------|
-| Research | coordinator, researcher (x2), analyst, documenter |
-| Development | coordinator, architect, coder (x2-3), tester, reviewer |
-| Analysis | coordinator, analyst (x2), researcher, documenter |
-| Testing | coordinator, tester (x3), reviewer, documenter |
-| Optimization | coordinator, optimizer, analyst, coder, tester |
-| Full-Stack | coordinator, architect, coder (x3), tester (x2), reviewer, documenter |
+| Task Type    | Agents to Spawn                                  |
+| ------------ | ------------------------------------------------ |
+| Research     | coordinator, researcher (x2), analyst, documenter|
+| Development  | coordinator, architect, coder (x2-3), tester     |
+| Analysis     | coordinator, analyst (x2), researcher, documenter|
+| Testing      | coordinator, tester (x3), reviewer, documenter   |
+| Optimization | coordinator, optimizer, analyst, coder, tester   |
+| Full-Stack   | coordinator, architect, coder (x3), tester (x2)  |
 
 ---
 
@@ -109,9 +95,12 @@ mcp__claude-flow__workflow_create({
   name: "workflow-name",
   steps: [
     { id: "step-1", action: "research", agent: "researcher" },
-    { id: "step-2", action: "design", agent: "architect", depends: ["step-1"] },
-    { id: "step-3", action: "implement", agent: "coder", depends: ["step-2"] },
-    { id: "step-4", action: "test", agent: "tester", depends: ["step-3"] }
+    { id: "step-2", action: "design", agent: "architect",
+      depends: ["step-1"] },
+    { id: "step-3", action: "implement", agent: "coder",
+      depends: ["step-2"] },
+    { id: "step-4", action: "test", agent: "tester",
+      depends: ["step-3"] }
   ],
   triggers: ["on-complete", "on-error"]
 })
@@ -149,13 +138,13 @@ mcp__claude-flow__memory_search({
 
 ### 3.3 Memory Operations Reference
 
-| Action | Use Case |
-|--------|----------|
-| `store` | Save decisions, context, requirements |
-| `retrieve` | Get specific stored data |
-| `list` | View all keys in namespace |
-| `delete` | Clean up completed work |
-| `search` | Find related memories by pattern |
+| Action     | Use Case                              |
+| ---------- | ------------------------------------- |
+| `store`    | Save decisions, context, requirements |
+| `retrieve` | Get specific stored data              |
+| `list`     | View all keys in namespace            |
+| `delete`   | Clean up completed work               |
+| `search`   | Find related memories by pattern      |
 
 ---
 
@@ -164,21 +153,21 @@ mcp__claude-flow__memory_search({
 ### 4.1 Pre-Task Hook (Start of Work)
 
 ```bash
-npx claude-flow@alpha hooks pre-task --description "[task-description]"
-npx claude-flow@alpha hooks session-restore --session-id "swarm-[id]"  # If resuming
+npx claude-flow@alpha hooks pre-task --description "[task]"
+npx claude-flow@alpha hooks session-restore --session-id "swarm-[id]"
 ```
 
 ### 4.2 During Work (After Each Significant Operation)
 
 ```bash
-npx claude-flow@alpha hooks post-edit --file "[filepath]" --memory-key "agent/[step]"
-npx claude-flow@alpha hooks notify --message "[decision-or-progress]"
+npx claude-flow@alpha hooks post-edit --file "[filepath]"
+npx claude-flow@alpha hooks notify --message "[progress]"
 ```
 
 ### 4.3 Post-Task Hook (End of Work)
 
 ```bash
-npx claude-flow@alpha hooks post-task --task-id "[task]" --analyze-performance true
+npx claude-flow@alpha hooks post-task --task-id "[task]"
 npx claude-flow@alpha hooks session-end --export-metrics true
 ```
 
@@ -186,10 +175,10 @@ npx claude-flow@alpha hooks session-end --export-metrics true
 
 ## Phase 5: Work Execution (Claude Code Tools)
 
-**CRITICAL: Batch operations in SINGLE messages for 6x performance**
+### Batch Operations for 6x Performance
 
 ```javascript
-// ✅ CORRECT: Single message with all operations
+// CORRECT: Single message with all operations
 [BatchTool - Message 1]:
   mcp__claude-flow__swarm_init({ topology: "mesh", maxAgents: 6 })
   mcp__claude-flow__agent_spawn({ type: "researcher" })
@@ -200,7 +189,7 @@ npx claude-flow@alpha hooks session-end --export-metrics true
   Task("Tester: Write and run tests. Use hooks.")
   TodoWrite({ todos: [...all-todos-at-once...] })
 
-// ❌ WRONG: Split across messages (6x slower!)
+// WRONG: Split across messages (6x slower!)
 Message 1: mcp__claude-flow__swarm_init
 Message 2: Task("researcher")
 Message 3: TodoWrite (single todo)
@@ -292,7 +281,7 @@ mcp__claude-flow__neural_predict({
 mcp__claude-flow__pattern_recognize({
   data: [
     { timestamp: Date.now(), value: 0.8, category: "performance" },
-    { timestamp: Date.now() - 1000, value: 0.7, category: "performance" }
+    { timestamp: Date.now() - 1000, value: 0.7, category: "perf" }
   ],
   patterns: ["anomaly", "trend", "cycle"]
 })
@@ -354,7 +343,7 @@ mcp__claude-flow__trend_analysis({
 
 ```javascript
 mcp__claude-flow__benchmark_run({
-  suite: "swarm-coordination" | "neural-performance" | "memory-efficiency"
+  suite: "swarm-coordination" | "neural-performance"
 })
 ```
 
@@ -366,7 +355,7 @@ For structured development workflows, use SPARC modes:
 
 ```javascript
 mcp__claude-flow__sparc_mode({
-  mode: "dev" | "api" | "ui" | "test" | "refactor" | "specification" | "pseudocode" | "architecture",
+  mode: "dev" | "api" | "ui" | "test" | "refactor",
   task_description: "Detailed task description",
   options: {
     parallel: true,
@@ -376,16 +365,17 @@ mcp__claude-flow__sparc_mode({
 ```
 
 **SPARC Mode Reference:**
-| Mode | Purpose |
-|------|---------|
-| `specification` | Define requirements, acceptance criteria |
-| `pseudocode` | Design algorithms, logic flow |
-| `architecture` | System design, component structure |
-| `dev` | General development |
-| `api` | API-focused development |
-| `ui` | UI/frontend development |
-| `test` | Testing and validation |
-| `refactor` | Code optimization |
+
+| Mode            | Purpose                              |
+| --------------- | ------------------------------------ |
+| `specification` | Define requirements, acceptance      |
+| `pseudocode`    | Design algorithms, logic flow        |
+| `architecture`  | System design, component structure   |
+| `dev`           | General development                  |
+| `api`           | API-focused development              |
+| `ui`            | UI/frontend development              |
+| `test`          | Testing and validation               |
+| `refactor`      | Code optimization                    |
 
 ---
 
@@ -428,81 +418,88 @@ mcp__claude-flow__workflow_template({
 ## Complete MCP Tools Reference (87+ Tools)
 
 ### Swarm Tools (~27)
-| Tool | Purpose |
-|------|---------|
-| `swarm_init` | Initialize swarm with topology |
-| `swarm_status` | Get swarm health and metrics |
-| `swarm_monitor` | Real-time monitoring |
-| `agent_spawn` | Create specialized agents |
-| `agent_list` | List active agents |
-| `agent_metrics` | Agent performance data |
-| `task_orchestrate` | Complex task workflows |
-| `task_results` | Get task outcomes |
+
+| Tool               | Purpose                      |
+| ------------------ | ---------------------------- |
+| `swarm_init`       | Initialize swarm topology    |
+| `swarm_status`     | Get swarm health and metrics |
+| `swarm_monitor`    | Real-time monitoring         |
+| `agent_spawn`      | Create specialized agents    |
+| `agent_list`       | List active agents           |
+| `agent_metrics`    | Agent performance data       |
+| `task_orchestrate` | Complex task workflows       |
+| `task_results`     | Get task outcomes            |
 
 ### Memory Tools (~12)
-| Tool | Purpose |
-|------|---------|
-| `memory_usage` | Store/retrieve/list/delete/search |
-| `memory_search` | Pattern-based search |
-| `memory_analytics` | Usage statistics |
-| `memory_export` | Export memories |
-| `memory_import` | Import memories |
+
+| Tool               | Purpose                       |
+| ------------------ | ----------------------------- |
+| `memory_usage`     | Store/retrieve/list/delete    |
+| `memory_search`    | Pattern-based search          |
+| `memory_analytics` | Usage statistics              |
+| `memory_export`    | Export memories               |
+| `memory_import`    | Import memories               |
 
 ### Neural Tools (~15)
-| Tool | Purpose |
-|------|---------|
-| `neural_train` | Train coordination patterns |
-| `neural_predict` | Make predictions |
-| `neural_patterns` | Analyze patterns |
-| `neural_save` | Save trained models |
-| `neural_optimize` | WASM SIMD optimization |
-| `neural_inference` | Run inference |
-| `pattern_recognize` | Pattern recognition |
-| `cognitive_behavior` | Behavior analysis |
-| `learning_adapt` | Adaptive learning |
-| `neural_compress` | Model compression |
-| `neural_ensemble` | Create ensembles |
-| `neural_transfer` | Transfer learning |
-| `neural_explain` | AI explainability |
+
+| Tool                | Purpose                      |
+| ------------------- | ---------------------------- |
+| `neural_train`      | Train coordination patterns  |
+| `neural_predict`    | Make predictions             |
+| `neural_patterns`   | Analyze patterns             |
+| `neural_save`       | Save trained models          |
+| `neural_optimize`   | WASM SIMD optimization       |
+| `neural_inference`  | Run inference                |
+| `pattern_recognize` | Pattern recognition          |
+| `cognitive_behavior`| Behavior analysis            |
+| `learning_adapt`    | Adaptive learning            |
+| `neural_compress`   | Model compression            |
+| `neural_ensemble`   | Create ensembles             |
+| `neural_transfer`   | Transfer learning            |
+| `neural_explain`    | AI explainability            |
 
 ### DAA Tools (~8)
-| Tool | Purpose |
-|------|---------|
-| `daa_agent_create` | Dynamic agent creation |
+
+| Tool                   | Purpose                     |
+| ---------------------- | --------------------------- |
+| `daa_agent_create`     | Dynamic agent creation      |
 | `daa_capability_match` | Match capabilities to tasks |
-| `daa_resource_alloc` | Resource allocation |
-| `daa_lifecycle_manage` | Agent lifecycle |
-| `daa_communication` | Inter-agent messaging |
-| `daa_consensus` | Consensus mechanisms |
+| `daa_resource_alloc`   | Resource allocation         |
+| `daa_lifecycle_manage` | Agent lifecycle             |
+| `daa_communication`    | Inter-agent messaging       |
+| `daa_consensus`        | Consensus mechanisms        |
 
 ### Workflow Tools (~9)
-| Tool | Purpose |
-|------|---------|
-| `workflow_create` | Create custom workflows |
-| `workflow_execute` | Execute workflows |
-| `workflow_export` | Export definitions |
-| `workflow_template` | Manage templates |
-| `parallel_execute` | Concurrent tasks |
-| `batch_process` | Batch operations |
-| `pipeline_create` | CI/CD pipelines |
-| `scheduler_manage` | Task scheduling |
-| `event_trigger` | Event triggers |
+
+| Tool                | Purpose                      |
+| ------------------- | ---------------------------- |
+| `workflow_create`   | Create custom workflows      |
+| `workflow_execute`  | Execute workflows            |
+| `workflow_export`   | Export definitions           |
+| `workflow_template` | Manage templates             |
+| `parallel_execute`  | Concurrent tasks             |
+| `batch_process`     | Batch operations             |
+| `pipeline_create`   | CI/CD pipelines              |
+| `scheduler_manage`  | Task scheduling              |
+| `event_trigger`     | Event triggers               |
 
 ### Performance Tools (~10)
-| Tool | Purpose |
-|------|---------|
-| `performance_report` | System metrics |
-| `bottleneck_analyze` | Find bottlenecks |
-| `benchmark_run` | Run benchmarks |
-| `trend_analysis` | Analyze trends |
+
+| Tool                 | Purpose              |
+| -------------------- | -------------------- |
+| `performance_report` | System metrics       |
+| `bottleneck_analyze` | Find bottlenecks     |
+| `benchmark_run`      | Run benchmarks       |
+| `trend_analysis`     | Analyze trends       |
 
 ### System Tools (~6)
-| Tool | Purpose |
-|------|---------|
-| `sparc_mode` | SPARC development |
-| `terminal_exec` | Execute commands |
-| `config_manage` | Configuration |
-| `feature_detect` | Feature detection |
+
+| Tool             | Purpose              |
+| ---------------- | -------------------- |
+| `sparc_mode`     | SPARC development    |
+| `terminal_exec`  | Execute commands     |
+| `config_manage`  | Configuration        |
+| `feature_detect` | Feature detection    |
 
 ---
 
@@ -511,7 +508,8 @@ mcp__claude-flow__workflow_template({
 At task completion, provide:
 
 ### Summary
-```
+
+```markdown
 ## Execution Summary
 
 ### What Was Built/Changed
@@ -542,36 +540,47 @@ At task completion, provide:
 ## Quick Start Templates
 
 ### Research Task
+
 ```javascript
-mcp__claude-flow__swarm_init({ topology: "mesh", strategy: "research", maxAgents: 5 })
-mcp__claude-flow__agent_spawn({ type: "coordinator", name: "research-lead" })
-mcp__claude-flow__agent_spawn({ type: "researcher", name: "primary-researcher" })
-mcp__claude-flow__agent_spawn({ type: "researcher", name: "secondary-researcher" })
-mcp__claude-flow__agent_spawn({ type: "analyst", name: "data-analyst" })
-mcp__claude-flow__agent_spawn({ type: "documenter", name: "report-writer" })
-mcp__claude-flow__task_orchestrate({ task: "...", strategy: "adaptive", priority: "high" })
+mcp__claude-flow__swarm_init({
+  topology: "mesh", strategy: "research", maxAgents: 5
+})
+mcp__claude-flow__agent_spawn({ type: "coordinator" })
+mcp__claude-flow__agent_spawn({ type: "researcher" })
+mcp__claude-flow__agent_spawn({ type: "researcher" })
+mcp__claude-flow__agent_spawn({ type: "analyst" })
+mcp__claude-flow__agent_spawn({ type: "documenter" })
+mcp__claude-flow__task_orchestrate({
+  task: "...", strategy: "adaptive", priority: "high"
+})
 ```
 
 ### Development Task
+
 ```javascript
-mcp__claude-flow__swarm_init({ topology: "hierarchical", strategy: "development", maxAgents: 8 })
-mcp__claude-flow__agent_spawn({ type: "coordinator", name: "dev-lead" })
-mcp__claude-flow__agent_spawn({ type: "architect", name: "system-architect" })
+mcp__claude-flow__swarm_init({
+  topology: "hierarchical", strategy: "development", maxAgents: 8
+})
+mcp__claude-flow__agent_spawn({ type: "coordinator" })
+mcp__claude-flow__agent_spawn({ type: "architect" })
 mcp__claude-flow__agent_spawn({ type: "coder", name: "backend-dev" })
 mcp__claude-flow__agent_spawn({ type: "coder", name: "frontend-dev" })
-mcp__claude-flow__agent_spawn({ type: "tester", name: "qa-engineer" })
-mcp__claude-flow__agent_spawn({ type: "reviewer", name: "code-reviewer" })
+mcp__claude-flow__agent_spawn({ type: "tester" })
+mcp__claude-flow__agent_spawn({ type: "reviewer" })
 mcp__claude-flow__sparc_mode({ mode: "dev", task_description: "..." })
 ```
 
 ### Testing Task
+
 ```javascript
-mcp__claude-flow__swarm_init({ topology: "mesh", strategy: "testing", maxAgents: 6 })
-mcp__claude-flow__agent_spawn({ type: "coordinator", name: "test-lead" })
+mcp__claude-flow__swarm_init({
+  topology: "mesh", strategy: "testing", maxAgents: 6
+})
+mcp__claude-flow__agent_spawn({ type: "coordinator" })
 mcp__claude-flow__agent_spawn({ type: "tester", name: "unit-tester" })
-mcp__claude-flow__agent_spawn({ type: "tester", name: "integration-tester" })
+mcp__claude-flow__agent_spawn({ type: "tester", name: "integration" })
 mcp__claude-flow__agent_spawn({ type: "tester", name: "e2e-tester" })
-mcp__claude-flow__agent_spawn({ type: "analyst", name: "coverage-analyst" })
+mcp__claude-flow__agent_spawn({ type: "analyst" })
 mcp__claude-flow__sparc_mode({ mode: "test", task_description: "..." })
 ```
 
@@ -586,7 +595,6 @@ mcp__claude-flow__sparc_mode({ mode: "test", task_description: "..." })
 5. **Use Hooks**: Maintain context across operations
 6. **Monitor Progress**: Check `swarm_status` when blocked
 7. **Store Decisions**: Use memory for important context
-8. **Verify First**: Always check MCP connectivity before orchestration
 
 ---
 
