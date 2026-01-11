@@ -1,0 +1,45 @@
+# Opportunities Research Directory
+# Contains strategic opportunity analysis for CANVS location-based social platform
+
+directory: opportunities
+description: Strategic opportunities, timing analysis, and competitive advantages research
+created: 2025-01-11
+updated: 2025-01-11
+
+files:
+  - name: strategic_opportunities_analysis.md
+    description: Comprehensive analysis of timing opportunities, unique value propositions, strategic advantages, partnership opportunities, and monetization models for CANVS
+    topics:
+      - timing_opportunities
+      - technology_inflection_points
+      - cultural_shifts
+      - market_gaps
+      - unique_value_propositions
+      - mobile_first_strategy
+      - partnership_opportunities
+      - monetization_models
+      - competitive_moats
+      - risk_mitigation
+
+key_findings:
+  market_size:
+    - Location-based services market: $125-510 billion by 2032-2033
+    - Mobile AR market: $327.7 billion by 2032 (30.84% CAGR)
+    - Contextual advertising market: $562.1 billion by 2030
+
+  user_trends:
+    - 73% of Gen Z report digital exhaustion
+    - 62% struggle to build meaningful relationships
+    - 78% of users have deleted apps over privacy concerns
+    - 41% of Americans reducing screen time in 2025
+
+  technology_readiness:
+    - ARKit adoption up 25% year-over-year
+    - 5G coverage reaching 60% globally by end of 2025
+    - AR glasses arriving 2026-2027
+    - 2-3 year window before hardware shift
+
+related_research:
+  - ../data/engagement-metrics-research.md
+  - ../challenges/
+  - ../user_personas/

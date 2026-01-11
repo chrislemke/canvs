@@ -1,0 +1,15 @@
+folder: challenges
+description: Research on challenges and barriers to adoption for location-based AR social applications
+files:
+  - name: location_ar_social_challenges.md
+    description: Comprehensive analysis of technical, user adoption, business, and regulatory challenges with historical case studies and mitigations
+topics:
+  - Technical challenges (GPS, AR tracking, battery, device fragmentation)
+  - User adoption barriers (privacy, social awkwardness, empty world problem)
+  - Business challenges (monetization, moderation, legal liability)
+  - Historical failures (Foursquare, Gowalla, Yik Yak, Google Glass)
+  - Lessons from Niantic/Ingress/Pokemon Go
+related:
+  - /research/data/location_privacy_safety_governance.md
+  - /research/gps_precision/intro.md
+  - /research/visual_positioning_systems/intro.md

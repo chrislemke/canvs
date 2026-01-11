@@ -1,0 +1,87 @@
+name: data
+path: research/data
+purpose: Comprehensive data strategy research - how data drives CANVS business success
+
+contains:
+  - data strategy overview (overview.md)
+  - modern data stack analysis
+  - graph database research (Neo4j, meaning graph)
+  - spatial/geospatial database strategies
+  - time-series database (TimescaleDB)
+  - vector database comparisons
+  - analytics tools and free services
+  - data collection strategies
+  - data processing and ETL pipelines
+  - data monetization strategies
+  - data-driven decision making frameworks
+  - growth through data strategies
+  - ML/AI applications for CANVS
+
+primary_files:
+  - overview.md
+  - modern_data_stack.md
+  - graph_databases.md
+  - data_collection_strategy.md
+  - data_processing_etl_strategy.md
+  - data_monetization.md
+  - data_driven_decision_making.md
+  - growth_through_data.md
+  - ml_ai_applications.md
+
+keywords:
+  - data strategy
+  - data-driven company
+  - analytics
+  - graph database
+  - Neo4j
+  - meaning graph
+  - spatial database
+  - PostGIS
+  - H3
+  - time-series
+  - TimescaleDB
+  - vector database
+  - pgvector
+  - data warehouse
+  - ETL
+  - dbt
+  - Airflow
+  - Metabase
+  - PostHog
+  - Google Analytics
+  - data monetization
+  - MPI metric
+  - growth hacking
+  - retention
+  - K-factor
+  - ML/AI
+  - embeddings
+  - Reality Filter
+
+related:
+  - specs/tech/mvp/specs/srs/05-database-architecture.md
+  - specs/tech/parts/ai/ai_implementation_architecture.md
+  - specs/tech/mvp/specs/srs/10-technology-stack-hosting.md
+  - specs/tech/mvp/specs/ai_features.md
+  - specs/tech/parts/ai/spatial_ai_features.md
+  - specs/tech/stack
+  - planning/36_data_model
+  - planning/62_analytics_telemetry_plan
+  - planning/63_metric_definitions
+  - vision/product_vision_paper.md
+
+category: research
+
+ai_guidance: >
+  This folder contains extensive research on how CANVS can become a data-driven
+  company. The overview.md document provides a comprehensive strategy covering:
+  data collection, processing, database technologies, analytics tools,
+  monetization, and growth. Key insights: PostgreSQL with extensions (PostGIS,
+  H3, pgvector, TimescaleDB) serves as the Swiss Army knife for MVP. Graph
+  databases (Neo4j) become important for the "Meaning Graph" at scale. The
+  North Star metric is MPI/week (Meaningful Place Interactions). Free/open-source
+  tools can support growth to 100K+ users before significant investment needed.
+
+priority: critical
+
+updated: 2026-01-11
