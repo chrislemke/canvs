@@ -3,9 +3,7 @@ path: presentation
 purpose: Presentation materials, demos, and marketing assets
 
 contains:
-  - website materials
-  - presentation decks
-  - demo content
+  - subfolders
 
 primary_files: []
 
@@ -29,4 +27,4 @@ ai_guidance: >
 
 priority: low
 
-updated: 2026-01-10
+updated: 2026-01-11

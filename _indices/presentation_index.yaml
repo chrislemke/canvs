@@ -9,7 +9,7 @@ metadata:
   name: presentation_index
   folder: presentation
   purpose: Presentation materials, demos, and marketing assets
-  updated: "2026-01-10"
+  updated: "2026-01-11"
 
 # =============================================================================
 # FILES
@@ -59,6 +59,17 @@ website_drafts:
   - path: presentation/website/drafts/minimax.html
     summary: MiniMax-generated website draft
     type: document
+
+splash_page_files:
+  - path: presentation/website/splash_page/index.html
+    summary: Main splash page HTML implementation
+    type: document
+    priority: high
+
+  - path: presentation/website/splash_page/paper.html
+    summary: Paper-style version of splash page
+    type: document
+    priority: medium
 
 splash_page_specs:
   - path: presentation/website/splash_page/specs/technical_specification.md

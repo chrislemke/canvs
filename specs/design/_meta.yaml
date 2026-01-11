@@ -9,10 +9,12 @@ contains:
   - app icons
 
 primary_files:
+  - design_system.yaml
   - specs.md
-  - design_vision_v1.html
-  - design_vision_v2.html
+  - design_vision_v4.html
   - design_vision_v3.html
+  - design_vision_v2.html
+  - design_vision_v1.html
 
 keywords:
   - design
@@ -37,4 +39,4 @@ ai_guidance: >
 
 priority: medium
 
-updated: 2026-01-10
+updated: 2026-01-11

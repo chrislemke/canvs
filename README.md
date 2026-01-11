@@ -7,10 +7,44 @@
 
 <p align="center">
 
+> **Status:** Planning Phase | Target Launch: 2026
+>
+> This repository contains product vision, planning documents, and specifications for CANVS. Implementation has not yet begun.
+
+---
+
+## Quick Start
+
+New here? Start with these key documents:
+
+| Document | Purpose |
+|----------|---------|
+| [`_docs/start_here.yaml`](_docs/start_here.yaml) | Entry point for contributors and LLMs |
+| [`vision/product_vision_paper.md`](vision/product_vision_paper.md) | Full product vision (2026-2030) |
+| [`_indices/master.yaml`](_indices/master.yaml) | Complete project structure map |
+
+---
+
+## Repository Structure
+
+| Folder | Purpose |
+|--------|---------|
+| `planning/` | 77 numbered planning stages (01_problem_statement → 77_post_launch_review) |
+| `specs/` | Design and technical specifications |
+| `research/` | AI, GPS precision, visual positioning research |
+| `vision/` | Product vision papers |
+| `presentation/` | Website and marketing materials |
+| `notes/` | Meeting notes and observations |
+| `_indices/` | Index files mapping project structure |
+| `_docs/` | Entry point documentation |
+| `_templates/` | Document templates |
+
 ---
 
 ## Table of Contents
 
+- [Quick Start](#quick-start)
+- [Repository Structure](#repository-structure)
 - [Executive Summary](#executive-summary)
 - [The Vision: The Internet of Places](#the-vision-the-internet-of-places)
 - [The Problem We Solve](#the-problem-we-solve)
@@ -627,10 +661,10 @@ This README represents the product vision for CANVS. For detailed documentation,
 
 | Document | Description |
 |----------|-------------|
-| [Product Vision Paper](../vision/product_vision_paper.md) | Complete strategic vision (2026-2030) |
-| [Design Specifications](../specs/design/specs.md) | Visual design language and UI specifications |
-| [Technical Specifications](../specs/tech/mvp/specs/tech_specs.md) | MVP technical architecture |
-| [AI Feature Integrations](../specs/tech/parts/ai/visionary_feature_integrations.md) | LLM and AI capabilities roadmap |
+| [Product Vision Paper](vision/product_vision_paper.md) | Complete strategic vision (2026-2030) |
+| [Design Specifications](specs/design/specs.md) | Visual design language and UI specifications |
+| [Technical Specifications](specs/tech/mvp/specs/tech_specs.md) | MVP technical architecture |
+| [AI Feature Integrations](specs/tech/parts/ai/visionary_feature_integrations.md) | LLM and AI capabilities roadmap |
 
 ---
 

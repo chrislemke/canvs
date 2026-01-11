@@ -1,622 +1,527 @@
-# PostgreSQL + PostGIS Spatial Database Performance & Scaling Challenges
+# CANVS MVP Technical Challenges Analysis
 
 **Version:** 1.0.0
 **Last Updated:** January 2026
-**Context:** CANVS MVP - Location-Based Social Platform
-**Scale Target:** 10k-100k users, millions of location-anchored posts
+**Status:** Research Complete
+**Related Document:** [tech_specs.md](./tech_specs.md)
 
 ---
 
 ## Table of Contents
 
-1. [Spatial Query Performance](#1-spatial-query-performance)
-2. [H3 Hexagonal Indexing Challenges](#2-h3-hexagonal-indexing-challenges)
-3. [Real-time Updates at Scale](#3-real-time-updates-at-scale)
-4. [Connection Pooling](#4-connection-pooling)
-5. [Data Growth Management](#5-data-growth-management)
-6. [Multi-Region Considerations](#6-multi-region-considerations)
-7. [Cost Scaling](#7-cost-scaling)
-8. [Recommendations Summary](#8-recommendations-summary)
+1. [Executive Summary](#1-executive-summary)
+2. [GPS & Geolocation Challenges](#2-gps--geolocation-challenges)
+3. [PWA & Browser Compatibility Challenges](#3-pwa--browser-compatibility-challenges)
+4. [Spatial Database & Scaling Challenges](#4-spatial-database--scaling-challenges)
+5. [Media Handling Challenges](#5-media-handling-challenges)
+6. [Push Notifications & Real-time Challenges](#6-push-notifications--real-time-challenges)
+7. [Security & Anti-Spoofing Challenges](#7-security--anti-spoofing-challenges)
+8. [Content Moderation Challenges](#8-content-moderation-challenges)
+9. [AR/VPS Integration Challenges (MVP v2)](#9-arvps-integration-challenges-mvp-v2)
+10. [Infrastructure & Cost Challenges](#10-infrastructure--cost-challenges)
+11. [Risk Matrix Summary](#11-risk-matrix-summary)
+12. [Recommended Mitigations Priority](#12-recommended-mitigations-priority)
+13. [Potential Show-Stoppers](#13-potential-show-stoppers)
 
 ---
 
-## 1. Spatial Query Performance
+## 1. Executive Summary
 
-### 1.1 ST_DWithin Performance at Scale
+This document provides a comprehensive analysis of technical challenges facing the CANVS MVP implementation. Each challenge is assessed for impact, likelihood, and includes practical solutions.
 
-**The Challenge:**
-ST_DWithin is the core function for "find posts within X meters of user" queries. At millions of rows, poorly optimized queries can degrade from milliseconds to seconds.
+### 1.1 Critical Findings
 
-**Performance Characteristics:**
+| Category | Critical Challenges | Manageable Challenges |
+|----------|--------------------|-----------------------|
+| GPS/Geolocation | 3 | 4 |
+| PWA/Browser | 2 | 5 |
+| Database/Scaling | 2 | 4 |
+| Media Handling | 1 | 4 |
+| Push Notifications | 2 | 3 |
+| Security | 3 | 4 |
+| Content Moderation | 1 | 3 |
+| AR/VPS (v2) | 2 | 3 |
 
-| Row Count | Indexed Query | Unindexed Query | Notes |
-|-----------|--------------|-----------------|-------|
-| 10,000 | <10ms | 100-500ms | Negligible difference |
-| 100,000 | 10-50ms | 1-5 seconds | Index critical |
-| 1,000,000 | 50-200ms | 10-60 seconds | Must optimize |
-| 10,000,000 | 200-500ms | Minutes | Partitioning needed |
+### 1.2 Key Takeaways
 
-**Key Insight from [PostGIS Documentation](https://postgis.net/docs/ST_DWithin.html):**
-> "ST_DWithin includes a bounding box comparison that makes use of any indexes available on the geometries."
+1. **GPS precision is the core UX challenge** - Urban environments can degrade accuracy to 30-100m, significantly impacting the location-anchored content experience
+2. **iOS PWA limitations require careful UX design** - Push notifications require home screen installation; no true background location
+3. **Location spoofing cannot be fully prevented in web** - Accept this and design around it with rate limits, behavioral analysis, and trust systems
+4. **Supabase Realtime has scaling limits** - Plan architecture for connection pooling and geographic sharding
+5. **8th Wall deprecation affects MVP v2 VPS plans** - Consider native app path for ARCore Geospatial
 
-ST_DWithin automatically uses the `&&` operator internally on an expanded bounding box, enabling GiST index usage. However, the query planner must recognize this opportunity.
+---
 
-**Optimization Strategies:**
+## 2. GPS & Geolocation Challenges
 
-1. **Always Create GiST Indexes:**
+### 2.1 Urban Canyon Effect
+
+**Problem:**
+Tall buildings create "urban canyons" that block direct satellite signals and cause multipath interference. GPS signals bounce off glass and metal surfaces, creating false positioning data.
+
+**Technical Details:**
+- In dense urban areas, GPS accuracy can degrade from 3-10m to 30-100m
+- Multipath interference occurs when reflected signals arrive at the receiver with longer travel times
+- Limited satellite visibility in narrow streets reduces position quality
+- Some downtown areas may have only 3-4 visible satellites vs 8-12 in open areas
+
+**Impact:** HIGH
+**Likelihood:** HIGH (in any urban deployment)
+
+**Solutions:**
+
+1. **Visual Honesty - Display Accuracy Circles:**
+```typescript
+// Always show the uncertainty to users
+function renderAccuracyCircle(map: MapLibreMap, position: GeolocationPosition) {
+  const accuracy = position.coords.accuracy;
+
+  map.addSource('accuracy-circle', {
+    type: 'geojson',
+    data: createCircleGeoJSON(
+      position.coords.longitude,
+      position.coords.latitude,
+      accuracy
+    )
+  });
+
+  map.addLayer({
+    id: 'accuracy-fill',
+    type: 'fill',
+    source: 'accuracy-circle',
+    paint: {
+      'fill-color': accuracy <= 20 ? '#22c55e' : accuracy <= 50 ? '#eab308' : '#ef4444',
+      'fill-opacity': 0.15
+    }
+  });
+}
+```
+
+2. **Accuracy-Gated Actions:**
+```typescript
+interface LocationState {
+  position: GeolocationPosition;
+  accuracyTier: 'excellent' | 'good' | 'fair' | 'poor';
+  canPost: boolean;
+  canUnlock: boolean;
+}
+
+function getLocationState(position: GeolocationPosition): LocationState {
+  const accuracy = position.coords.accuracy;
+  return {
+    position,
+    accuracyTier: accuracy <= 10 ? 'excellent' : accuracy <= 25 ? 'good' : accuracy <= 50 ? 'fair' : 'poor',
+    canPost: accuracy <= 50,     // Only allow posting with ≤50m accuracy
+    canUnlock: accuracy <= 100   // Slightly more lenient for unlocking
+  };
+}
+```
+
+3. **User Guidance:**
+   - Show "Move outside for better accuracy" prompts
+   - Provide accuracy badge: "±18m" or "±45m (approximate)"
+   - Disable create button when accuracy exceeds threshold
+
+4. **Google's 3D Mapping Aided Corrections:**
+   - Available in 3,850+ cities through Google Play Services
+   - Automatically improves accuracy on Android devices
+   - No code changes required - benefits are transparent
+
+**References:**
+- [Google 3D Mapping Corrections](https://www.gpsworld.com/google-to-improve-urban-gps-accuracy-for-apps/)
+- [Sidewalk Matching Research](https://satellite-navigation.springeropen.com/articles/10.1186/s43020-025-00159-8)
+
+---
+
+### 2.2 Indoor Positioning Limitations
+
+**Problem:**
+GPS signals cannot penetrate buildings effectively. Indoor positioning relies on WiFi triangulation, which has limited accuracy (20-50m) and inconsistent availability.
+
+**Technical Details:**
+- Indoor GPS accuracy typically 50-100m+ (often unusable)
+- WiFi triangulation requires known access point locations
+- Bluetooth beacons require physical infrastructure
+- Cell tower positioning is very coarse (100m+)
+
+**Impact:** HIGH
+**Likelihood:** HIGH (users will use app indoors)
+
+**Solutions:**
+
+1. **Venue Association:**
+```typescript
+// When accuracy is poor, offer venue/building selection
+async function handleIndoorLocation(position: GeolocationPosition) {
+  if (position.coords.accuracy > 50) {
+    // Query nearby venues from OpenStreetMap/Google Places
+    const venues = await getNearbyVenues(position.coords.latitude, position.coords.longitude);
+    // Let user select their venue
+    return showVenueSelector(venues);
+  }
+}
+```
+
+2. **Accept Indoor Limitations:**
+   - Clearly communicate that CANVS works best outdoors
+   - Allow "approximate" posts with larger unlock radii indoors
+   - Consider venue-level anchoring (coffee shop level) vs precise spots
+
+3. **Future: QR Code Anchors:**
+   - Businesses could display QR codes that provide precise indoor anchors
+   - Creates partnership opportunities
+   - Doesn't require GPS at all
+
+---
+
+### 2.3 GPS Drift and Jitter
+
+**Problem:**
+Even when stationary, GPS position can "drift" by 5-30 meters due to atmospheric conditions, satellite geometry changes, and signal processing variations.
+
+**Technical Details:**
+- Position can shift every few seconds without user movement
+- Creates confusing UX when map marker jumps around
+- Can cause false "unlock" triggers or unexpected "out of range" states
+
+**Impact:** MEDIUM
+**Likelihood:** HIGH
+
+**Solutions:**
+
+1. **Kalman Filtering:**
+```typescript
+import KalmanFilter from 'kalmanjs';
+
+class PositionSmoother {
+  private latFilter = new KalmanFilter({ R: 0.01, Q: 3 });
+  private lngFilter = new KalmanFilter({ R: 0.01, Q: 3 });
+
+  smooth(position: GeolocationPosition): { lat: number; lng: number } {
+    return {
+      lat: this.latFilter.filter(position.coords.latitude),
+      lng: this.lngFilter.filter(position.coords.longitude)
+    };
+  }
+}
+```
+
+2. **Stationary Detection:**
+```typescript
+function detectStationary(history: GeolocationPosition[]): boolean {
+  if (history.length < 3) return false;
+  const recent = history.slice(-5);
+  const avgSpeed = recent.reduce((sum, p) => sum + (p.coords.speed || 0), 0) / recent.length;
+  return avgSpeed < 0.5; // m/s
+}
+```
+
+3. **Manual Pin Adjustment:**
+   - Allow users to drag their pin within the accuracy radius
+   - Builds trust when GPS is imperfect
+   - Store user-adjusted position if within reasonable bounds
+
+---
+
+### 2.4 Battery Drain from Location Tracking
+
+**Problem:**
+Continuous high-accuracy GPS tracking significantly drains mobile device batteries, creating poor user experience and potential negative reviews.
+
+**Technical Details:**
+- High-accuracy GPS uses 100-200mW of power
+- Continuous tracking can drain 10-15% battery per hour
+- `watchPosition` with `enableHighAccuracy: true` is the most power-hungry mode
+
+**Impact:** MEDIUM
+**Likelihood:** HIGH
+
+**Solutions:**
+
+1. **Adaptive Tracking Strategy:**
+```typescript
+function getLocationConfig(context: 'browse' | 'create' | 'unlock'): PositionOptions {
+  switch (context) {
+    case 'create':
+      return { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 };
+    case 'unlock':
+      return { enableHighAccuracy: true, timeout: 10000, maximumAge: 5000 };
+    case 'browse':
+      return { enableHighAccuracy: false, timeout: 30000, maximumAge: 60000 };
+  }
+}
+```
+
+2. **Interval-Based Updates:**
+```typescript
+class LocationManager {
+  private intervalId: number | null = null;
+
+  startTracking(intervalMs: number = 10000) {
+    this.intervalId = window.setInterval(() => {
+      navigator.geolocation.getCurrentPosition(
+        this.handlePosition,
+        this.handleError,
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 }
+      );
+    }, intervalMs);
+  }
+}
+```
+
+---
+
+### 2.5 Permission Denial Rates
+
+**Problem:**
+Users increasingly deny location permission requests. Studies show 30-50% denial rates for apps without clear value proposition.
+
+**Impact:** HIGH
+**Likelihood:** MEDIUM
+
+**Solutions:**
+
+1. **Pre-Permission Education:**
+```typescript
+async function requestLocationWithEducation() {
+  const userAgreed = await showEducationModal({
+    title: "CANVS needs your location",
+    message: "To discover memories left by others and leave your own mark on the world, CANVS needs to know where you are.",
+    benefits: [
+      "Discover pins and capsules near you",
+      "Leave memories at meaningful places",
+      "Unlock content left by friends"
+    ],
+    privacyNote: "We only use your location while the app is open."
+  });
+
+  if (userAgreed) {
+    return navigator.geolocation.getCurrentPosition(...);
+  }
+}
+```
+
+2. **Graceful Degradation:**
+   - Offer manual location entry
+   - Provide city-level browsing
+   - Explain limited features
+
+---
+
+## 3. PWA & Browser Compatibility Challenges
+
+### 3.1 iOS Safari PWA Limitations
+
+**Problem:**
+iOS Safari has significant PWA limitations compared to Chrome on Android, affecting push notifications, storage, and background capabilities.
+
+**Technical Details:**
+- Push notifications only work if PWA is installed to home screen (iOS 16.4+)
+- No background sync capability
+- Storage limited to ~50MB for Cache API
+- Storage can be evicted after 7 days of inactivity
+- No beforeinstallprompt event for install prompts
+
+**Impact:** HIGH
+**Likelihood:** CERTAIN (affects all iOS users)
+
+**Solutions:**
+
+1. **Installation Education:**
+```typescript
+function showInstallInstructions() {
+  if (detectiOS() && !isInstalled()) {
+    showModal({
+      title: "Add CANVS to Home Screen",
+      steps: [
+        "Tap the Share button at the bottom of Safari",
+        "Scroll down and tap 'Add to Home Screen'",
+        "Tap 'Add' to confirm"
+      ],
+      whyNeeded: "Required for push notifications and the best experience"
+    });
+  }
+}
+```
+
+2. **Feature-Based Degradation:**
+```typescript
+const features = {
+  pushNotifications: isInstalled() && 'PushManager' in window,
+  backgroundSync: 'serviceWorker' in navigator && 'sync' in ServiceWorkerRegistration.prototype,
+  persistentStorage: 'storage' in navigator && 'persist' in navigator.storage
+};
+
+if (features.persistentStorage) {
+  await navigator.storage.persist();
+}
+```
+
+3. **Alternative Engagement for Non-Installed:**
+   - Email notifications as fallback
+   - SMS notifications for critical updates
+   - Clear "install for notifications" prompts
+
+**Reference:**
+- [PWA on iOS - Current Status](https://brainhub.eu/library/pwa-on-ios)
+
+---
+
+### 3.2 Push Notification Reliability on iOS
+
+**Problem:**
+iOS web push notifications can be unreliable - they may work initially then stop unexpectedly.
+
+**Technical Details:**
+- If user doesn't interact with pushes, iOS may stop delivering them
+- Service worker listeners may not trigger reliably after device restarts
+- Users can become unexpectedly unsubscribed
+
+**Impact:** HIGH
+**Likelihood:** MEDIUM
+
+**Solutions:**
+
+1. **Subscription Health Monitoring:**
+```typescript
+async function checkPushSubscription() {
+  const registration = await navigator.serviceWorker.ready;
+  const subscription = await registration.pushManager.getSubscription();
+
+  if (subscription) {
+    const isValid = await verifySubscription(subscription);
+    if (!isValid) {
+      await subscription.unsubscribe();
+      await subscribeToPush();
+    }
+  }
+}
+```
+
+2. **Multi-Channel Fallback:**
+   - Email digest for inactive users
+   - In-app notification center
+   - "Check for updates" manual refresh
+
+---
+
+### 3.3 Media Capture Cross-Browser Issues
+
+**Problem:**
+Camera and microphone APIs behave differently across browsers, and codec support varies significantly.
+
+**Technical Details:**
+- MediaRecorder uses Opus on Chrome/Firefox, AAC on Safari
+- iOS doesn't support WebM container format
+- HEIC images from iOS need conversion
+
+**Impact:** MEDIUM
+**Likelihood:** HIGH
+
+**Solutions:**
+
+1. **Codec Detection:**
+```typescript
+function getRecorderMimeType(): string {
+  const types = [
+    'audio/webm;codecs=opus',
+    'audio/mp4',
+    'audio/aac'
+  ];
+  for (const type of types) {
+    if (MediaRecorder.isTypeSupported(type)) return type;
+  }
+  throw new Error('No supported audio format');
+}
+```
+
+2. **HEIC Conversion:**
+```typescript
+import heic2any from 'heic2any';
+
+async function processImage(file: File): Promise<Blob> {
+  if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
+    return await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 });
+  }
+  return file;
+}
+```
+
+---
+
+## 4. Spatial Database & Scaling Challenges
+
+### 4.1 Spatial Query Performance at Scale
+
+**Problem:**
+ST_DWithin queries can become slow as the posts table grows to millions of rows, even with spatial indexes.
+
+**Performance Benchmarks:**
+
+| Row Count | Indexed Query | Unindexed Query |
+|-----------|--------------|-----------------|
+| 10,000 | <10ms | 100-500ms |
+| 100,000 | 10-50ms | 1-5 seconds |
+| 1,000,000 | 50-200ms | 10-60 seconds |
+
+**Impact:** HIGH
+**Likelihood:** HIGH (as user base grows)
+
+**Solutions:**
+
+1. **Proper Index Creation:**
 ```sql
--- Required for any production spatial workload
-CREATE INDEX idx_place_anchors_location
+CREATE INDEX CONCURRENTLY idx_place_anchors_location
 ON place_anchors USING GIST (location);
 
--- After creating/modifying, ALWAYS run:
-VACUUM ANALYZE place_anchors;
+CREATE INDEX idx_place_anchors_h3_res8 ON place_anchors (h3_cell_res8);
+CREATE INDEX idx_place_anchors_h3_res9 ON place_anchors (h3_cell_res9);
+
+ANALYZE place_anchors;
 ```
 
-2. **Use Geography Carefully:**
+2. **H3 Pre-Filtering (Hybrid Approach):**
 ```sql
--- Geography (spherical) is more accurate but slower
--- Default: use_spheroid = true (accurate, slower)
-ST_DWithin(location, point, 500)  -- ~10-15% slower
-
--- For faster evaluation (less accurate at large distances):
-ST_DWithin(location, point, 500, false)  -- use_spheroid = false
-```
-
-Per [PostGIS ST_DWithin docs](https://postgis.net/docs/ST_DWithin.html): "For faster evaluation use `use_spheroid = false` to measure on the sphere."
-
-3. **Two-Stage Filtering Pattern:**
-```sql
--- Use indexable ST_DWithin first, then ST_Distance for ordering
-SELECT p.*,
+WITH nearby_cells AS (
+  SELECT unnest(h3_grid_disk(
+    h3_lat_lng_to_cell($1, $2, 8),
+    1
+  )) AS cell
+)
+SELECT p.*, pa.location,
        ST_Distance(pa.location, ST_MakePoint($2, $1)::geography) as distance_m
 FROM posts p
 JOIN place_anchors pa ON p.anchor_id = pa.id
-WHERE ST_DWithin(pa.location, ST_MakePoint($2, $1)::geography, 500)
+WHERE pa.h3_cell_res8 IN (SELECT cell FROM nearby_cells)
+  AND ST_DWithin(pa.location, ST_MakePoint($2, $1)::geography, 500)
 ORDER BY distance_m ASC
 LIMIT 50;
 ```
 
-4. **Ensure Proper Type Casting:**
-Per [Medium - 5 Principles for PostGIS](https://medium.com/@cfvandersluijs/5-principles-for-writing-high-performance-queries-in-postgis-bbea3ffb9830):
-> "Always ensure that your query can use the index. Wrap geometry literals with ST_GeomFromText() or cast them to the correct type."
-
-```sql
--- Good: Explicit cast ensures index usage
-ST_MakePoint($1, $2)::geography
-
--- Bad: May not use index
-ST_GeographyFromText('POINT(' || $1 || ' ' || $2 || ')')
-```
-
-**References:**
-- [PostGIS ST_DWithin](https://postgis.net/docs/ST_DWithin.html)
-- [PostGIS Spatial Queries](https://postgis.net/docs/using_postgis_query.html)
+**Reference:**
+- [PostGIS Performance Tips](https://postgis.net/docs/performance_tips.html)
 - [5 Principles for High-Performance PostGIS Queries](https://medium.com/@cfvandersluijs/5-principles-for-writing-high-performance-queries-in-postgis-bbea3ffb9830)
 
 ---
 
-### 1.2 GiST Index Efficiency for GEOGRAPHY Columns
+### 4.2 Supabase Realtime Connection Limits
 
-**The Challenge:**
-GiST (Generalized Search Tree) indexes use R-Tree structures internally. Their efficiency varies based on data distribution and query patterns.
+**Problem:**
+Supabase Realtime has connection limits per project. Geographic subscriptions multiply connection needs.
 
-**How GiST Spatial Indexes Work:**
+**Technical Details:**
+- Free tier: 200 concurrent connections
+- Pro tier: 500+ connections
+- Each user WebSocket counts as a connection
+- RLS checks on CDC can cause bottlenecks
 
-Per [PostGIS Spatial Indexing Workshop](https://postgis.net/workshops/postgis-intro/indexing.html):
-> "R-Trees break up data into rectangles, and sub-rectangles, and sub-sub rectangles. It is a self-tuning index structure that automatically handles variable data density."
+**Impact:** HIGH
+**Likelihood:** MEDIUM (at scale)
 
-**Performance Factors:**
-
-| Factor | Impact | Mitigation |
-|--------|--------|------------|
-| Data density variation | Medium | Automatic R-Tree adaptation |
-| Overlapping bounding boxes | High | Use point data when possible |
-| Complex geometries | High | Store simplified versions |
-| Index freshness | Critical | Regular VACUUM ANALYZE |
-
-**GiST vs SP-GiST vs BRIN:**
-
-Per [Crunchy Data - Spatial Indexes of PostGIS](https://www.crunchydata.com/blog/the-many-spatial-indexes-of-postgis):
-> "When data has a lot of overlaps, GIST outperforms SPGIST. When there is less overlap, SPGIST outperforms GIST."
-
-For CANVS point-based location data with minimal overlap, GiST remains the best choice.
-
-**BRIN Alternative for Very Large Tables:**
-
-Per [Alibaba Cloud PostGIS Best Practices](https://www.alibabacloud.com/blog/postgresql-best-practices-selection-and-optimization-of-postgis-spatial-indexes-gist-brin-and-r-tree_597034):
-> "BRIN is fast to build (6hrs vs 3.5 min for GiST on same data) and requires hardly any disk space (50 GB vs 3.6 MB). Consider BRIN only if your data table is large and stored in highly spatially correlated order."
-
-**Optimization SQL:**
-
-```sql
--- Check index usage in query plan
-EXPLAIN (ANALYZE, BUFFERS)
-SELECT * FROM place_anchors
-WHERE ST_DWithin(location, ST_MakePoint(-74.0, 40.7)::geography, 500);
-
--- Look for:
--- "Index Scan using idx_place_anchors_location"
--- NOT "Seq Scan"
-
--- If seeing Seq Scan, check statistics:
-SELECT relname, reltuples, relpages
-FROM pg_class WHERE relname = 'place_anchors';
-
--- Force statistics update
-ANALYZE place_anchors;
-```
-
----
-
-### 1.3 Query Optimization Strategies for Nearby Searches
-
-**Recommended Query Pattern for CANVS:**
-
-```sql
--- Optimized nearby posts query
-CREATE OR REPLACE FUNCTION nearby_posts_optimized(
-  user_lat DOUBLE PRECISION,
-  user_lng DOUBLE PRECISION,
-  radius_m INTEGER DEFAULT 500,
-  limit_count INTEGER DEFAULT 50
-)
-RETURNS TABLE (
-  post_id UUID,
-  distance_m DOUBLE PRECISION,
-  is_unlocked BOOLEAN
-) AS $$
-BEGIN
-  RETURN QUERY
-  WITH nearby AS (
-    -- Stage 1: Index-accelerated bounding box filter
-    SELECT
-      p.id,
-      pa.location,
-      pa.unlock_radius_m
-    FROM posts p
-    JOIN place_anchors pa ON p.anchor_id = pa.id
-    WHERE ST_DWithin(
-      pa.location,
-      ST_MakePoint(user_lng, user_lat)::geography,
-      radius_m,
-      false  -- use_spheroid=false for speed
-    )
-    AND p.audience IN ('nearby', 'public')
-    AND p.is_flagged = FALSE
-  )
-  -- Stage 2: Precise distance calculation on filtered set
-  SELECT
-    n.id,
-    ST_Distance(
-      n.location,
-      ST_MakePoint(user_lng, user_lat)::geography,
-      true  -- use_spheroid=true for accurate ordering
-    ) as distance_m,
-    (ST_Distance(n.location, ST_MakePoint(user_lng, user_lat)::geography) <= n.unlock_radius_m) as is_unlocked
-  FROM nearby n
-  ORDER BY distance_m ASC
-  LIMIT limit_count;
-END;
-$$ LANGUAGE plpgsql STABLE;
-```
-
-**Key Optimizations Applied:**
-1. `use_spheroid=false` in ST_DWithin for fast filtering
-2. `use_spheroid=true` in ST_Distance for accurate ordering
-3. CTE separates index scan from distance calculation
-4. `STABLE` marking allows query plan caching
-
----
-
-### 1.4 Hot Spots Problem (Many Posts in Same Location)
-
-**The Challenge:**
-Popular locations (Times Square, Eiffel Tower, popular cafes) accumulate thousands of posts. Queries for these areas become expensive.
-
-**Quantified Impact:**
-
-| Posts in 500m radius | Query Time | User Experience |
-|---------------------|------------|-----------------|
-| 100 | <50ms | Excellent |
-| 1,000 | 100-200ms | Acceptable |
-| 10,000 | 500ms-2s | Degraded |
-| 50,000+ | 2-10s | Unacceptable |
-
-**Mitigation Strategies:**
-
-1. **Spatial Clustering on Disk:**
-
-Per [PostGIS Clustering Workshop](https://postgis.net/workshops/postgis-intro/clusterindex.html):
-> "Features that are close in the real world will be physically placed close to each other in the dataset. This can lead to performance improvement of up to 90% in later spatial queries."
-
-```sql
--- Cluster data by spatial index (one-time operation)
-CLUSTER place_anchors USING idx_place_anchors_location;
-
--- Must re-run after significant data changes
--- Schedule weekly during low-traffic periods
-
--- Alternative: Use ST_GeoHash for better spatial ordering
-CREATE INDEX idx_anchors_geohash
-ON place_anchors (ST_GeoHash(location::geometry, 8));
-
-CLUSTER place_anchors USING idx_anchors_geohash;
-```
-
-Per [PostGIS Tips & Tricks](https://abelvm.github.io/sql/sql-tricks/):
-> "This action takes less than 2s / 100K rows."
-
-2. **H3 Cell-Based Pre-filtering:**
-
-```sql
--- First filter by H3 cell (B-tree, very fast)
--- Then refine with ST_DWithin
-SELECT * FROM posts p
-JOIN place_anchors pa ON p.anchor_id = pa.id
-WHERE pa.h3_cell_res9 = ANY($h3_cells_array)
-  AND ST_DWithin(pa.location, $user_point, 500);
-```
-
-3. **Materialized View for Popular Areas:**
-
-```sql
--- Pre-aggregate hot spot statistics
-CREATE MATERIALIZED VIEW hot_spot_stats AS
-SELECT
-  h3_cell_res9,
-  COUNT(*) as post_count,
-  MAX(created_at) as latest_post
-FROM place_anchors pa
-JOIN posts p ON p.anchor_id = pa.id
-GROUP BY h3_cell_res9
-HAVING COUNT(*) > 1000;
-
-CREATE INDEX idx_hot_spots ON hot_spot_stats (h3_cell_res9);
-
--- Refresh periodically
-REFRESH MATERIALIZED VIEW CONCURRENTLY hot_spot_stats;
-```
-
-4. **Result Limiting with Smart Sampling:**
-
-```sql
--- For hot spots, sample instead of returning all
-CREATE OR REPLACE FUNCTION nearby_posts_sampled(
-  user_lng DOUBLE PRECISION,
-  user_lat DOUBLE PRECISION,
-  max_results INTEGER DEFAULT 50
-) RETURNS SETOF posts AS $$
-DECLARE
-  total_nearby INTEGER;
-  sample_rate FLOAT;
-BEGIN
-  -- Count nearby posts
-  SELECT COUNT(*) INTO total_nearby
-  FROM place_anchors
-  WHERE ST_DWithin(location, ST_MakePoint(user_lng, user_lat)::geography, 500);
-
-  IF total_nearby <= max_results THEN
-    -- Return all if under limit
-    RETURN QUERY SELECT p.* FROM posts p
-    JOIN place_anchors pa ON p.anchor_id = pa.id
-    WHERE ST_DWithin(pa.location, ST_MakePoint(user_lng, user_lat)::geography, 500)
-    ORDER BY p.created_at DESC
-    LIMIT max_results;
-  ELSE
-    -- Sample using TABLESAMPLE for hot spots
-    sample_rate := (max_results::FLOAT / total_nearby) * 100;
-    RETURN QUERY SELECT p.* FROM posts p
-    JOIN place_anchors pa ON p.anchor_id = pa.id
-    WHERE ST_DWithin(pa.location, ST_MakePoint(user_lng, user_lat)::geography, 500)
-    ORDER BY RANDOM()
-    LIMIT max_results;
-  END IF;
-END;
-$$ LANGUAGE plpgsql;
-```
-
----
-
-## 2. H3 Hexagonal Indexing Challenges
-
-### 2.1 Choosing Appropriate Resolution (8/9/10)
-
-**Resolution Characteristics:**
-
-| Resolution | Avg Edge Length | Avg Area | Hexagons Globally | CANVS Use Case |
-|------------|-----------------|----------|-------------------|----------------|
-| 8 | ~461m | 0.74 km^2 | ~691 million | Regional discovery, privacy bucketing |
-| 9 | ~174m | 0.10 km^2 | ~4.8 billion | Neighborhood level, default nearby |
-| 10 | ~66m | 0.015 km^2 | ~34 billion | Street level, unlock zones |
-| 11 | ~25m | 0.002 km^2 | ~237 billion | Precise positioning |
-
-**Performance Impact of Resolution:**
-
-Per [RustProof Labs H3 Blog](https://blog.rustprooflabs.com/2022/04/postgis-h3-intro):
-> "Resolution 8: 840 hexagons for Denver area; Resolution 9: 4,515 hexagons; Resolution 10: 27,538 hexagons."
-
-**Recommendation for CANVS:**
-
-```sql
--- Store multiple resolutions for flexibility
-ALTER TABLE place_anchors ADD COLUMN IF NOT EXISTS h3_cell_res8 TEXT;
-ALTER TABLE place_anchors ADD COLUMN IF NOT EXISTS h3_cell_res9 TEXT;
-ALTER TABLE place_anchors ADD COLUMN IF NOT EXISTS h3_cell_res10 TEXT;
-
--- Indexes on each
-CREATE INDEX idx_h3_res8 ON place_anchors (h3_cell_res8);
-CREATE INDEX idx_h3_res9 ON place_anchors (h3_cell_res9);
-CREATE INDEX idx_h3_res10 ON place_anchors (h3_cell_res10);
-
--- Use cases:
--- res8: Privacy-preserving public location display
--- res9: Default nearby search (500m radius ~= 3 hex ring)
--- res10: Unlock radius checks (75m ~= 1 hex ring)
-```
-
-**Query Strategy by Resolution:**
-
-```sql
--- For 500m radius search, use res9 with 1-ring buffer
-WITH search_cells AS (
-  SELECT unnest(h3_grid_disk(
-    h3_lat_lng_to_cell($lat, $lng, 9),
-    2  -- 2 rings covers ~500m with margin
-  )) as cell
-)
-SELECT * FROM place_anchors
-WHERE h3_cell_res9 IN (SELECT cell FROM search_cells);
-```
-
----
-
-### 2.2 Edge Cases at Hexagon Boundaries
-
-**The Challenge:**
-Content near hexagon edges may not be found when querying only the user's cell.
-
-**Visual Representation:**
-```
-    User at edge of hex
-         v
-    ┌─────┐
-   /       \
-  /    X    \──── Post just across boundary (different cell)
-  \         /     Distance: 50m (should be found)
-   \       /
-    └─────┘
-```
-
-**Solution: Ring-Based Queries:**
-
-Per [h3-pg Documentation](https://github.com/zachasme/h3-pg/blob/main/docs/api.md):
-
-```sql
--- Always query center cell + neighbors
-CREATE OR REPLACE FUNCTION get_search_cells(
-  lat DOUBLE PRECISION,
-  lng DOUBLE PRECISION,
-  resolution INTEGER,
-  ring_size INTEGER
-) RETURNS TEXT[] AS $$
-  SELECT array_agg(cell::TEXT)
-  FROM unnest(h3_grid_disk(
-    h3_lat_lng_to_cell(lat, lng, resolution),
-    ring_size
-  )) as cell;
-$$ LANGUAGE SQL IMMUTABLE;
-
--- Usage
-SELECT * FROM place_anchors
-WHERE h3_cell_res9 = ANY(get_search_cells(40.7128, -74.0060, 9, 1));
-```
-
-**Ring Size Guidelines:**
-
-| Search Radius | Resolution | Recommended Ring Size |
-|--------------|------------|----------------------|
-| 100m | 10 | 2 |
-| 250m | 9 | 2 |
-| 500m | 9 | 3 |
-| 1km | 8 | 2 |
-| 5km | 7 | 2 |
-
-**Hybrid H3 + PostGIS Pattern:**
-
-```sql
--- Fast H3 pre-filter, precise PostGIS refinement
-WITH h3_candidates AS (
-  SELECT pa.*
-  FROM place_anchors pa
-  WHERE pa.h3_cell_res9 = ANY(
-    get_search_cells($lat, $lng, 9, 2)
-  )
-)
-SELECT * FROM h3_candidates
-WHERE ST_DWithin(location, ST_MakePoint($lng, $lat)::geography, 500);
-```
-
-Per [RustProof Labs H3 Performance](https://blog.rustprooflabs.com/2022/06/h3-indexes-on-postgis-data):
-> "Query time went from 543 seconds to 1 second using H3 indexes."
-
----
-
-### 2.3 pg_h3 Extension Maturity and Limitations
-
-**Current Status (2026):**
-
-Per [h3-pg GitHub](https://github.com/zachasme/h3-pg):
-> "The h3-pg project has moved to postgis/h3-pg and is now maintained under the PostGIS organization."
-
-**Supabase Support:**
-- H3 extension is available in Supabase
-- Enable via: `CREATE EXTENSION IF NOT EXISTS h3;`
-
-**Known Limitations:**
-
-1. **Memory Exhaustion with Polyfill:**
-
-Per [DLR pgh3 Documentation](https://github.com/dlr-eoc/pgh3/blob/master/doc/pgh3.md):
-> "Polyfill operations may fail with: 'requested memory allocation (7.58GB) exceeded the configured value (1023MB)'."
-
-```sql
--- Avoid polyfilling large polygons at high resolution
--- Instead, use h3_polygon_to_cells with limits
-SELECT h3_polygon_to_cells(geom, 9)
-FROM areas
-WHERE ST_Area(geom) < 10000000;  -- Limit polygon size
-```
-
-2. **Antimeridian Handling:**
-
-```sql
--- Enable extended coordinates for 180th meridian crossing
-SET h3.extend_antimeridian TO true;
-SELECT h3_cell_to_boundary(cell);
-```
-
-3. **No Native "Point NOT IN Hexagon" Queries:**
-
-Per [RustProof Labs](https://blog.rustprooflabs.com/2022/04/postgis-h3-intro):
-> "H3 functions are good at telling 'where things are' but there isn't an obvious way to find areas where 'this thing is not'."
-
-Workaround:
-```sql
--- Use LEFT JOIN with IS NULL
-SELECT h.cell
-FROM hexagon_grid h
-LEFT JOIN place_anchors pa ON pa.h3_cell_res9 = h.cell
-WHERE pa.id IS NULL;
-```
-
-**References:**
-- [h3-pg GitHub Repository](https://github.com/zachasme/h3-pg)
-- [H3 PostgreSQL Bindings PGXN](https://pgxn.org/dist/h3/)
-- [AWS RDS H3 Support Announcement](https://aws.amazon.com/about-aws/whats-new/2023/09/amazon-rds-postgresql-h3-pg-geospatial-indexing/)
-
----
-
-### 2.4 Hybrid H3 + PostGIS Query Patterns
-
-**Best Practice Architecture:**
-
-```
-Query Flow:
-1. H3 B-tree lookup (microseconds) → Candidate set
-2. PostGIS GiST refinement (milliseconds) → Precise results
-3. Distance calculation → Ordered results
-```
-
-**Implementation:**
-
-```sql
-CREATE OR REPLACE FUNCTION nearby_posts_hybrid(
-  user_lat DOUBLE PRECISION,
-  user_lng DOUBLE PRECISION,
-  radius_m INTEGER DEFAULT 500
-) RETURNS TABLE (
-  post_id UUID,
-  distance_m DOUBLE PRECISION
-) AS $$
-DECLARE
-  user_h3_res9 TEXT;
-  ring_size INTEGER;
-BEGIN
-  -- Calculate H3 cell and ring size
-  user_h3_res9 := h3_lat_lng_to_cell(user_lat, user_lng, 9);
-  ring_size := CEIL(radius_m / 174.0);  -- res9 edge length
-
-  RETURN QUERY
-  -- Stage 1: H3 filter (B-tree, very fast)
-  WITH h3_filtered AS (
-    SELECT pa.*, p.*
-    FROM place_anchors pa
-    JOIN posts p ON p.anchor_id = pa.id
-    WHERE pa.h3_cell_res9 = ANY(
-      SELECT unnest(h3_grid_disk(user_h3_res9, ring_size))::TEXT
-    )
-    AND p.is_flagged = FALSE
-  )
-  -- Stage 2: PostGIS refinement (GiST, precise)
-  SELECT
-    hf.id,
-    ST_Distance(hf.location, ST_MakePoint(user_lng, user_lat)::geography)
-  FROM h3_filtered hf
-  WHERE ST_DWithin(
-    hf.location,
-    ST_MakePoint(user_lng, user_lat)::geography,
-    radius_m,
-    false  -- spherical for speed
-  )
-  ORDER BY 2 ASC;
-END;
-$$ LANGUAGE plpgsql STABLE;
-```
-
-**Performance Comparison:**
-
-| Query Type | 100K rows | 1M rows | 10M rows |
-|------------|-----------|---------|----------|
-| PostGIS only | 80ms | 400ms | 2s |
-| H3 only | 5ms | 20ms | 100ms |
-| Hybrid H3+PostGIS | 15ms | 50ms | 200ms |
-
-The hybrid approach provides the precision of PostGIS with the speed of H3 B-tree lookups.
-
----
-
-## 3. Real-time Updates at Scale
-
-### 3.1 Supabase Realtime Connection Limits
-
-**The Challenge:**
-Each user maintaining a WebSocket connection for live updates consumes resources. Geographic subscriptions (new posts near me) compound the problem.
-
-**Supabase Realtime Limits:**
-
-Per [Supabase Realtime Quotas](https://supabase.com/docs/guides/realtime/quotas):
-> "All quotas are configurable per project... Connections will be disconnected if your project is generating too many messages per second."
-
-**Limits by Plan:**
-
-| Plan | Concurrent Connections | Messages/Month | Peak Connections Cost |
-|------|----------------------|----------------|----------------------|
-| Free | 200 | 2 million | Included |
-| Pro | 500+ | 5 million | $10/1,000 peak |
-| Team | 1,000+ | Unlimited | Custom |
-
-Per [Supabase Realtime Pricing](https://supabase.com/docs/guides/realtime/pricing):
-> "Peak connections cost $10 per 1,000 peak connections. Messages cost $2.50 per 1 million messages."
-
-**Cost Projection for CANVS:**
-
-| MAU | Peak Concurrent (10%) | Monthly Connection Cost | Message Cost (1M/day) |
-|-----|----------------------|------------------------|----------------------|
-| 10,000 | 1,000 | $10 | $75 |
-| 50,000 | 5,000 | $50 | $225 |
-| 100,000 | 10,000 | $100 | $375 |
-
----
-
-### 3.2 WebSocket Scaling for Geographic Subscriptions
-
-**The Challenge:**
-Per [Supabase Realtime Benchmarks](https://supabase.com/docs/guides/realtime/benchmarks):
-> "For the Postgres Changes feature, every change event must be checked to see if the subscribed user has access. If you have 100 users subscribed to a table where you make a single insert, it will trigger 100 'reads' - one for each user."
-
-**Geographic Subscription Amplification:**
-```
-1 new post → Check 10,000 users' locations → 10,000 proximity calculations
-                                          → Potentially 10,000 notifications
-```
-
-**Mitigation Strategies:**
+**Solutions:**
 
 1. **H3-Based Channel Segmentation:**
-
 ```typescript
-// Subscribe to H3 cell channels instead of table-wide
 const userH3Cell = h3.latLngToCell(userLat, userLng, 8);
 const neighborCells = h3.gridDisk(userH3Cell, 1);
 
@@ -633,750 +538,502 @@ const channels = neighborCells.map(cell =>
 );
 ```
 
-2. **Server-Side Broadcast Pattern:**
-
-Per [Supabase Realtime Docs](https://supabase.com/docs/guides/realtime/postgres-changes):
-> "Use Realtime server-side only and then re-stream the changes to your clients using Realtime Broadcast."
-
-```typescript
-// Edge Function: Process CDC, broadcast to relevant cells
-Deno.serve(async (req) => {
-  const { new: newPost } = await req.json();
-
-  // Get affected H3 cells
-  const postCell = h3.latLngToCell(newPost.lat, newPost.lng, 8);
-  const affectedCells = h3.gridDisk(postCell, 1);
-
-  // Broadcast to each cell's channel
-  for (const cell of affectedCells) {
-    await supabase.channel(`cell-${cell}`).send({
-      type: 'broadcast',
-      event: 'new-post',
-      payload: { id: newPost.id, preview: newPost.text?.slice(0, 100) }
-    });
-  }
-});
-```
-
-3. **Polling Fallback for Scale:**
-
-```typescript
-// Hybrid: Realtime for active users, polling for backgrounded
-const REALTIME_THRESHOLD = 5000; // concurrent connections
-
-if (activeConnections < REALTIME_THRESHOLD) {
-  useRealtimeSubscription();
-} else {
-  usePollingWithExponentialBackoff(30000); // 30s base interval
-}
-```
-
----
-
-### 3.3 Change Data Capture (CDC) Performance
-
-**The Challenge:**
-
-Per [Supabase Realtime Benchmarks](https://supabase.com/docs/guides/realtime/benchmarks):
-> "Database changes are processed on a single thread to maintain change order... compute upgrades don't have a large effect on the performance of Postgres change subscriptions."
-
-**RLS Impact on CDC:**
-
-Per [Supabase RLS Troubleshooting](https://supabase.com/docs/guides/troubleshooting/rls-performance-and-best-practices-Z5Jjwv):
-> "The impact of RLS on performance of your queries can be massive. Queries that use limit and offset will usually have to query all rows to determine order."
-
-**Optimization:**
-
+2. **Public Broadcast Table Without RLS:**
 ```sql
--- Create a public "broadcast" table without RLS for CDC
 CREATE TABLE public.post_broadcasts (
   id UUID PRIMARY KEY,
   h3_cell_res8 TEXT NOT NULL,
   preview TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
-
--- No RLS on broadcast table
-ALTER TABLE public.post_broadcasts ENABLE ROW LEVEL SECURITY;
-
--- Trigger to populate from posts
-CREATE OR REPLACE FUNCTION broadcast_new_post()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO public.post_broadcasts (id, h3_cell_res8, preview, created_at)
-  SELECT
-    NEW.id,
-    pa.h3_cell_res8,
-    LEFT(NEW.text_content, 100),
-    NEW.created_at
-  FROM place_anchors pa
-  WHERE pa.id = NEW.anchor_id;
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER post_broadcast_trigger
-AFTER INSERT ON posts
-FOR EACH ROW EXECUTE FUNCTION broadcast_new_post();
+-- No RLS = much faster CDC
 ```
 
-**References:**
+**Reference:**
 - [Supabase Realtime Quotas](https://supabase.com/docs/guides/realtime/quotas)
-- [Supabase Realtime Benchmarks](https://supabase.com/docs/guides/realtime/benchmarks)
-- [Building Scalable Real-Time Systems with Supabase](https://medium.com/@ansh91627/building-scalable-real-time-systems-a-deep-dive-into-supabase-realtime-architecture-and-eccb01852f2b)
 
 ---
 
-## 4. Connection Pooling
+## 5. Media Handling Challenges
 
-### 4.1 Supabase/PgBouncer Configuration
+### 5.1 Image Compression Quality vs Size
 
-**Connection Types:**
+**Problem:**
+Finding the right balance between image quality and file size, especially with various source formats.
 
-Per [Supabase Connection Docs](https://supabase.com/docs/guides/database/connecting-to-postgres):
-> "Supabase provisions a Dedicated Pooler (PgBouncer) for paying customers that's co-located with your Postgres database."
+**Impact:** MEDIUM
+**Likelihood:** HIGH
 
-| Connection Type | Port | Best For | Paid Plan? |
-|----------------|------|----------|------------|
-| Direct | 5432 | Long-running, server apps | All |
-| Shared Pooler | 6543 | Serverless, edge functions | All |
-| Dedicated Pooler | 5432 | High-scale serverless | Pro+ |
-
-**Transaction Mode (Critical for Serverless):**
-
-Per [Supabase Connection Management](https://supabase.com/docs/guides/database/connection-management):
-> "Transaction Mode is the mandatory choice for scalable, high-concurrency web APIs. A client borrows a connection only for the duration of a single transaction."
+**Solutions:**
 
 ```typescript
-// Edge Function connection string
-const supabaseUrl = process.env.SUPABASE_URL;
-// Use port 6543 for transaction mode pooling
-const connectionString = `postgres://postgres:${password}@db.xxx.supabase.co:6543/postgres`;
+import imageCompression from 'browser-image-compression';
+
+async function compressImage(file: File): Promise<Blob> {
+  const options = {
+    maxSizeMB: 0.8,
+    maxWidthOrHeight: 1920,
+    useWebWorker: true,
+    fileType: 'image/webp',
+    initialQuality: 0.85
+  };
+  return await imageCompression(file, options);
+}
 ```
-
-**Pool Size Limits:**
-
-| Supabase Plan | Direct Connections | Pooler Connections |
-|--------------|-------------------|-------------------|
-| Free | 25 | 50 |
-| Pro (Small) | 60 | 200 |
-| Pro (Medium) | 120 | 400 |
-| Pro (Large) | 180 | 600 |
 
 ---
 
-### 4.2 Cold Start Latency for Serverless Functions
+### 5.2 Upload Reliability on Poor Networks
 
-**The Challenge:**
+**Problem:**
+Mobile users often have unstable connections. Uploads can fail partway through.
 
-Per [Medium - Debugging Postgres Connection Pooling](https://jackymlui.medium.com/debugging-postgres-connection-pooling-with-aws-lambdas-1706bce8d8f0):
-> "Total latency: 2.5+ seconds for cold starts - unacceptable for production applications."
+**Impact:** MEDIUM
+**Likelihood:** HIGH
 
-**Cold Start Breakdown:**
+**Solutions:**
 
-| Component | Time | Mitigation |
-|-----------|------|------------|
-| Function initialization | 500-1000ms | Smaller bundles |
-| Connection establishment | 200-500ms | Connection pooling |
-| TLS handshake | 100-200ms | Connection reuse |
-| Query execution | Variable | Prepared statements |
-
-**Supabase Edge Function Optimizations:**
-
-Per [TechSynth Supabase Scaling Guide](https://techsynth.tech/blog/supabase-serverless-scaling/):
-> "Supabase solves this through pgBouncer connection pooling, automatic scaling, built-in RLS, and Edge Functions. Production deployments maintain single-digit millisecond query latency."
-
+1. **Retry with Exponential Backoff:**
 ```typescript
-// Supabase Edge Function with connection reuse
-import { createClient } from '@supabase/supabase-js';
-
-// Client created at module level (reused across invocations)
-const supabase = createClient(
-  Deno.env.get('SUPABASE_URL')!,
-  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-);
-
-Deno.serve(async (req) => {
-  // Connection reused from pool
-  const { data, error } = await supabase
-    .from('posts')
-    .select('*')
-    .limit(10);
-
-  return new Response(JSON.stringify(data));
-});
-```
-
----
-
-### 4.3 Connection Exhaustion Under Load
-
-**Warning Signs:**
-
-```
-ERROR: remaining connection slots are reserved for non-replication superuser connections
-ERROR: too many connections for role "postgres"
-ERROR: sorry, too many clients already
-```
-
-**Monitoring Query:**
-
-```sql
--- Check connection usage
-SELECT
-  count(*) as total_connections,
-  state,
-  usename,
-  application_name
-FROM pg_stat_activity
-GROUP BY state, usename, application_name
-ORDER BY total_connections DESC;
-
--- Check connection limits
-SHOW max_connections;
-```
-
-**Best Practices:**
-
-Per [Supabase Connection Scaling Guide](https://medium.com/@papansarkar101/supabase-connection-scaling-the-essential-guide-for-fastapi-developers-2dc5c428b638):
-> "In serverless setups, begin with connection_limit=1, increasing cautiously if needed."
-
-```typescript
-// Lambda/Serverless connection string
-const connectionString = `${baseUrl}?connection_limit=1&pool_timeout=10`;
-
-// Set statement timeout to prevent hung connections
-await client.query('SET statement_timeout = 30000'); // 30 seconds
-```
-
-**Connection Limit Formula:**
-
-```
-Safe Max Connections = (Pool Size - Reserved) / Expected Concurrent Lambdas
-                    = (200 - 20) / 50 = 3.6 ≈ 3 per Lambda
-```
-
-**References:**
-- [Supabase Connection Docs](https://supabase.com/docs/guides/database/connecting-to-postgres)
-- [Supabase PgBouncer Blog](https://supabase.com/blog/supabase-pgbouncer)
-- [Supabase Connection Scaling Guide](https://medium.com/@papansarkar101/supabase-connection-scaling-the-essential-guide-for-fastapi-developers-2dc5c428b638)
-
----
-
-## 5. Data Growth Management
-
-### 5.1 Partition Strategies for Time-Series Location Data
-
-**The Challenge:**
-CANVS data has both temporal (created_at) and spatial (location) dimensions. Partitioning must optimize for both.
-
-**Partitioning Options:**
-
-Per [Medium - 9 Postgres Partitioning Strategies](https://medium.com/@connect.hashblock/9-postgres-partitioning-strategies-for-time-series-at-scale-c1b764a9b691):
-> "Time-series wants range partitioning on a timestamp. Daily partitions for explosive write volumes, weekly for steady streams, monthly for moderate volumes."
-
-**Recommended: Composite Time + H3 Partitioning:**
-
-```sql
--- Main partitioned table
-CREATE TABLE posts_partitioned (
-  id UUID NOT NULL,
-  anchor_id UUID NOT NULL,
-  author_id UUID NOT NULL,
-  h3_cell_res8 TEXT NOT NULL,
-  text_content TEXT,
-  created_at TIMESTAMPTZ NOT NULL,
-  -- other columns...
-  PRIMARY KEY (id, created_at, h3_cell_res8)
-) PARTITION BY RANGE (created_at);
-
--- Monthly partitions
-CREATE TABLE posts_2026_01 PARTITION OF posts_partitioned
-  FOR VALUES FROM ('2026-01-01') TO ('2026-02-01');
-
-CREATE TABLE posts_2026_02 PARTITION OF posts_partitioned
-  FOR VALUES FROM ('2026-02-01') TO ('2026-03-01');
-
--- Each monthly partition sub-partitioned by H3 region (optional for hot cities)
-CREATE TABLE posts_2026_01_nyc PARTITION OF posts_2026_01
-  FOR VALUES FROM ('882a100') TO ('882a101')
-  PARTITION BY LIST (h3_cell_res8);
-```
-
-**Benefits:**
-
-Per [Stormatics PostgreSQL Partitioning](https://stormatics.tech/blogs/improving-postgresql-performance-with-partitioning):
-> "Bulk loads and deletes can be accomplished by adding or removing partitions. Dropping an individual partition is far faster than bulk DELETE and avoids VACUUM overhead."
-
-| Operation | Without Partitioning | With Partitioning |
-|-----------|---------------------|-------------------|
-| Delete old data | Hours (VACUUM) | Seconds (DROP) |
-| VACUUM | Table-wide lock | Per-partition |
-| Query recent | Full scan | Partition pruning |
-| Index maintenance | Growing overhead | Constant per partition |
-
-**Automation with pg_partman:**
-
-```sql
--- Install pg_partman (if available in Supabase)
-CREATE EXTENSION IF NOT EXISTS pg_partman;
-
-SELECT create_parent(
-  p_parent_table := 'public.posts_partitioned',
-  p_control := 'created_at',
-  p_interval := '1 month',
-  p_premake := 3  -- Pre-create 3 future partitions
-);
-
--- Schedule maintenance
-SELECT run_maintenance('public.posts_partitioned');
-```
-
----
-
-### 5.2 VACUUM and ANALYZE Scheduling
-
-**The Challenge:**
-
-Per [PostgreSQL VACUUM Best Practices](https://www.enterprisedb.com/blog/postgresql-vacuum-and-analyze-best-practice-tips):
-> "Manual VACUUM ANALYZE performs a VACUUM and then an ANALYZE for each selected table. This is a handy combination for routine maintenance scripts."
-
-**Critical Issue with Partitioned Tables:**
-
-Per [Cybertec Partitioned Table Statistics](https://www.cybertec-postgresql.com/en/partitioned-table-statistics/):
-> "Partitioned tables do not directly store tuples and consequently are not processed by autovacuum. This means autovacuum does not run ANALYZE on partitioned tables, causing suboptimal plans."
-
-**Solution:**
-
-```sql
--- Manual ANALYZE on partitioned parent table
-ANALYZE posts_partitioned;
-
--- Schedule via pg_cron (if available in Supabase)
-SELECT cron.schedule(
-  'analyze-posts',
-  '0 3 * * *',  -- Daily at 3 AM
-  $$ANALYZE posts_partitioned$$
-);
-
--- Aggressive VACUUM after bulk deletes
-SELECT cron.schedule(
-  'vacuum-old-partitions',
-  '0 4 * * 0',  -- Weekly on Sunday at 4 AM
-  $$VACUUM (VERBOSE, ANALYZE) posts_2025_01, posts_2025_02$$
-);
-```
-
-**Monitoring VACUUM Health:**
-
-```sql
--- Check for bloat
-SELECT
-  schemaname, tablename,
-  pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) as total_size,
-  n_dead_tup,
-  last_vacuum,
-  last_autovacuum
-FROM pg_stat_user_tables
-WHERE n_dead_tup > 10000
-ORDER BY n_dead_tup DESC;
-```
-
----
-
-### 5.3 Index Maintenance Overhead
-
-**The Challenge:**
-Spatial indexes (GiST) require more maintenance than B-tree indexes, especially on frequently updated tables.
-
-**Index Bloat Detection:**
-
-```sql
--- Check index bloat
-SELECT
-  indexrelname as index_name,
-  pg_size_pretty(pg_relation_size(indexrelid)) as index_size,
-  idx_scan as index_scans,
-  idx_tup_read,
-  idx_tup_fetch
-FROM pg_stat_user_indexes
-WHERE schemaname = 'public'
-ORDER BY pg_relation_size(indexrelid) DESC;
-```
-
-**REINDEX Strategy:**
-
-```sql
--- REINDEX can rebuild bloated indexes
--- Use CONCURRENTLY to avoid locking (PostgreSQL 12+)
-REINDEX INDEX CONCURRENTLY idx_place_anchors_location;
-
--- Schedule weekly
-SELECT cron.schedule(
-  'reindex-spatial',
-  '0 5 * * 0',  -- Sunday 5 AM
-  $$REINDEX INDEX CONCURRENTLY idx_place_anchors_location$$
-);
-```
-
-**Partial Indexes for Hot Data:**
-
-```sql
--- Index only recent posts for faster nearby queries
-CREATE INDEX idx_recent_posts_location
-ON posts USING GIST (anchor_id)
-WHERE created_at > NOW() - INTERVAL '30 days';
-
--- Smaller index = faster updates
-```
-
-**References:**
-- [PostgreSQL Table Partitioning](https://www.postgresql.org/docs/current/ddl-partitioning.html)
-- [PostgreSQL VACUUM Documentation](https://www.postgresql.org/docs/current/sql-vacuum.html)
-- [PostgreSQL VACUUM Best Practices](https://www.enterprisedb.com/blog/postgresql-vacuum-and-analyze-best-practice-tips)
-
----
-
-## 6. Multi-Region Considerations
-
-### 6.1 Read Replicas for Geographic Distribution
-
-**Supabase Read Replica Support:**
-
-Per [Supabase Read Replicas Docs](https://supabase.com/docs/guides/platform/read-replicas):
-> "Supabase allows you to deploy read-only databases across multiple regions for lower latency."
-
-**Availability:**
-- Available on **Pro and Enterprise** plans
-- AWS regions worldwide
-
-**Geo-Routing (April 2025+):**
-
-Per [Supabase Read Replicas](https://supabase.com/docs/guides/platform/read-replicas):
-> "Starting April 4th, 2025, eligible Data API requests use geo-routing that directs requests to the closest available database."
-
-**Architecture:**
-
-```
-                    ┌─────────────────┐
-                    │  Primary DB     │
-                    │  (us-east-1)    │
-                    │  Read + Write   │
-                    └────────┬────────┘
-                             │ Replication
-           ┌─────────────────┼─────────────────┐
-           │                 │                 │
-           ▼                 ▼                 ▼
-    ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-    │ Read Replica │  │ Read Replica │  │ Read Replica │
-    │  (eu-west-1) │  │ (ap-south-1) │  │ (ap-east-1)  │
-    │   Europe     │  │    India     │  │    APAC      │
-    └──────────────┘  └──────────────┘  └──────────────┘
-```
-
-**Implementation:**
-
-```typescript
-// Supabase client with region-aware routing
-const supabase = createClient(supabaseUrl, supabaseKey, {
-  db: {
-    schema: 'public',
-  },
-  global: {
-    headers: {
-      'x-region': 'auto'  // Let Supabase route to nearest replica
+async function uploadWithRetry(file: Blob, uploadUrl: string, maxRetries = 3): Promise<void> {
+  let attempt = 0;
+  while (attempt < maxRetries) {
+    try {
+      const response = await fetch(uploadUrl, { method: 'PUT', body: file });
+      if (response.ok) return;
+      throw new Error(`Upload failed: ${response.status}`);
+    } catch (error) {
+      attempt++;
+      if (attempt >= maxRetries) throw error;
+      await new Promise(r => setTimeout(r, 1000 * Math.pow(2, attempt)));
     }
   }
-});
+}
+```
 
-// Writes always go to primary
-await supabase.from('posts').insert(newPost);
-
-// Reads routed to nearest replica
-const { data } = await supabase.from('posts').select('*');
+2. **Offline Queue with IndexedDB:**
+```typescript
+class UploadQueue {
+  async enqueue(upload: PendingUpload) {
+    await idb.set('upload_queue', [...this.queue, upload]);
+    if (navigator.onLine) this.processQueue();
+  }
+}
+window.addEventListener('online', () => uploadQueue.processQueue());
 ```
 
 ---
 
-### 6.2 Latency for Users Far from Supabase Region
+### 5.3 Cloudflare R2 CORS Configuration
 
-**Latency by Distance:**
+**Problem:**
+Presigned URL uploads to R2 require proper CORS configuration. Misconfiguration causes upload failures.
 
-| User Location | Primary in us-east-1 | With Regional Replica |
-|--------------|---------------------|----------------------|
-| New York | 5-15ms | 5-15ms |
-| London | 80-120ms | 10-20ms (eu-west-1) |
-| Mumbai | 150-250ms | 20-40ms (ap-south-1) |
-| Sydney | 200-300ms | 30-50ms (ap-southeast-2) |
+**Impact:** MEDIUM
+**Likelihood:** HIGH (during setup)
 
-**Edge Function Routing:**
+**Solutions:**
 
+```json
+{
+  "CORSRules": [{
+    "AllowedOrigins": ["https://canvs.app", "http://localhost:3000"],
+    "AllowedMethods": ["GET", "PUT", "HEAD"],
+    "AllowedHeaders": ["content-type", "content-length"],
+    "ExposeHeaders": ["ETag"],
+    "MaxAgeSeconds": 3600
+  }]
+}
+```
+
+**Reference:**
+- [R2 Presigned URLs](https://developers.cloudflare.com/r2/api/s3/presigned-urls/)
+
+---
+
+## 6. Push Notifications & Real-time Challenges
+
+### 6.1 Web Push Subscription Lifecycle
+
+**Problem:**
+Web push subscriptions can expire, become invalid, or fail silently.
+
+**Impact:** HIGH
+**Likelihood:** HIGH
+
+**Solutions:**
+
+1. **Server-Side 410 Handling:**
 ```typescript
-// Detect user region from request
-const userRegion = Deno.env.get('DENO_REGION');
+import webpush from 'web-push';
 
-// Route to appropriate read replica
-const replicaUrl = {
-  'eu-central-1': process.env.SUPABASE_EU_URL,
-  'ap-southeast-1': process.env.SUPABASE_APAC_URL,
-  'default': process.env.SUPABASE_URL
-}[userRegion] || process.env.SUPABASE_URL;
+async function sendNotification(subscription: PushSubscription, payload: object) {
+  try {
+    await webpush.sendNotification(subscription, JSON.stringify(payload));
+  } catch (error) {
+    if (error.statusCode === 410 || error.statusCode === 404) {
+      await db.from('push_subscriptions').delete().eq('endpoint', subscription.endpoint);
+    }
+    throw error;
+  }
+}
+```
 
-const supabase = createClient(replicaUrl, supabaseKey);
+2. **Periodic Subscription Validation:**
+```typescript
+async function periodicSubscriptionCheck() {
+  const subscription = await getPushSubscription();
+  if (subscription) {
+    await fetch('/api/push/heartbeat', {
+      method: 'POST',
+      body: JSON.stringify({ endpoint: subscription.endpoint, lastActive: Date.now() })
+    });
+  }
+}
 ```
 
 ---
 
-### 6.3 Eventual Consistency Trade-offs
+## 7. Security & Anti-Spoofing Challenges
 
-**Replication Lag:**
-- Typical: 10-100ms under normal load
-- Peak traffic: 100-500ms
-- Network issues: 1-5 seconds
+### 7.1 GPS Spoofing in Web Context
 
-**Implications for CANVS:**
+**Problem:**
+Web apps cannot reliably detect GPS spoofing. Users can use browser extensions, developer tools, or modified browsers to fake their location.
 
-| Operation | Consistency Need | Strategy |
-|-----------|-----------------|----------|
-| Create post | Strong (write) | Primary only |
-| Nearby discovery | Eventual OK | Read replica |
-| Unlock check | Strong | Primary or cache |
-| Reaction count | Eventual OK | Read replica |
-| Comment thread | Strong | Primary |
+**Impact:** HIGH
+**Likelihood:** HIGH (for motivated bad actors)
 
-**Read-Your-Writes Pattern:**
+**Critical Insight:** Accept that web apps cannot prevent spoofing. Design mitigations that reduce impact rather than attempting perfect prevention.
+
+**Solutions:**
+
+1. **Rate Limiting:**
+```typescript
+async function canUserCreatePost(userId: string): Promise<boolean> {
+  const recentPosts = await db.from('posts')
+    .select('*')
+    .eq('author_id', userId)
+    .gte('created_at', new Date(Date.now() - 86400000).toISOString());
+
+  const isNewAccount = await isAccountNew(userId);
+  const limit = isNewAccount ? 5 : 50;
+  return recentPosts.length < limit;
+}
+```
+
+2. **Behavioral Analysis:**
+```typescript
+async function detectSuspiciousBehavior(userId: string, newPosition: Position): Promise<RiskLevel> {
+  const recentPositions = await getRecentPositions(userId);
+  const lastPosition = recentPositions[0];
+
+  if (lastPosition) {
+    const distance = haversineDistance(lastPosition, newPosition);
+    const timeDiff = (Date.now() - lastPosition.timestamp) / 1000 / 3600;
+    const speedKmh = distance / timeDiff;
+    if (speedKmh > 1000) return 'high'; // Faster than a jet
+  }
+  return 'low';
+}
+```
+
+3. **Trust Scoring:**
+```typescript
+function calculateTrustScore(factors: TrustFactors): number {
+  let score = 0.5;
+  score += Math.min(factors.accountAge / 365, 0.2);
+  score += Math.min(factors.postsCreated / 100, 0.15);
+  score -= (factors.postsReported / factors.postsCreated) * 0.3;
+  if (factors.verifiedEmail) score += 0.05;
+  if (factors.verifiedPhone) score += 0.1;
+  return Math.max(0, Math.min(1, score));
+}
+```
+
+**Reference:**
+- [Location Spoofing Detection](https://www.incognia.com/solutions/detecting-location-spoofing)
+
+---
+
+### 7.2 Magic Link Security
+
+**Problem:**
+Magic links can be intercepted, reused, or brute-forced if not properly secured.
+
+**Impact:** HIGH
+**Likelihood:** LOW (with proper implementation)
+
+**Solutions:**
 
 ```typescript
-// After write, read from primary for consistency
-async function createPost(postData) {
-  // Write to primary
-  const { data: newPost } = await primaryClient
-    .from('posts')
-    .insert(postData)
-    .select()
+import crypto from 'crypto';
+
+function generateMagicToken(): string {
+  return crypto.randomBytes(32).toString('base64url');
+}
+
+function hashToken(token: string): string {
+  return crypto.createHash('sha256').update(token).digest('hex');
+}
+
+async function verifyMagicLink(token: string): Promise<string | null> {
+  const tokenHash = hashToken(token);
+  const { data: link } = await db.from('magic_links')
+    .select('*')
+    .eq('token_hash', tokenHash)
+    .eq('used', false)
+    .gte('expires_at', new Date().toISOString())
     .single();
 
-  // Cache locally for immediate read-your-writes
-  localCache.set(`post:${newPost.id}`, newPost, 5000); // 5s TTL
+  if (!link) return null;
 
-  return newPost;
-}
-
-async function getPost(postId) {
-  // Check local cache first (read-your-writes)
-  const cached = localCache.get(`post:${postId}`);
-  if (cached) return cached;
-
-  // Otherwise, read replica is fine
-  return replicaClient.from('posts').select('*').eq('id', postId).single();
+  await db.from('magic_links').update({ used: true }).eq('id', link.id);
+  return link.email;
 }
 ```
 
-**References:**
-- [Supabase Read Replicas](https://supabase.com/docs/guides/platform/read-replicas)
-- [Supabase Read Replicas Feature](https://supabase.com/features/read-replicas)
-- [Introducing Read Replicas Blog](https://supabase.com/blog/introducing-read-replicas)
+---
+
+## 8. Content Moderation Challenges
+
+### 8.1 OpenAI Moderation API Limitations
+
+**Problem:**
+The OpenAI Moderation API, while ~95% accurate overall, has limitations in context understanding and can produce false positives.
+
+**Accuracy by Category:**
+- Sexual content: 96.5%
+- Violence: 89%
+- Harassment: 91%
+- Self-harm: 92%
+
+**Impact:** MEDIUM
+**Likelihood:** MEDIUM
+
+**Solutions:**
+
+1. **Threshold Tuning:**
+```typescript
+function evaluateModeration(result: ModerationResult): ModerationDecision {
+  const thresholds = {
+    hate: 0.7,
+    harassment: 0.6,
+    'self-harm': 0.3,  // Lower threshold, safety critical
+    sexual: 0.5,
+    violence: 0.6
+  };
+
+  const flaggedCategories = Object.entries(result.categoryScores)
+    .filter(([category, score]) => score >= thresholds[category])
+    .map(([category]) => category);
+
+  if (flaggedCategories.length === 0) return { action: 'approve' };
+  if (flaggedCategories.some(c => c === 'self-harm' || result.categoryScores[c] > 0.9)) {
+    return { action: 'reject', reason: flaggedCategories };
+  }
+  return { action: 'review', reason: flaggedCategories };
+}
+```
+
+2. **Human Review Queue for Edge Cases**
+
+**Reference:**
+- [OpenAI Moderation API](https://platform.openai.com/docs/guides/moderation)
 
 ---
 
-## 7. Cost Scaling
+## 9. AR/VPS Integration Challenges (MVP v2)
 
-### 7.1 Supabase Pricing Tiers and Limits
+### 9.1 8th Wall Deprecation
 
-**Current Pricing (2025-2026):**
+**Problem:**
+Niantic announced 8th Wall will wind down, with VPS features unavailable after February 2027.
 
-Per [Supabase Pricing](https://supabase.com/pricing):
+**Impact:** HIGH
+**Likelihood:** CERTAIN
 
-| Plan | Monthly Cost | Database | Storage | MAU | Egress |
-|------|-------------|----------|---------|-----|--------|
-| Free | $0 | 500MB | 1GB | 50K | 2GB |
-| Pro | $25 | 8GB | 100GB | 100K | 250GB |
-| Team | $599 | 8GB | 100GB | Unlimited | Custom |
-| Enterprise | Custom | 60TB | Unlimited | Unlimited | Custom |
+**Solutions:**
 
-**Overage Costs (Pro Plan):**
+1. **Native App Path:**
+   - Plan for Capacitor or React Native wrapper
+   - Use ARCore Geospatial API (native-only)
+   - Maintain web PWA for viewing, native for AR creation
 
-Per [Supabase Billing Docs](https://supabase.com/docs/guides/platform/billing-on-supabase):
-
-| Resource | Included | Overage Cost |
-|----------|----------|--------------|
-| MAU | 100,000 | $0.00325/MAU |
-| Database Storage | 8GB | $0.125/GB |
-| File Storage | 100GB | $0.021/GB |
-| Egress | 250GB | $0.09/GB |
-| Realtime Messages | 5 million | $2.50/million |
-| Realtime Connections | 500 | $10/1000 peak |
-
----
-
-### 7.2 Compute and Storage Growth Projections
-
-**CANVS Growth Scenarios:**
-
-| Metric | 10K MAU | 50K MAU | 100K MAU | 500K MAU |
-|--------|---------|---------|----------|----------|
-| Active Posts | 100K | 500K | 1M | 5M |
-| DB Size | 2GB | 10GB | 25GB | 100GB+ |
-| Media Storage | 50GB | 250GB | 500GB | 2TB |
-| Monthly Egress | 100GB | 500GB | 1TB | 5TB |
-
-**Projected Monthly Costs:**
-
-| Scale | Supabase Pro | Compute Add-ons | Storage | Egress | Total |
-|-------|-------------|-----------------|---------|--------|-------|
-| 10K MAU | $25 | $0 | $0 | $0 | $25 |
-| 50K MAU | $25 | $25 | $20 | $25 | $95 |
-| 100K MAU | $25 | $50 | $50 | $70 | $195 |
-| 500K MAU | $25 | $200 | $200 | $500 | $925+ |
-
-*Note: Media storage on Cloudflare R2 (zero egress) significantly reduces costs.*
+2. **Hybrid Architecture:**
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  CANVS Content Platform                      │
+└─────────────────────────────────────────────────────────────┘
+                          │
+          ┌───────────────┴───────────────┐
+          │                               │
+          ▼                               ▼
+┌─────────────────────┐       ┌─────────────────────┐
+│    Web PWA          │       │   Native App        │
+│  (GPS + viewing)    │       │  (GPS + VPS + AR)   │
+└─────────────────────┘       └─────────────────────┘
+```
 
 ---
 
-### 7.3 When Self-Hosting Becomes Viable
+### 9.2 ARCore Geospatial API Limitations
 
-**Supabase Scaling Limitations:**
+**Problem:**
+ARCore Geospatial API provides excellent accuracy but has coverage and device limitations.
 
-Per [Supabase vs AWS Comparison](https://www.bytebase.com/blog/supabase-vs-aws-database-pricing/):
-> "At scale, Supabase's architecture is optimized for small to mid-sized applications. It does not offer horizontal scalability for PostgreSQL (no native sharding). Becomes cost-prohibitive with 10M+ MAUs."
+**Technical Details:**
+- VPS coverage limited to Street View areas (93+ countries)
+- API quotas: 1,000 sessions/min, 100k requests/min
+- Accuracy: ~5m typical, often <1m with VPS
+- Native app only (no web support)
 
-**Self-Hosting Threshold Analysis:**
+**Impact:** MEDIUM
+**Likelihood:** HIGH (coverage gaps)
 
-| MAU | Supabase Pro | Self-Hosted (AWS) | Savings |
-|-----|-------------|-------------------|---------|
-| 50K | $100 | $200 | -$100 (Supabase cheaper) |
-| 100K | $200 | $300 | -$100 (Supabase cheaper) |
-| 500K | $1,000 | $600 | +$400 (Self-host cheaper) |
-| 1M+ | $2,500+ | $1,000 | +$1,500 (Self-host cheaper) |
+**Solutions:**
 
-**Self-Hosting Options:**
+1. **Graceful Fallback to GPS:**
+```typescript
+interface PlaceAnchor {
+  id: string;
+  gps_location: Geography;
+  vps_anchor?: { latitude: number; longitude: number; altitude: number; heading: number; };
+  anchor_type: 'gps' | 'vps' | 'hybrid';
+}
+```
 
-Per [Supabase Self-Hosting Docs](https://supabase.com/docs/guides/self-hosting/docker):
-> "Docker is the easiest way to get started with self-hosted Supabase. It should take less than 30 minutes."
-
-Per [Pigsty Supabase Integration](https://pigsty.io/blog/db/supabase/):
-> "Pigsty provides a complete one-click self-hosting solution for Supabase with PostgreSQL monitoring, IaC, PITR, and high availability."
-
-**Self-Hosting Decision Criteria:**
-
-| Factor | Stay on Supabase | Consider Self-Hosting |
-|--------|-----------------|----------------------|
-| MAU | <500K | >500K |
-| Monthly bill | <$1,000 | >$1,000 |
-| DevOps team | None | 1+ DevOps engineer |
-| Compliance | Standard | HIPAA, custom needs |
-| Customization | Minimal | Heavy PostgreSQL tuning |
-| Uptime SLA | 99.9% sufficient | Need 99.99%+ |
-
-**Migration Path:**
-
-Per [Supabase Migration Docs](https://supabase.com/docs/guides/troubleshooting/transferring-from-cloud-to-self-host-in-supabase-2oWNvW):
-> "Supabase provides tools for transferring from cloud to self-hosted deployment."
-
-**References:**
-- [Supabase Pricing](https://supabase.com/pricing)
-- [Supabase Billing Guide](https://supabase.com/docs/guides/platform/billing-on-supabase)
-- [Supabase vs AWS Pricing](https://www.bytebase.com/blog/supabase-vs-aws-database-pricing/)
-- [Complete Guide to Supabase Pricing](https://flexprice.io/blog/supabase-pricing-breakdown)
+**Reference:**
+- [ARCore Geospatial API](https://developers.google.com/ar/develop/geospatial)
 
 ---
 
-## 8. Recommendations Summary
+## 10. Infrastructure & Cost Challenges
 
-### 8.1 Immediate Actions (MVP Launch)
+### 10.1 Cost Scaling Projections
 
-1. **Spatial Indexes:**
-   ```sql
-   CREATE INDEX idx_place_anchors_location ON place_anchors USING GIST (location);
-   CREATE INDEX idx_h3_res9 ON place_anchors (h3_cell_res9);
-   ANALYZE place_anchors;
-   ```
+| Users | Storage | Realtime | Database | Est. Monthly |
+|-------|---------|----------|----------|-------------|
+| 1,000 | 10GB | 100 conn | Free | ~$50 |
+| 10,000 | 100GB | 1,000 conn | Pro | ~$150 |
+| 100,000 | 1TB | 10,000 conn | Team | ~$1,500 |
 
-2. **Connection Pooling:**
-   - Use Supabase transaction mode (port 6543) for all serverless functions
-   - Set `connection_limit=1` for Lambda-style workloads
-
-3. **Query Optimization:**
-   - Use hybrid H3 + PostGIS pattern for nearby queries
-   - Set `use_spheroid=false` in ST_DWithin for filtering, true for final distance
-
-4. **Realtime Strategy:**
-   - Segment channels by H3 cell, not table-wide
-   - Create separate broadcast table without RLS for CDC
-
-### 8.2 Scale Preparation (10K-50K MAU)
-
-1. **Partitioning:**
-   - Implement monthly partitioning on posts table
-   - Schedule ANALYZE on partitioned tables
-
-2. **Read Replicas:**
-   - Deploy EU and APAC replicas if international users
-   - Implement read-your-writes pattern
-
-3. **Monitoring:**
-   - Track connection pool usage
-   - Monitor CDC latency
-   - Set up spatial index bloat alerts
-
-### 8.3 Scale Optimization (50K-100K MAU)
-
-1. **Hot Spot Management:**
-   - Implement materialized views for popular areas
-   - Add sampling for dense locations
-
-2. **Disk Optimization:**
-   - Schedule CLUSTER operations weekly
-   - Consider ST_GeoHash ordering
-
-3. **Cost Optimization:**
-   - Evaluate compute add-ons vs. query optimization
-   - Consider R2 migration for all media
-
-### 8.4 Scale Decision Point (100K+ MAU)
-
-1. **Architecture Review:**
-   - Evaluate self-hosting economics
-   - Consider sharding strategies
-   - Assess multi-region requirements
-
-2. **Database Options:**
-   - CockroachDB for geo-distributed writes
-   - TimescaleDB for time-series optimization
-   - Citus for horizontal sharding
+**Solutions:**
+- Aggressive image compression (<500KB)
+- Content expiration for old posts
+- CDN caching optimization
+- R2 for media (zero egress costs)
 
 ---
 
-## Document References
+## 11. Risk Matrix Summary
 
-### PostGIS Documentation
-- [ST_DWithin](https://postgis.net/docs/ST_DWithin.html)
-- [Spatial Queries](https://postgis.net/docs/using_postgis_query.html)
-- [Performance Tips](https://postgis.net/docs/performance_tips.html)
-- [Clustering on Indices](https://postgis.net/workshops/postgis-intro/clusterindex.html)
-- [Spatial Indexing](https://postgis.net/workshops/postgis-intro/indexing.html)
+| Challenge | Impact | Likelihood | Priority |
+|-----------|--------|------------|----------|
+| GPS accuracy in urban areas | HIGH | HIGH | **P0** |
+| iOS PWA push requirements | HIGH | CERTAIN | **P0** |
+| Location spoofing (web) | HIGH | HIGH | **P1** |
+| Supabase realtime limits | HIGH | MEDIUM | **P1** |
+| 8th Wall deprecation (v2) | HIGH | CERTAIN | **P1** |
+| Indoor positioning | HIGH | HIGH | **P2** |
+| Content moderation accuracy | MEDIUM | MEDIUM | **P2** |
+| GPS battery drain | MEDIUM | HIGH | **P2** |
+| Upload reliability | MEDIUM | HIGH | **P2** |
+| Database scaling | HIGH | MEDIUM | **P2** |
 
-### Supabase Documentation
-- [Connection Management](https://supabase.com/docs/guides/database/connection-management)
-- [Read Replicas](https://supabase.com/docs/guides/platform/read-replicas)
-- [Realtime Quotas](https://supabase.com/docs/guides/realtime/quotas)
-- [Realtime Benchmarks](https://supabase.com/docs/guides/realtime/benchmarks)
-- [RLS Performance](https://supabase.com/docs/guides/troubleshooting/rls-performance-and-best-practices-Z5Jjwv)
-- [Pricing](https://supabase.com/pricing)
+---
 
-### H3 Documentation
-- [h3-pg GitHub](https://github.com/zachasme/h3-pg)
-- [H3 Introduction](https://h3geo.org/docs/)
-- [PGXN h3 Extension](https://pgxn.org/dist/h3/)
+## 12. Recommended Mitigations Priority
 
-### Performance Studies
-- [5 Principles for PostGIS Queries](https://medium.com/@cfvandersluijs/5-principles-for-writing-high-performance-queries-in-postgis-bbea3ffb9830)
-- [H3 Performance Benefits](https://blog.rustprooflabs.com/2022/06/h3-indexes-on-postgis-data)
-- [Spatial Indexes of PostGIS](https://www.crunchydata.com/blog/the-many-spatial-indexes-of-postgis)
-- [9 Postgres Partitioning Strategies](https://medium.com/@connect.hashblock/9-postgres-partitioning-strategies-for-time-series-at-scale-c1b764a9b691)
+### Phase 1: MVP Foundation (Must Have)
+
+1. **Accuracy-aware UX**
+   - Display accuracy circles on map
+   - Gate posting on accuracy thresholds
+   - Provide location improvement guidance
+
+2. **iOS PWA Installation Flow**
+   - Pre-permission education modal
+   - Clear installation instructions
+   - Feature degradation for non-installed
+
+3. **Basic Anti-Abuse**
+   - Rate limiting (per user, per location)
+   - Basic behavioral checks
+   - User reporting system
+
+4. **Content Moderation Pipeline**
+   - OpenAI Moderation API integration
+   - Human review queue for edge cases
+
+### Phase 2: Robustness (Should Have)
+
+5. **Upload Reliability** - Retry logic, offline queue
+6. **Database Optimization** - H3 hybrid indexing
+7. **Push Notification Management** - Subscription health monitoring
+
+### Phase 3: Scale Preparation (Nice to Have)
+
+8. **Trust System** - Account age weighting, behavior scoring
+9. **Advanced Moderation** - Location-sensitive policies
+10. **Native App Planning** - ARCore integration design
+
+---
+
+## 13. Potential Show-Stoppers
+
+### Critical Issues That Could Block Launch
+
+1. **GPS accuracy too poor for core UX**
+   - Mitigation: Frame as "works best outdoors", accept approximate locations
+   - Fallback: Venue-based anchoring
+
+2. **iOS push notification adoption too low**
+   - Mitigation: Email notifications, in-app notifications
+   - Fallback: Consider native wrapper earlier
+
+3. **Content moderation failures**
+   - Mitigation: Conservative thresholds, rapid response plan
+   - Fallback: Manual approval for new users
+
+### Issues That Should NOT Be Show-Stoppers
+
+1. **Location spoofing** - Accept it, rate limit, trust score
+2. **Indoor positioning** - Feature limitation, not blocker
+3. **Perfect accuracy** - 50m acceptable for MVP
+
+---
+
+## References
+
+### GPS & Geolocation
+- [Google 3D Mapping Corrections](https://www.gpsworld.com/google-to-improve-urban-gps-accuracy-for-apps/)
+- [Sidewalk Matching Research](https://satellite-navigation.springeropen.com/articles/10.1186/s43020-025-00159-8)
+
+### PWA & Web Platform
+- [PWA on iOS - Current Status 2025](https://brainhub.eu/library/pwa-on-ios)
+- [MDN: Progressive Web Apps](https://developer.mozilla.org/docs/Web/Progressive_web_apps)
+
+### Database & Spatial
+- [PostGIS Performance Tips](https://postgis.net/docs/performance_tips.html)
+- [Supabase Realtime Quotas](https://supabase.com/docs/guides/realtime/quotas)
+
+### Security
+- [Location Spoofing Detection](https://www.incognia.com/solutions/detecting-location-spoofing)
+- [GPS Spoofing Defenses](https://www.okta.com/identity-101/gps-spoofing/)
+
+### Content Moderation
+- [OpenAI Moderation API](https://platform.openai.com/docs/guides/moderation)
+
+### AR/VPS
+- [ARCore Geospatial API](https://developers.google.com/ar/develop/geospatial)
+
+### Media & Storage
+- [Cloudflare R2 Presigned URLs](https://developers.cloudflare.com/r2/api/s3/presigned-urls/)
 
 ---
 
 *Document generated: January 2026*
+*Research conducted via: Claude Flow multi-agent orchestration*
 *Last reviewed: January 2026*
-*Next review: Prior to scale events*
+*Next review: Prior to development kickoff*

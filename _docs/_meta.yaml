@@ -14,7 +14,7 @@ primary_files:
   - best_practice.yaml
   - claude_flow_planning_instructions.yaml
   - claude_flow_software_dev_and_research_instructions.yaml
-  - index_maintenance.yaml
+  - index_lookup.yaml
   - understanding_meta_files.yaml
   - use_gemini_cli.yaml
 
@@ -39,4 +39,4 @@ ai_guidance: >
 
 priority: high
 
-updated: 2026-01-10
+updated: 2026-01-11

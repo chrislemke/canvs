@@ -10,6 +10,14 @@ contains:
 primary_files:
   - master.yaml
   - docs_index.yaml
+  - planning_index.yaml
+  - specs_index.yaml
+  - specs_tech_index.yaml
+  - specs_design_index.yaml
+  - memory_index.yaml
+  - vision_index.yaml
+  - coordination_index.yaml
+  - presentation_index.yaml
 
 keywords:
   - index
@@ -33,4 +41,4 @@ ai_guidance: >
 
 priority: high
 
-updated: 2025-01-10
+updated: 2026-01-11

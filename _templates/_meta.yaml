@@ -8,6 +8,7 @@ contains:
 
 primary_files:
   - _meta.template.yaml
+  - index.template.yaml
 
 keywords:
   - templates
@@ -29,4 +30,4 @@ ai_guidance: >
 
 priority: medium
 
-updated: 2025-01-10
+updated: 2026-01-11

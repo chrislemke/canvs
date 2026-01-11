@@ -1,0 +1,81 @@
+# =============================================================================
+# research Index - Research Documents
+# =============================================================================
+# Index of all files in the research/ folder.
+# Research documents and technical investigations.
+# =============================================================================
+
+metadata:
+  name: research_index
+  folder: research
+  purpose: Research documents and technical investigations
+  updated: "2026-01-11"
+
+# =============================================================================
+# FILES
+# =============================================================================
+
+files:
+
+  # ---------------------------------------------------------------------------
+  # AI RESEARCH
+  # ---------------------------------------------------------------------------
+
+  - path: research/ai/intro.md
+    summary: AI integration research and concepts for the project
+    keywords: [ai, research, machine-learning, integration]
+    type: document
+    priority: high
+    updated: 2026-01-11
+
+  # ---------------------------------------------------------------------------
+  # GPS PRECISION RESEARCH
+  # ---------------------------------------------------------------------------
+
+  - path: research/gps_precision/intro.md
+    summary: GPS precision research and accuracy considerations
+    keywords: [gps, precision, location, accuracy, positioning]
+    type: document
+    priority: high
+    updated: 2026-01-10
+
+  # ---------------------------------------------------------------------------
+  # VISUAL POSITIONING SYSTEMS
+  # ---------------------------------------------------------------------------
+
+  - path: research/visual_positioning_systems/intro.md
+    summary: Visual positioning systems overview and research
+    keywords: [vps, visual, positioning, computer-vision]
+    type: document
+    priority: high
+    updated: 2026-01-10
+
+  - path: research/visual_positioning_systems/stack.md
+    summary: Technology stack analysis for visual positioning systems
+    keywords: [vps, stack, technology, implementation]
+    type: document
+    priority: high
+    updated: 2026-01-10
+
+# =============================================================================
+# SUBFOLDERS
+# =============================================================================
+
+subfolders:
+  - path: research/ai
+    purpose: AI and machine learning research
+
+  - path: research/gps_precision
+    purpose: GPS precision and location accuracy research
+
+  - path: research/visual_positioning_systems
+    purpose: Visual positioning systems research
+
+# =============================================================================
+# RELATED
+# =============================================================================
+
+related:
+  - _indices/master.yaml
+  - specs/tech/parts/ai/
+  - specs/tech/mvp/specs/ai_features.md

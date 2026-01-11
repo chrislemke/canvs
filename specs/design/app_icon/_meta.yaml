@@ -3,16 +3,18 @@ path: specs/design/app_icon
 purpose: App icon design specifications and asset variations
 
 contains:
-  - app icon specifications
-  - icon versions (PNG, JPEG)
-  - multiple design iterations
+  - markdown-documentation
+  - images
 
 primary_files:
   - specs.md
-  - v1.png
-  - v2.png
+  - v7.png
+  - v6.png
+  - v5.png
+  - v4.png
   - v3.png
-  - v4.jpeg
+  - v2.png
+  - v1.png
 
 keywords:
   - icon
@@ -33,4 +35,4 @@ ai_guidance: >
 
 priority: low
 
-updated: 2026-01-10
+updated: 2026-01-11

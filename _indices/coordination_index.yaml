@@ -9,7 +9,7 @@ metadata:
   name: coordination_index
   folder: coordination
   purpose: Claude Flow agent coordination and orchestration infrastructure
-  updated: "2026-01-10"
+  updated: "2026-01-11"
 
 # =============================================================================
 # FILES

@@ -3,10 +3,11 @@ path: specs/tech/parts/ai
 purpose: AI feature specifications and integration plans
 
 contains:
-  - AI feature specifications
-  - integration documentation
+  - markdown-documentation
 
 primary_files:
+  - spatial_ai_features.md
+  - ai_implementation_architecture.md
   - visionary_feature_integrations.md
 
 keywords:
@@ -28,4 +29,4 @@ ai_guidance: >
 
 priority: medium
 
-updated: 2026-01-10
+updated: 2026-01-11

@@ -1,15 +1,4 @@
 repos:
-  # Claude Code Maintenance Hook
-  - repo: local
-    hooks:
-      - id: claude-maintenance
-        name: Claude Code Maintenance
-        entry: scripts/hooks/claude-maintenance-hook.sh
-        language: script
-        pass_filenames: false
-        stages: [pre-commit]
-        always_run: true
-
   # General file quality hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0

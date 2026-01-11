@@ -9,7 +9,7 @@ metadata:
   name: specs_tech_index
   folder: specs/tech
   purpose: Technical specifications, architecture, and stack documentation
-  updated: "2026-01-10"
+  updated: "2026-01-11"
 
 # =============================================================================
 # FILES
@@ -41,7 +41,10 @@ subfolders:
   - path: specs/tech/mvp
     purpose: MVP-specific specifications
     contains:
-      - specs/tech/mvp/specs/ - MVP spec documents
+      - specs/tech/mvp/specs/ai_features.md - AI feature specifications
+      - specs/tech/mvp/specs/challenges.md - Technical challenges
+      - specs/tech/mvp/specs/srs.md - Software requirements specification
+      - specs/tech/mvp/specs/tech_specs.md - Technical specifications
 
   # ---------------------------------------------------------------------------
   # COMPONENT SPECIFICATIONS
@@ -50,7 +53,9 @@ subfolders:
   - path: specs/tech/parts
     purpose: Component specifications
     contains:
-      - specs/tech/parts/ai/ - AI component specifications
+      - specs/tech/parts/ai/ai_implementation_architecture.md - AI architecture
+      - specs/tech/parts/ai/spatial_ai_features.md - Spatial AI features
+      - specs/tech/parts/ai/visionary_feature_integrations.md - Feature integrations
 
   # ---------------------------------------------------------------------------
   # TECHNOLOGY STACK

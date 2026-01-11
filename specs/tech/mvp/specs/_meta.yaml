@@ -3,11 +3,12 @@ path: specs/tech/mvp/specs
 purpose: MVP technical specifications and requirements
 
 contains:
-  - software requirements specification
-  - technical specifications
+  - markdown-documentation
 
 primary_files:
   - tech_specs.md
+  - ai_features.md
+  - challenges.md
   - srs.md
 
 keywords:
@@ -30,4 +31,4 @@ ai_guidance: >
 
 priority: high
 
-updated: 2026-01-10
+updated: 2026-01-11

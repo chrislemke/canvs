@@ -9,7 +9,7 @@
 metadata:
   name: master_index
   purpose: High-level project overview and folder navigation
-  updated: "2026-01-10"
+  updated: "2026-01-11"
 
 # =============================================================================
 # PROJECT FOLDERS
@@ -89,6 +89,7 @@ folders:
     keywords: [research, analysis, findings, study]
     category: research
     priority: medium
+    index: _indices/research_index.yaml
 
   - path: notes
     summary: Project notes and temporary content
@@ -138,6 +139,7 @@ indices:
   - _indices/notes_index.yaml
   - _indices/presentation_index.yaml
   - _indices/scripts_index.yaml
+  - _indices/research_index.yaml
 
 # =============================================================================
 # NAVIGATION GUIDANCE
