@@ -1,0 +1,2157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CANVS - Product Vision Paper & Strategic Roadmap</title>
+    <meta
+      name="description"
+      content="CANVS Product Vision Paper: The Spatial Social Layer. The end of the feed. The beginning of the world."
+    />
+    <meta name="robots" content="noindex, nofollow" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --alabaster: #f0efea;
+        --ink: #1a1a18;
+        --terracotta: #d97757;
+        --sage: #8da399;
+        --highlighter: #eedc5b;
+        --ink-light: rgba(26, 26, 24, 0.6);
+        --ink-lighter: rgba(26, 26, 24, 0.15);
+        --font-serif: "Newsreader", Georgia, serif;
+        --font-sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+      }
+
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        background-color: var(--alabaster);
+        color: var(--ink);
+        line-height: 1.8;
+        -webkit-font-smoothing: antialiased;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 60px 40px 100px;
+      }
+
+      /* Paper texture */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 9999;
+      }
+
+      /* Typography */
+      h1 {
+        font-family: var(--font-serif);
+        font-size: 3rem;
+        font-weight: 400;
+        line-height: 1.2;
+        margin-bottom: 8px;
+        letter-spacing: -0.02em;
+      }
+
+      h2 {
+        font-family: var(--font-serif);
+        font-size: 2rem;
+        font-weight: 400;
+        line-height: 1.25;
+        margin-top: 80px;
+        margin-bottom: 24px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--ink-lighter);
+        letter-spacing: -0.01em;
+      }
+
+      h3 {
+        font-family: var(--font-serif);
+        font-size: 1.4rem;
+        font-weight: 500;
+        margin-top: 48px;
+        margin-bottom: 16px;
+        color: var(--terracotta);
+      }
+
+      h4 {
+        font-family: var(--font-serif);
+        font-size: 1.15rem;
+        font-weight: 500;
+        margin-top: 32px;
+        margin-bottom: 12px;
+      }
+
+      p {
+        margin-bottom: 16px;
+        font-size: 1rem;
+      }
+
+      .subtitle {
+        font-family: var(--font-serif);
+        font-size: 1.3rem;
+        color: var(--ink-light);
+        margin-bottom: 8px;
+      }
+
+      .tagline {
+        font-family: var(--font-serif);
+        font-size: 1.5rem;
+        font-style: italic;
+        color: var(--terracotta);
+        margin-bottom: 48px;
+      }
+
+      /* Links */
+      a {
+        color: var(--terracotta);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.2s ease;
+      }
+
+      a:hover {
+        border-bottom-color: var(--terracotta);
+      }
+
+      /* Strong/Bold */
+      strong {
+        font-weight: 600;
+      }
+
+      em {
+        font-style: italic;
+      }
+
+      /* Lists */
+      ul,
+      ol {
+        margin-bottom: 20px;
+        padding-left: 24px;
+      }
+
+      li {
+        margin-bottom: 8px;
+      }
+
+      li::marker {
+        color: var(--sage);
+      }
+
+      /* Table of Contents */
+      .toc {
+        background: rgba(141, 163, 153, 0.1);
+        padding: 32px 40px;
+        border-radius: 4px;
+        margin: 40px 0 60px;
+      }
+
+      .toc ul {
+        list-style: none;
+        padding-left: 0;
+        columns: 2;
+        column-gap: 40px;
+      }
+
+      .toc li {
+        margin-bottom: 12px;
+        font-size: 0.95rem;
+        break-inside: avoid;
+      }
+
+      .toc a {
+        color: var(--ink);
+        border-bottom: none;
+      }
+
+      .toc a:hover {
+        color: var(--terracotta);
+      }
+
+      /* Horizontal rules */
+      hr {
+        border: none;
+        height: 1px;
+        background: var(--ink-lighter);
+        margin: 60px 0;
+      }
+
+      /* Tables */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 24px 0 32px;
+        font-size: 0.9rem;
+      }
+
+      th {
+        text-align: left;
+        padding: 14px 16px;
+        background: var(--ink);
+        color: var(--alabaster);
+        font-weight: 500;
+        font-size: 0.8rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      td {
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--ink-lighter);
+        vertical-align: top;
+      }
+
+      tr:hover td {
+        background: rgba(141, 163, 153, 0.05);
+      }
+
+      /* Code blocks */
+      pre {
+        background: var(--ink);
+        color: var(--alabaster);
+        padding: 24px;
+        border-radius: 4px;
+        overflow-x: auto;
+        margin: 24px 0;
+        font-family: "SF Mono", Monaco, monospace;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      code {
+        font-family: "SF Mono", Monaco, monospace;
+        font-size: 0.9em;
+        background: rgba(26, 26, 24, 0.06);
+        padding: 2px 6px;
+        border-radius: 3px;
+      }
+
+      pre code {
+        background: none;
+        padding: 0;
+      }
+
+      /* Blockquotes - for key insights */
+      blockquote {
+        border-left: 3px solid var(--terracotta);
+        padding-left: 24px;
+        margin: 32px 0;
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: 1.1rem;
+        color: var(--ink);
+      }
+
+      /* Key insight boxes */
+      .insight {
+        background: linear-gradient(
+          180deg,
+          transparent 60%,
+          var(--highlighter) 60%
+        );
+        padding: 0 4px;
+      }
+
+      /* Section styling */
+      section {
+        margin-bottom: 20px;
+      }
+
+      /* Appendix links */
+      .appendix ul {
+        list-style: none;
+        padding-left: 0;
+      }
+
+      .appendix li {
+        margin-bottom: 10px;
+        padding-left: 20px;
+        position: relative;
+      }
+
+      .appendix li::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: var(--sage);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        body {
+          padding: 40px 24px 80px;
+        }
+
+        h1 {
+          font-size: 2.2rem;
+        }
+
+        h2 {
+          font-size: 1.6rem;
+          margin-top: 60px;
+        }
+
+        .toc ul {
+          columns: 1;
+        }
+
+        table {
+          font-size: 0.8rem;
+        }
+
+        th,
+        td {
+          padding: 10px 12px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 1.8rem;
+        }
+
+        .tagline {
+          font-size: 1.2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>CANVS - It's the world: The Spatial Social Layer</h1>
+      <p class="subtitle">Product Vision Paper & Strategic Roadmap</p>
+      <p class="tagline">The end of the feed. The beginning of the world.</p>
+    </header>
+
+    <hr />
+
+    <nav class="toc">
+      <h2
+        style="
+          margin-top: 0;
+          border-bottom: none;
+          padding-bottom: 0;
+          font-size: 1.3rem;
+        "
+      >
+        Table of Contents
+      </h2>
+      <ul>
+        <li>
+          <a href="#executive-summary">0. Executive Summary: What CANVS Is</a>
+        </li>
+        <li>
+          <a href="#manifesto"
+            >1. Manifesto: The End of the Feed, the Beginning of the World</a
+          >
+        </li>
+        <li>
+          <a href="#problem"
+            >2. The Problem: Context Loss and the "Ghost Event"</a
+          >
+        </li>
+        <li>
+          <a href="#solution"
+            >3. The Solution: Persistent Emotional Anchoring</a
+          >
+        </li>
+        <li>
+          <a href="#thesis"
+            >4. The Product Thesis: "The Spatial Social Layer"</a
+          >
+        </li>
+        <li><a href="#browser">5. Core Experience: The Spatial Browser</a></li>
+        <li>
+          <a href="#primitives">6. Core Building Blocks: Spatial Primitives</a>
+        </li>
+        <li>
+          <a href="#tech">7. Deep-Tech Foundation: How This Becomes Real</a>
+        </li>
+        <li><a href="#market">8. Market Opportunity: Why This, Why Now</a></li>
+        <li><a href="#competitive">9. Competitive Landscape</a></li>
+        <li><a href="#llm">10. LLM Agents as the "Reality Filter"</a></li>
+        <li><a href="#usecases">11. Emotional & Social Use Cases</a></li>
+        <li>
+          <a href="#impact">12. Societal Impact: Why the World Needs This</a>
+        </li>
+        <li><a href="#challenges">13. Challenges & Mitigations</a></li>
+        <li><a href="#safety">14. Trust, Safety, and Governance</a></li>
+        <li><a href="#monetization">15. Monetization</a></li>
+        <li><a href="#roadmap">16. Strategic Roadmap</a></li>
+        <li><a href="#opportunity">17. The Big Opportunity</a></li>
+        <li><a href="#conclusion">18. Conclusion: Build the Layer</a></li>
+        <li><a href="#appendix">Appendix A: Research Sources</a></li>
+      </ul>
+    </nav>
+
+    <hr />
+
+    <section id="executive-summary">
+      <h2>0. Executive Summary: What CANVS Is</h2>
+
+      <p>
+        CANVS is a
+        <strong
+          >persistent, AR-native social layer anchored to physical
+          places</strong
+        >. Instead of consuming life through a decontextualized feed, people
+        experience content <strong>where it belongs</strong>: at the location it
+        refers to, at the scale it happened, with the atmosphere that gave it
+        meaning.
+      </p>
+
+      <p>
+        CANVS turns the planet into an <strong>addressable surface</strong>:
+        every bench, alley, beach, mural, café table, trailhead, and plaza
+        becomes a node in a living network of memories, knowledge, art, and
+        coordination.
+      </p>
+
+      <p>This idea is now feasible because the enabling stack has matured:</p>
+
+      <ul>
+        <li>
+          <strong>World-scale AR anchoring is real and productized.</strong>
+          Visual Positioning Systems (VPS) combine GPS with vision-based
+          localization to place content far more reliably than GPS alone.
+        </li>
+        <li>
+          <strong
+            >Persistent, shareable AR at real-world locations is
+            shipping.</strong
+          >
+          Modern AR platforms can lock content to places in a way that multiple
+          people can reliably see over time.
+        </li>
+        <li>
+          <strong
+            >Consumers and creators are being trained for location-anchored
+            AR.</strong
+          >
+          Place-anchored AR content creation is becoming mainstream.
+        </li>
+        <li>
+          <strong
+            >Spatial computing hardware is moving from "demo" to
+            "platform."</strong
+          >
+          Headsets and smart glasses are evolving into everyday computing
+          surfaces.
+        </li>
+      </ul>
+
+      <p>
+        CANVS is designed to become <strong>glass-native</strong>: as AR glasses
+        and spatial computers transition into everyday devices, CANVS becomes an
+        always-available layer—less like an app, more like a
+        <strong>new default interface for place</strong>.
+      </p>
+    </section>
+
+    <hr />
+
+    <section id="manifesto">
+      <h2>1. Manifesto: The End of the Feed, the Beginning of the World</h2>
+
+      <p>We are building the <strong>Internet of Places</strong>.</p>
+
+      <p>
+        Today's social platforms are optimized for
+        <strong>infinite scrolling</strong>, not for human life. They isolate us
+        inside algorithmic loops and replace lived reality with mediated
+        content.
+      </p>
+
+      <p>CANVS flips the direction of attention:</p>
+
+      <ul>
+        <li>The feed is not the home screen. <strong>The world is.</strong></li>
+        <li>
+          Content is not something you "go find." It's something you
+          <strong>encounter</strong>, because you are there.
+        </li>
+        <li>
+          Meaning is not manufactured by engagement hacks. Meaning is
+          <strong>in context</strong>.
+        </li>
+      </ul>
+
+      <p>
+        A story about a sunset is powerful anywhere.<br />
+        A story about a sunset becomes <em>inevitable</em> when you're sitting
+        in the exact place it happened—at the same angle, the same horizon line,
+        the same wind.
+      </p>
+
+      <p>
+        <strong>Vision:</strong> CANVS is the social operating layer for spatial
+        computing.<br />
+        When the world becomes a canvas, CANVS provides the paint.
+      </p>
+    </section>
+
+    <hr />
+
+    <section id="problem">
+      <h2>2. The Problem: Context Loss and the "Ghost Event"</h2>
+
+      <p>
+        <strong>Things happen at places.</strong><br />
+        But digital memory is usually detached from the physical world.
+      </p>
+
+      <p>
+        A first kiss. A perfect skate trick. A protest that changed someone's
+        life. A conversation that flipped a career. A hidden café that felt like
+        finding oxygen.
+      </p>
+
+      <p>Then the moment ends—and the meaning becomes invisible.</p>
+
+      <p>
+        <strong>Status quo:</strong><br />
+        Someone stands at that place two weeks later and sees… concrete. The
+        emotion is gone. The story exists somewhere in a cloud account, if at
+        all. It's not "there." It's nowhere.
+      </p>
+
+      <p>
+        <strong>The gap:</strong><br />
+        We walk through a world full of invisible meaning, unable to perceive
+        the human layers that already exist all around us.
+      </p>
+    </section>
+
+    <hr />
+
+    <section id="solution">
+      <h2>3. The Solution: Persistent Emotional Anchoring</h2>
+
+      <p>CANVS makes moments <strong>spatially persistent</strong>.</p>
+
+      <p>
+        Not as a gimmick, but as a new medium:<br />
+        <strong>Place becomes the index.</strong>
+      </p>
+
+      <p>CANVS enables:</p>
+
+      <ul>
+        <li>
+          <strong>Reality Time Capsules:</strong> content (text, audio, video,
+          3D captures, sketches) pinned to real-world locations so future
+          visitors can "open" the moment where it happened.
+        </li>
+        <li>
+          <strong>Asynchronous presence:</strong> you can experience a moment
+          later, not by "watching a video," but by seeing the memory
+          <strong>in situ</strong>, aligned to the geometry of the world.
+        </li>
+      </ul>
+
+      <p>
+        This depends on a real technical foundation:
+        <strong>world-locked anchoring</strong>.
+      </p>
+
+      <ul>
+        <li>
+          GPS alone often breaks immersion due to drift and urban multipath.
+        </li>
+        <li>
+          Modern stacks combine GPS with vision-based localization (VPS) and
+          mapping for stable placement.
+        </li>
+        <li>
+          Reliable persistence requires multi-tier anchoring, re-localization,
+          and confidence-aware rendering.
+        </li>
+      </ul>
+    </section>
+
+    <hr />
+
+    <section id="thesis">
+      <h2>4. The Product Thesis: "The Spatial Social Layer"</h2>
+
+      <p>CANVS is not:</p>
+
+      <ul>
+        <li>a traditional social network (feed-first)</li>
+        <li>a maps app (utility-first)</li>
+        <li>a game (loop-first)</li>
+      </ul>
+
+      <p>CANVS is a new primitive:</p>
+
+      <h3>The world as a browsable interface</h3>
+
+      <p>
+        A <strong>Spatial Browser</strong> that lets you "read" places the way
+        you read websites.
+      </p>
+
+      <p>
+        If the 1990s internet was made of pages and links, the spatial internet
+        is made of:
+      </p>
+
+      <ul>
+        <li><strong>Places</strong></li>
+        <li><strong>Anchors</strong></li>
+        <li><strong>Layers</strong></li>
+        <li><strong>Memories</strong></li>
+        <li><strong>Paths</strong></li>
+        <li><strong>Social context</strong></li>
+        <li><strong>AI mediation</strong></li>
+      </ul>
+    </section>
+
+    <hr />
+
+    <section id="browser">
+      <h2>5. Core Experience: The Spatial Browser</h2>
+
+      <h3>5.1 Three modes (one mental model)</h3>
+
+      <ol>
+        <li>
+          <strong>AR Mode ("Magic Window / Glass View")</strong><br />
+          You look at the world and see location-anchored content where it
+          belongs.
+        </li>
+        <li>
+          <strong>Map Mode ("Spatial Radar")</strong><br />
+          You see nearby layers, hotspots, and trails. Map is not the
+          product—it's the minimap.
+        </li>
+        <li>
+          <strong>Time Mode ("Temporal Scrub")</strong><br />
+          Slide through time to see what happened here: yesterday, last summer,
+          10 years ago.
+        </li>
+      </ol>
+
+      <h3>5.2 The fundamental interaction: "Look → Understand → Act"</h3>
+
+      <p>CANVS is built around "micro-encounters":</p>
+
+      <ul>
+        <li>see a story</li>
+        <li>feel something</li>
+        <li>reply, add context, or create your own layer</li>
+        <li>move on, carrying the place with you</li>
+      </ul>
+
+      <p>
+        The goal is not infinite consumption.<br />
+        The goal is <strong>meaningful place interactions</strong>.
+      </p>
+
+      <p>
+        <strong>North Star metric proposal:</strong><br />
+        <strong
+          >MPI/week = Meaningful Place Interactions per user per week</strong
+        ><br />
+        (Opening a capsule, leaving a voice note, contributing to a utility
+        marker, participating in a local thread, etc.)
+      </p>
+    </section>
+
+    <hr />
+
+    <section id="primitives">
+      <h2>6. Core Building Blocks: Spatial Primitives</h2>
+
+      <h3>A. Pins</h3>
+      <p>
+        Simple anchors: notes, photos, audio, links, "hidden menu" tips,
+        warnings, micro-stories.
+      </p>
+
+      <h3>B. Bubbles (Group Memory Objects)</h3>
+      <p>A shared container anchored to a place.</p>
+      <p>Examples:</p>
+      <ul>
+        <li>"We used to meet here every Friday."</li>
+        <li>"This bench is where she told me yes."</li>
+        <li>"We found this spot during our first week in this city."</li>
+      </ul>
+
+      <h3>C. Time Capsules</h3>
+      <p>Richer artifacts: multi-media + 3D capture + timeline.</p>
+
+      <h3>D. Trails</h3>
+      <p>A sequence of anchors that forms a narrative route:</p>
+      <ul>
+        <li>"My break-up walk."</li>
+        <li>"Best street art within 12 minutes."</li>
+        <li>"The city through immigrant food."</li>
+        <li>"A grief trail for remembrance."</li>
+      </ul>
+
+      <h3>E. Drops (Geo-fenced Releases)</h3>
+      <p>
+        Music, artwork, collectibles, or messages that only unlock at a location
+        and time.
+      </p>
+
+      <h3>F. Portals</h3>
+      <p>A place anchored to another place via story logic:</p>
+      <ul>
+        <li>"If you liked this, go to that."</li>
+        <li>"This spot is the sibling of that spot."</li>
+      </ul>
+    </section>
+
+    <hr />
+
+    <section id="tech">
+      <h2>7. Deep-Tech Foundation: How This Becomes Real</h2>
+
+      <h3>7.1 World-scale localization: GPS is not enough</h3>
+
+      <p><strong>Reality:</strong> GPS drift breaks immersion.</p>
+
+      <p>
+        Modern AR stacks solve this via <strong>visual localization</strong> and
+        mapping.
+      </p>
+
+      <p>
+        <strong>Design implication for CANVS:</strong><br />
+        Build a <strong>multi-tier anchoring strategy</strong>:
+      </p>
+
+      <ol>
+        <li>
+          <strong>Coarse localization</strong> (GPS / map alignment) for
+          discovery and approximate placement
+        </li>
+        <li>
+          <strong>VPS localization</strong> (when available) for world alignment
+        </li>
+        <li>
+          <strong>Local SLAM anchoring</strong> for stable, low-jitter placement
+          in the user's immediate session
+        </li>
+        <li>
+          <strong>Re-localization & drift correction</strong> for persistence
+          across time and devices
+        </li>
+      </ol>
+
+      <h3>7.2 Technology Stack</h3>
+
+      <p>
+        The AR technology landscape has matured significantly. Here's what's
+        production-ready today:
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Provider</th>
+            <th>Coverage</th>
+            <th>Accuracy</th>
+            <th>Best For</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Google ARCore Geospatial</strong></td>
+            <td>100+ countries</td>
+            <td>1-5 meters</td>
+            <td>Global coverage, wide device support</td>
+          </tr>
+          <tr>
+            <td><strong>Niantic Lightship VPS</strong></td>
+            <td>1M+ activated locations</td>
+            <td>Centimeter-level</td>
+            <td>High-precision at key venues</td>
+          </tr>
+          <tr>
+            <td><strong>Apple ARKit Location Anchors</strong></td>
+            <td>~50 cities</td>
+            <td>Sub-meter</td>
+            <td>iOS premium experience</td>
+          </tr>
+          <tr>
+            <td><strong>Unity AR Foundation 5.x</strong></td>
+            <td>Cross-platform</td>
+            <td>Platform-dependent</td>
+            <td>Single codebase development</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p><strong>Recommended Multi-Provider Strategy for CANVS:</strong></p>
+      <ol>
+        <li>
+          <strong>Primary</strong>: Google ARCore Geospatial API (global
+          coverage, free, proven at scale)
+        </li>
+        <li>
+          <strong>Precision Layer</strong>: Niantic Lightship VPS (centimeter
+          accuracy at activated locations)
+        </li>
+        <li>
+          <strong>Fallback</strong>: GPS + compass + IMU (always available,
+          graceful degradation)
+        </li>
+        <li>
+          <strong>Indoor</strong>: Custom venue mapping via Immersal or Niantic
+          enterprise
+        </li>
+      </ol>
+
+      <h3>7.3 The "AR Cloud" is the macro concept</h3>
+
+      <p>
+        The "AR Cloud" describes a persistent, spatially accurate digital copy
+        of the world (a "digital twin") that enables shared AR experiences
+        across users and time.
+      </p>
+
+      <p>
+        <strong>CANVS interpretation:</strong><br />
+        We don't need to own the entire AR Cloud. We need to own the
+        <strong>social meaning layer</strong> that lives on top of it.
+      </p>
+
+      <h3>7.4 Positioning abstraction: "Anchor Runtime"</h3>
+
+      <p>
+        In practice, CANVS should treat positioning vendors as interchangeable
+        backends.
+      </p>
+
+      <p>CANVS creates its own stable concept:</p>
+      <ul>
+        <li><strong>CANVS Anchor ID</strong> (a persistent identifier)</li>
+        <li>
+          <strong>Anchor bundles</strong> (multi-representation: lat/long/alt +
+          visual features + local map fragments + constraints)
+        </li>
+        <li>
+          <strong>Confidence-aware rendering</strong> (content fades in only
+          when tracking confidence is sufficient)
+        </li>
+      </ul>
+
+      <h3>7.5 3D capture becomes a native media type (not a luxury)</h3>
+
+      <p>
+        To "freeze" moments, CANVS should support
+        <strong>spatial capture formats</strong>:
+      </p>
+      <ul>
+        <li>Quick scan (phone LiDAR / photogrammetry)</li>
+        <li>"Spatial clips" (short 3D snapshots)</li>
+        <li>High-fidelity capture for creators</li>
+      </ul>
+
+      <p>
+        <strong>Product implication:</strong><br />
+        Time capsules evolve from "video pinned to a spot" into "walkable memory
+        fragments."
+      </p>
+
+      <h3>7.6 Web-native distribution is a force multiplier</h3>
+
+      <p>
+        "Open in browser" becomes a growth lever: a location-locked experience
+        shared via link, not installation.
+      </p>
+
+      <h3>7.7 Hardware agnosticism is not optional</h3>
+
+      <p>
+        Spatial computing hardware is diversifying (headsets, AR glasses, smart
+        glasses with displays).
+      </p>
+
+      <p>CANVS should architect for <strong>portable XR</strong>:</p>
+      <ul>
+        <li>Use standards where possible.</li>
+        <li>
+          Treat the phone as the bootstrapping device, but maintain a
+          "glass-first" UX philosophy.
+        </li>
+      </ul>
+    </section>
+
+    <hr />
+
+    <section id="market">
+      <h2>8. Market Opportunity: Why This, Why Now</h2>
+
+      <h3>8.1 Market Size & Growth</h3>
+
+      <p>
+        The convergence of AR, location services, and social media creates a
+        massive opportunity:
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Market Segment</th>
+            <th>2025</th>
+            <th>2030 (Projected)</th>
+            <th>CAGR</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Global AR Market</td>
+            <td>$83.65B</td>
+            <td>$599.59B</td>
+            <td>37.9%</td>
+          </tr>
+          <tr>
+            <td>Location-Based Services</td>
+            <td>$56.23B</td>
+            <td>$172.97B</td>
+            <td>25.35%</td>
+          </tr>
+          <tr>
+            <td>Mobile AR Market</td>
+            <td>$94.82B</td>
+            <td>$327.7B</td>
+            <td>30.84%</td>
+          </tr>
+          <tr>
+            <td>UGC Platform Market</td>
+            <td>$9.0B</td>
+            <td>$72.32B</td>
+            <td>29.82%</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <blockquote>
+        <strong>Key Insight:</strong> The total addressable market exceeds
+        <strong>$800 billion by 2030</strong>.
+      </blockquote>
+
+      <h3>8.2 Cultural Timing</h3>
+
+      <p>We are at a cultural inflection point:</p>
+      <ul>
+        <li>
+          <strong>73% of Gen Z</strong> report digital exhaustion despite 7.2
+          hours daily online
+        </li>
+        <li>
+          <strong>62%</strong> struggle to build meaningful relationships
+          through current platforms
+        </li>
+        <li>
+          <strong>41%</strong> of Americans are actively reducing screen time
+        </li>
+        <li>
+          <strong>32%</strong> report social media fatigue - demand for new
+          experiences is real
+        </li>
+      </ul>
+
+      <h3>8.3 Proven Model at Scale</h3>
+
+      <p>Location-based AR is not speculative:</p>
+      <ul>
+        <li>
+          <strong>Pokemon GO</strong>: $8+ billion lifetime revenue, 100M+
+          users, 40-minute average daily sessions
+        </li>
+        <li>
+          <strong>Snap Map</strong>: 400M+ monthly active users, 8 billion AR
+          lens plays per day
+        </li>
+        <li>
+          <strong>Google Maps Live View</strong>: Billions of users with AR
+          navigation
+        </li>
+      </ul>
+
+      <p>
+        The technology works. The user behaviors exist. The gap is a
+        <strong>social layer that isn't a game</strong>.
+      </p>
+
+      <h3>8.4 Why Now: The Strategic Window</h3>
+
+      <p>
+        <strong>Timing factors that make 2026 the ideal launch window:</strong>
+      </p>
+      <ol>
+        <li>
+          <strong>Technology Inflection</strong>: ARKit 6, ARCore Geospatial,
+          and Niantic VPS are mature and production-ready
+        </li>
+        <li>
+          <strong>5G Maturity</strong>: 60%+ global population coverage enables
+          real-time location experiences
+        </li>
+        <li>
+          <strong>AR Glasses Horizon</strong>: 2-3 years before mainstream
+          adoption creates urgency to build content networks
+        </li>
+        <li>
+          <strong>Incumbent Gaps</strong>: Niantic pivoted to enterprise (sold
+          Pokemon GO for $3.5B), BeReal declined 40%, no dominant player in
+          emotional location social
+        </li>
+        <li>
+          <strong>Privacy Demand</strong>: 78% of users have deleted apps over
+          privacy concerns - opportunity for trust-first design
+        </li>
+      </ol>
+    </section>
+
+    <hr />
+
+    <section id="competitive">
+      <h2>9. Competitive Landscape</h2>
+
+      <h3>9.1 Who's Playing in Location Social</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Platform</th>
+            <th>Users</th>
+            <th>Model</th>
+            <th>Gap CANVS Fills</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Snap Map</strong></td>
+            <td>400M MAU</td>
+            <td>Real-time location sharing</td>
+            <td>No persistent content; shows WHERE not WHAT</td>
+          </tr>
+          <tr>
+            <td><strong>Pokemon GO</strong></td>
+            <td>60M MAU</td>
+            <td>Location-based gaming</td>
+            <td>Gaming focus, not social-first</td>
+          </tr>
+          <tr>
+            <td><strong>Google Maps</strong></td>
+            <td>Billions</td>
+            <td>Utility + reviews</td>
+            <td>Transactional, not emotional</td>
+          </tr>
+          <tr>
+            <td><strong>Instagram Map</strong></td>
+            <td>Large</td>
+            <td>Content discovery by location</td>
+            <td>Location is feature, not focus</td>
+          </tr>
+          <tr>
+            <td><strong>Yelp</strong></td>
+            <td>178M visitors</td>
+            <td>Business reviews</td>
+            <td>Business-focused, not social</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>9.2 What's Missing in the Market</h3>
+
+      <p>
+        <strong
+          >No mainstream app lets users leave discoverable content at physical
+          locations that persists over time.</strong
+        >
+      </p>
+
+      <p>Current solutions are fragmented:</p>
+      <ul>
+        <li>Check-ins (Foursquare) → Check-in fatigue killed this</li>
+        <li>Reviews (Yelp/Google) → Transactional, not emotional</li>
+        <li>Location sharing (Snap Map) → Real-time only, no persistence</li>
+        <li>Exploration (Randonautica) → Niche, no user content</li>
+      </ul>
+
+      <h3>9.3 Why Location Apps Have Failed Before</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>App</th>
+            <th>Failure Mode</th>
+            <th>CANVS Lesson</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Foursquare</strong></td>
+            <td>Split into two apps, lost social magic</td>
+            <td>Keep social core unified</td>
+          </tr>
+          <tr>
+            <td><strong>Yik Yak</strong></td>
+            <td>Anonymity + location = unmoderable</td>
+            <td>Identity and safety from day one</td>
+          </tr>
+          <tr>
+            <td><strong>Gowalla</strong></td>
+            <td>Feature war with Foursquare</td>
+            <td>Don't compete on same dimensions</td>
+          </tr>
+          <tr>
+            <td><strong>Google Glass</strong></td>
+            <td>"Glasshole" stigma, premature launch</td>
+            <td>Phone-first avoids wearable stigma</td>
+          </tr>
+          <tr>
+            <td><strong>BeReal</strong></td>
+            <td>Forced authenticity creates new anxiety</td>
+            <td>Context over gimmicks</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <blockquote>
+        <strong>Key Insight:</strong> Proximity alone isn't compelling. Location
+        must enhance genuine value—not be the sole value proposition.
+      </blockquote>
+    </section>
+
+    <hr />
+
+    <section id="llm">
+      <h2>10. LLM Agents as the "Reality Filter" (Not a Chatbot)</h2>
+
+      <p>
+        In a world where every place can hold content, the core product is not
+        creation—it's <strong>filtering</strong>.
+      </p>
+
+      <p>CANVS needs a personal AI layer that feels like:</p>
+      <ul>
+        <li>"my taste"</li>
+        <li>"my friends"</li>
+        <li>"my values"</li>
+        <li>"my mental state"</li>
+        <li>"my intent right now"</li>
+      </ul>
+
+      <h3>10.1 The Agent's job</h3>
+      <ul>
+        <li>Summarize the layer you're in</li>
+        <li>Surface what matters</li>
+        <li>Prevent overwhelm</li>
+        <li>Prevent harm</li>
+        <li>Turn raw spatial data into <em>felt relevance</em></li>
+      </ul>
+
+      <h3>10.2 Example features (agent-native)</h3>
+      <ul>
+        <li>
+          <strong>Friend-memory surfacing:</strong> "Your friend left a note
+          here 3 years ago."
+        </li>
+        <li>
+          <strong>Emotion search:</strong> "Show me places where people reported
+          feeling calm."
+        </li>
+        <li>
+          <strong>Context compression:</strong> Turn 400 nearby anchors into 5
+          meaningful options.
+        </li>
+        <li>
+          <strong>Path generation:</strong> "Give me a 30-minute walk that ends
+          somewhere optimistic."
+        </li>
+      </ul>
+
+      <h3>10.3 Safety-aware personalization</h3>
+
+      <p>The agent is also a safety filter:</p>
+      <ul>
+        <li>suppress stalking-like patterns</li>
+        <li>reduce accidental over-sharing</li>
+        <li>
+          warn if a user is about to publish to a sensitive location context
+        </li>
+      </ul>
+
+      <p>(See "Safety & Governance" below.)</p>
+    </section>
+
+    <hr />
+
+    <section id="usecases">
+      <h2>11. Emotional & Social Use Cases: Re-enchanting Reality</h2>
+
+      <h3>Category 1: Shared Memories (Emotional Layer)</h3>
+
+      <h4>1) The Skating Bubble</h4>
+      <p>
+        Friends leave a group bubble at the rink. Years later, someone returns
+        alone and opens it—hearing laughter and seeing spatial clips aligned to
+        the ice.
+      </p>
+
+      <h4>2) Sunset Stories</h4>
+      <p>A global atlas of romance: "Sit here at 19:42. Perfect angle."</p>
+
+      <h4>3) Grief & Remembrance</h4>
+      <p>
+        Digital candles and memories anchored to meaningful places—lasting,
+        revisitable, shareable with chosen people.
+      </p>
+
+      <h4>4) Letters to Future Me</h4>
+      <p>A capsule you can only open when you physically return.</p>
+
+      <h3>Category 2: Hyper-Local Utility (Useful Layer)</h3>
+
+      <h4>1) Surf Intelligence</h4>
+      <p>AR markers: hazards, entry points, wind advice.</p>
+
+      <h4>2) Hidden Menu Layer</h4>
+      <p>
+        Recommendations pinned to a specific table or counter: "Order it this
+        way."
+      </p>
+
+      <h4>3) Accessibility Layer</h4>
+      <p>
+        User-generated accessibility notes anchored precisely: step-free
+        entrances, quiet hours, safe seating, lighting warnings.
+      </p>
+
+      <h3>Category 3: Urban Culture & Play (Creative Layer)</h3>
+
+      <h4>1) Street Art Living Threads</h4>
+      <p>
+        Discussions float <em>in front of</em> murals—timelines, artist credits,
+        community response—without touching the wall.
+      </p>
+
+      <h4>2) Flashmob Countdown / Location Drops</h4>
+      <p>Exclusive content appears when a place "activates" at a time.</p>
+
+      <h4>3) Civic Layer (Citizen Signals)</h4>
+      <p>Hazards, unsafe corners, mutual aid requests, neighborhood alerts.</p>
+    </section>
+
+    <hr />
+
+    <section id="impact">
+      <h2>12. Societal Impact: Why the World Needs This</h2>
+
+      <h3>12.1 Movement and "Touching Grass"</h3>
+
+      <p>
+        Location-based AR can drive real-world activity. CANVS generalizes that
+        mechanism beyond a single game loop:
+      </p>
+      <ul>
+        <li>content requires presence</li>
+        <li>presence requires movement</li>
+        <li>movement increases serendipity and social contact</li>
+      </ul>
+
+      <p>
+        <strong>Market validation</strong>: 180M+ Americans set outdoor
+        recreation records in 2024 (80% participation rate). People want to be
+        outside—they need reasons.
+      </p>
+
+      <h3>12.2 Economic revitalization</h3>
+
+      <p>
+        Location-anchored digital layers can improve discovery and drive
+        attention to local businesses.
+      </p>
+
+      <p>
+        CANVS can become the "local discovery layer" that is emotional, not
+        transactional.
+      </p>
+
+      <p><strong>Partnership opportunities:</strong></p>
+      <ul>
+        <li>
+          Tourism boards and destination marketing (AR tourism market: $29B →
+          $109B by 2030)
+        </li>
+        <li>Local businesses and chambers of commerce</li>
+        <li>
+          Universities and campuses (32.9% dropout rate = engagement crisis)
+        </li>
+        <li>Music/entertainment venues (concert AR experiences)</li>
+        <li>Museums and cultural institutions</li>
+      </ul>
+
+      <h3>12.3 The map data itself becomes strategic</h3>
+
+      <p>
+        Planet-scale spatial mapping is increasingly viewed as a core asset for
+        future devices like smart glasses and robots.
+      </p>
+
+      <p>
+        CANVS rides that wave—while specializing in the
+        <strong>human meaning graph</strong>.
+      </p>
+    </section>
+
+    <hr />
+
+    <section id="challenges">
+      <h2>13. Challenges & Mitigations</h2>
+
+      <h3>13.1 Technical Challenges</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Challenge</th>
+            <th>Impact</th>
+            <th>CANVS Mitigation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>GPS accuracy (urban canyons)</td>
+            <td>Content appears in wrong place</td>
+            <td>VPS fusion with graceful degradation</td>
+          </tr>
+          <tr>
+            <td>AR drift and stability</td>
+            <td>Objects float/jitter</td>
+            <td>Confidence-aware rendering; cloud anchors</td>
+          </tr>
+          <tr>
+            <td>Battery consumption</td>
+            <td>2-hour sessions max in full AR</td>
+            <td>AR as enhancement, not requirement</td>
+          </tr>
+          <tr>
+            <td>Device fragmentation</td>
+            <td>Not all phones support AR</td>
+            <td>Core features work without AR</td>
+          </tr>
+          <tr>
+            <td>Development costs</td>
+            <td>$250K-$800K for complex AR</td>
+            <td>Cross-platform Unity; phased features</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>13.2 User Adoption Barriers</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Barrier</th>
+            <th>Concern</th>
+            <th>CANVS Mitigation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Social awkwardness</td>
+            <td>"Glasshole" stigma</td>
+            <td>Phone-first (socially normalized)</td>
+          </tr>
+          <tr>
+            <td>Privacy concerns</td>
+            <td>Location tracking fears</td>
+            <td>Granular controls, privacy-by-design</td>
+          </tr>
+          <tr>
+            <td>Empty world problem</td>
+            <td>No content = no value</td>
+            <td>Atomic network launch; seed content</td>
+          </tr>
+          <tr>
+            <td>Network effects</td>
+            <td>Need users to create value</td>
+            <td>Solo value first; async social</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>13.3 Business Challenges</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Challenge</th>
+            <th>Risk</th>
+            <th>CANVS Mitigation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Content moderation</td>
+            <td>Location-specific harm</td>
+            <td>Proactive moderation; property owner opt-out</td>
+          </tr>
+          <tr>
+            <td>Legal/property rights</td>
+            <td>Trespassing liability</td>
+            <td>Default to public spaces; clear ToS</td>
+          </tr>
+          <tr>
+            <td>Monetization uncertainty</td>
+            <td>No proven model for location social</td>
+            <td>Multiple revenue streams; creator economy</td>
+          </tr>
+          <tr>
+            <td>Data privacy regulations</td>
+            <td>GDPR/CCPA fines</td>
+            <td>Privacy-first architecture; over-compliance</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <hr />
+
+    <section id="safety">
+      <h2>
+        14. Trust, Safety, and Governance: The Layer Must Be Safe by Design
+      </h2>
+
+      <p>
+        A spatial social layer amplifies both beauty and risk. The design must
+        assume adversarial use.
+      </p>
+
+      <h3>14.1 Location privacy is high stakes</h3>
+
+      <p>
+        Location data can enable re-identification, inference of sensitive
+        information, and physical threats.
+      </p>
+
+      <p>
+        <strong>CANVS principle:</strong><br />
+        Precision is a privilege, not a default.
+      </p>
+
+      <h3>14.2 Anti-stalking posture (non-negotiable)</h3>
+
+      <p><strong>CANVS must implement:</strong></p>
+      <ul>
+        <li>private-by-default creation modes</li>
+        <li>audience controls (self / friends / groups / public)</li>
+        <li>proximity-based visibility limits</li>
+        <li>strong reporting and rapid takedown</li>
+        <li>"shadow banning" for suspicious behavioral patterns</li>
+        <li>location obfuscation options ("near here" instead of exact)</li>
+        <li>hard blocks that prevent re-appearance in shared spaces</li>
+      </ul>
+
+      <h3>14.3 Property, nuisance, and crowd externalities</h3>
+
+      <p>Location-based experiences can generate real-world conflict.</p>
+
+      <p><strong>CANVS mitigation model:</strong></p>
+      <ul>
+        <li>
+          <strong>Private Space Shield:</strong> strong exclusion zones and
+          owner claims
+        </li>
+        <li>
+          <strong>Noise budgets:</strong> limit visibility/activation of
+          high-traffic anchors
+        </li>
+        <li>
+          <strong>Event throttles:</strong> prevent "stampede mechanics" near
+          residences
+        </li>
+        <li>
+          <strong>Local governance:</strong> trusted community moderators,
+          verified stewards
+        </li>
+        <li>
+          <strong>"Good citizen" design:</strong> discourage congregating
+          mechanics in sensitive places
+        </li>
+      </ul>
+
+      <p>
+        <strong>Lesson from Pokemon GO:</strong> $4M settlement over
+        trespassing. Property owner opt-out must exist from day one.
+      </p>
+
+      <h3>14.4 Moderation needs to be spatially aware</h3>
+
+      <p>
+        Unlike a feed, harmful content in CANVS is
+        <strong>attached to a place</strong>. Moderation needs:
+      </p>
+      <ul>
+        <li>geofenced rules (schools, hospitals, memorial sites)</li>
+        <li>content type constraints by zone</li>
+        <li>age gating</li>
+        <li>contextual integrity (e.g., memorial vs nightlife area)</li>
+      </ul>
+    </section>
+
+    <hr />
+
+    <section id="monetization">
+      <h2>15. Monetization: Non-Intrusive, Spatial-Native, Opt-In</h2>
+
+      <p>CANVS monetizes <em>without becoming a billboard apocalypse</em>.</p>
+
+      <h3>15.1 Contextual Advertising (Privacy-First)</h3>
+
+      <p>Location-based advertising can be privacy-first and effective:</p>
+      <ul>
+        <li>Contextual ads get 50% more clicks than behavioral</li>
+        <li>79% of consumers prefer contextual vs behavioral ads</li>
+        <li>Global contextual advertising market: $562.1B by 2030</li>
+      </ul>
+
+      <p>
+        <strong>CANVS approach</strong>: Contextual targeting uses place
+        content, not user tracking.
+      </p>
+
+      <h3>15.2 Spatial-native brand objects</h3>
+
+      <p>Not popups. <strong>Objects with physical logic</strong>:</p>
+      <ul>
+        <li>collectibles</li>
+        <li>AR mini-experiences</li>
+        <li>limited drops</li>
+        <li>"try before you buy" overlays</li>
+        <li>"story objects" that belong to a location</li>
+      </ul>
+
+      <h3>15.3 Local business toolkit (the "Digital Footfall Engine")</h3>
+      <ul>
+        <li>claim your place</li>
+        <li>publish offers as spatial objects</li>
+        <li>enable "community moments" (e.g., secret menu, local trivia)</li>
+        <li>get aggregated analytics (privacy-preserving)</li>
+      </ul>
+
+      <h3>15.4 Events as high-intensity loops</h3>
+
+      <p>
+        CANVS can enable "micro-events" at neighborhood scale and "macro-events"
+        for cities.
+      </p>
+
+      <h3>15.5 Premium</h3>
+      <ul>
+        <li>personal memory vaults</li>
+        <li>high-fidelity time capsules</li>
+        <li>private group spaces</li>
+        <li>advanced AI filters</li>
+        <li>creator tools (capture, editing, moderation features)</li>
+      </ul>
+
+      <h3>15.6 Creator Economy</h3>
+
+      <p>Enable content creators to monetize:</p>
+      <ul>
+        <li>Tipping and appreciation features</li>
+        <li>Exclusive experience access</li>
+        <li>Brand collaboration tools</li>
+      </ul>
+    </section>
+
+    <hr />
+
+    <section id="roadmap">
+      <h2>16. Strategic Roadmap: Mobile-First, Then Glass-Native</h2>
+
+      <h3>The Phased Approach</h3>
+
+      <p>
+        CANVS will be built in two major phases, recognizing that AR glasses are
+        2-4 years from mainstream adoption while mobile AR is production-ready
+        today:
+      </p>
+
+      <pre>
+Phase 1: Mobile App Foundation
+    ↓
+Phase 2: Glass-Native Transition</pre
+      >
+
+      <p><strong>Strategic Rationale:</strong></p>
+      <ul>
+        <li>
+          <strong>Billions</strong> of AR-capable smartphones are deployed today
+        </li>
+        <li>
+          AR glasses (Apple, Meta, Google) arriving 2026-2029 as early-adopter
+          products
+        </li>
+        <li>
+          <strong>2-3 year window</strong> to build content networks and user
+          habits before hardware shift
+        </li>
+        <li>
+          Mobile establishes the data assets, social graphs, and behaviors that
+          transfer to glasses
+        </li>
+      </ul>
+
+      <hr />
+
+      <h3>Phase 1: Mobile App MVP</h3>
+
+      <p>
+        <strong>Objective:</strong> Prove the core loop; establish content
+        networks; build user base.
+      </p>
+
+      <h4>1A: Core Mobile Features</h4>
+
+      <p><strong>Map Mode (Primary Experience)</strong></p>
+      <ul>
+        <li>Discover nearby CANVS content on an interactive map</li>
+        <li>
+          Filter by type: memories, recommendations, community notes, trails
+        </li>
+        <li>See content density "heat maps" for exploration</li>
+        <li>Non-AR native - works on any smartphone</li>
+      </ul>
+
+      <p><strong>Creation Tools (Mobile-First)</strong></p>
+      <ul>
+        <li>Pin text, photos, audio, video to locations</li>
+        <li>Simple capture: point phone, record, anchor</li>
+        <li>Privacy controls: public / friends / groups / self</li>
+        <li>Time-lock options for future reveal</li>
+      </ul>
+
+      <p><strong>AR Mode (Enhancement Layer)</strong></p>
+      <ul>
+        <li>Optional AR view using ARKit/ARCore</li>
+        <li>See content floating at anchor points</li>
+        <li>Walk toward content to "approach" it</li>
+        <li>10-30 second interaction design (not continuous)</li>
+        <li>Graceful degradation when tracking confidence is low</li>
+      </ul>
+
+      <p><strong>Social Features</strong></p>
+      <ul>
+        <li>Friend connections (import from contacts)</li>
+        <li>Follow specific places or creators</li>
+        <li>Activity feed: what friends created/discovered</li>
+        <li>
+          Async interaction: reply to content at locations you visit later
+        </li>
+      </ul>
+
+      <h4>1B: Technical Foundation</h4>
+      <ul>
+        <li>
+          <strong>Multi-provider positioning</strong>: ARCore Geospatial
+          (primary), GPS (fallback)
+        </li>
+        <li>
+          <strong>Cloud anchor system</strong>: Persistent content across users
+          and time
+        </li>
+        <li>
+          <strong>Confidence-aware rendering</strong>: Content appears when
+          positioning is reliable
+        </li>
+        <li>
+          <strong>Battery optimization</strong>: Intelligent polling; AR as
+          opt-in enhancement
+        </li>
+        <li>
+          <strong>Device capability detection</strong>: Graceful feature
+          adaptation
+        </li>
+      </ul>
+
+      <h4>1C: Launch Strategy</h4>
+
+      <p>
+        <strong>Atomic Network Approach</strong> (learn from Cold Start
+        Problem):
+      </p>
+      <ol>
+        <li>
+          Launch in <strong>one neighborhood</strong> with content density, not
+          global with emptiness
+        </li>
+        <li>Partner with local venues for initial content seeding</li>
+        <li>Import interesting public locations (landmarks, parks, art)</li>
+        <li>Reward early users with "Founding Member" status</li>
+        <li>Expand neighborhood by neighborhood, city by city</li>
+      </ol>
+
+      <p><strong>Initial Target Markets:</strong></p>
+      <ul>
+        <li>
+          University campuses (captive audience, high engagement potential)
+        </li>
+        <li>Tourist destinations (tourism boards as partners)</li>
+        <li>Music/entertainment venues (concert experiences)</li>
+        <li>Neighborhoods with strong local identity</li>
+      </ul>
+
+      <p><strong>Success Metrics:</strong></p>
+      <ul>
+        <li>MPI/week (Meaningful Place Interactions per user per week)</li>
+        <li>Content density per square km in active areas</li>
+        <li>Week 1 / Week 4 / Week 12 retention</li>
+        <li>Time to first content creation</li>
+        <li>AR mode adoption rate (enhancement, not requirement)</li>
+      </ul>
+
+      <hr />
+
+      <h3>Phase 1.5: Scale & Learn (2027)</h3>
+
+      <p>
+        <strong>Objective:</strong> Expand coverage; introduce AI filtering;
+        build business relationships.
+      </p>
+
+      <ul>
+        <li>
+          <strong>AI "Reality Filter" v1</strong>: summarization, semantic
+          search, friend-memory surfacing
+        </li>
+        <li>
+          <strong>Trails, drops, portals</strong>: Richer content primitives
+        </li>
+        <li>
+          <strong>Local business claims</strong>: Venue dashboard and basic
+          analytics
+        </li>
+        <li>
+          <strong>Creator marketplace</strong>: Early tools for content
+          monetization
+        </li>
+        <li>
+          <strong>Web-native sharing</strong>: Location-locked experiences via
+          link (WebAR for discovery)
+        </li>
+        <li>
+          <strong>Geographic expansion</strong>: 10+ cities with meaningful
+          content density
+        </li>
+      </ul>
+
+      <p><strong>Data Assets Being Collected:</strong></p>
+      <ul>
+        <li>User location patterns and preferences</li>
+        <li>Venue/place metadata from user activity</li>
+        <li>Social connection graphs tied to locations</li>
+        <li>User-generated content anchored to millions of places</li>
+        <li>Movement patterns and "moments" data</li>
+      </ul>
+
+      <p>
+        <em>These assets become critical for glasses-native experiences.</em>
+      </p>
+
+      <hr />
+
+      <h3>Phase 2: Glass-Native Transition (2029–2031)</h3>
+
+      <p>
+        <strong>Objective:</strong> Become the default spatial social layer
+        across devices.
+      </p>
+
+      <h4>2029: Early Glass Integration</h4>
+      <ul>
+        <li>
+          <strong>visionOS app</strong>: Ship for Apple Vision Pro (even with
+          low adoption) for developer credibility
+        </li>
+        <li>
+          <strong>Android XR early access</strong>: Position for Google/Samsung
+          glasses launch
+        </li>
+        <li>
+          <strong>Snap Specs partnership</strong>: Leverage Snap's 400M MAU Snap
+          Map for spatial discovery
+        </li>
+        <li>
+          <strong>Always-on lightweight layer</strong>: "Glanceable place
+          context" UX
+        </li>
+        <li>
+          <strong>Audio-first features</strong>: Voice check-ins, proximity
+          notifications
+        </li>
+        <li>
+          <strong>Spatial audio cues</strong>: Directional sound for content
+          discovery
+        </li>
+      </ul>
+
+      <h4>2030: Platformization</h4>
+      <ul>
+        <li>
+          <strong>Public SDK</strong>: Third-party "place apps" can build on
+          CANVS location layer
+        </li>
+        <li>
+          <strong>Verified civic layers</strong>: Cities, museums, campuses as
+          official content sources
+        </li>
+        <li>
+          <strong>Indoor positioning</strong>: Venue partnerships for interior
+          navigation
+        </li>
+        <li>
+          <strong>Enterprise tools</strong>: Real estate, tourism, retail
+          analytics (privacy-preserving)
+        </li>
+        <li>
+          <strong>Standards alignment</strong>: Portable XR workflows for
+          cross-platform content
+        </li>
+      </ul>
+
+      <h4>2031: The Spatial Social OS</h4>
+      <ul>
+        <li>
+          <strong>Default "meaning layer"</strong>: CANVS runs across phones,
+          glasses, and future devices
+        </li>
+        <li>
+          <strong>Places become queryable</strong>: "What should I know about
+          this place?"
+        </li>
+        <li>
+          <strong>Emotionally legible world</strong>: AI understands "vibe" of
+          locations
+        </li>
+        <li>
+          <strong>The feed is obsolete</strong>: Location and context replace
+          algorithmic curation
+        </li>
+      </ul>
+
+      <hr />
+
+      <h3>Hardware Timeline Alignment</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Hardware State</th>
+            <th>CANVS Position</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>2026</strong></td>
+            <td>Smart glasses (audio + camera); Meta leads</td>
+            <td>Mobile app launch; build content network</td>
+          </tr>
+          <tr>
+            <td><strong>2028</strong></td>
+            <td>Display glasses emerge ($300-800)</td>
+            <td>Scale mobile; begin glasses R&D</td>
+          </tr>
+          <tr>
+            <td><strong>~2029</strong></td>
+            <td>Apple/Google AR glasses launch</td>
+            <td>Ship glasses apps; establish ecosystem position</td>
+          </tr>
+          <tr>
+            <td><strong>~2029</strong></td>
+            <td>43M+ AR devices projected</td>
+            <td>Multi-platform growth; platformization</td>
+          </tr>
+          <tr>
+            <td><strong>~2030</strong></td>
+            <td>AR glasses approach mainstream</td>
+            <td>Glass-native default; spatial social OS</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <blockquote>
+        <strong>Strategic Insight:</strong> The race is for
+        <strong>data assets</strong>, not hardware. Whoever has the best
+        location intelligence, social graphs, and spatial content will power the
+        glasses experiences of 2028-2030. Building on mobile NOW creates the
+        foundation.
+      </blockquote>
+    </section>
+
+    <hr />
+
+    <section id="opportunity">
+      <h2>
+        17. The Big Opportunity: Why This Can Become a Once-a-Decade Platform
+      </h2>
+
+      <p>The social internet has had multiple eras:</p>
+      <ol>
+        <li><strong>Web pages</strong> (static)</li>
+        <li>
+          <strong>Feeds</strong> (social graphs + algorithmic distribution)
+        </li>
+        <li><strong>Messaging</strong> (private networks)</li>
+        <li><strong>Spatial</strong> (place as interface)</li>
+      </ol>
+
+      <p>CANVS is built for the spatial era.</p>
+
+      <p>The infrastructure is converging:</p>
+      <ul>
+        <li>AR anchoring stacks exist across major ecosystems</li>
+        <li>The AR Cloud concept supports persistent shared experiences</li>
+        <li>Spatial computing devices are accelerating beyond labs</li>
+        <li>
+          Location-based AR has demonstrated real-world behavior change at scale
+        </li>
+      </ul>
+
+      <p>This creates a window where a "spatial social layer" can become:</p>
+      <ul>
+        <li><strong>the default discovery interface for cities</strong></li>
+        <li><strong>the default memory interface for human life</strong></li>
+        <li><strong>the default coordination layer for communities</strong></li>
+        <li><strong>the default canvas for creators</strong></li>
+        <li><strong>the default AR layer for glasses</strong></li>
+      </ul>
+
+      <h3>Why CANVS Can Win</h3>
+
+      <p><strong>Perfect Storm of Conditions:</strong></p>
+      <ol>
+        <li>
+          <strong>Technology Ready:</strong> Mobile AR is mature, 5G is
+          ubiquitous, ARKit/ARCore proven
+        </li>
+        <li>
+          <strong>Cultural Moment:</strong> Gen Z exhaustion with traditional
+          social creates demand
+        </li>
+        <li>
+          <strong>Market Gap:</strong> Niantic pivot, BeReal decline, no
+          dominant player in emotional location social
+        </li>
+        <li>
+          <strong>Timing Window:</strong> 2-3 years before AR glasses shift
+          landscape
+        </li>
+        <li>
+          <strong>Privacy Positioning:</strong> First-mover in privacy-first
+          location sharing
+        </li>
+      </ol>
+
+      <p>
+        <strong>Unique Positioning:</strong><br />
+        CANVS occupies a space no one else is targeting:
+      </p>
+      <ul>
+        <li><strong>Not transactional</strong> (unlike Yelp, Google Maps)</li>
+        <li><strong>Not gamified</strong> (unlike Pokemon GO)</li>
+        <li><strong>Not forced authenticity</strong> (unlike BeReal)</li>
+        <li><strong>Not surveillance-based</strong> (unlike Facebook)</li>
+      </ul>
+
+      <p>
+        Instead:
+        <strong
+          >Emotional, persistent, movement-encouraging, community-building,
+          privacy-first</strong
+        >
+      </p>
+    </section>
+
+    <hr />
+
+    <section id="conclusion">
+      <h2>18. Conclusion: Build the Layer</h2>
+
+      <p>CANVS is not "another app."</p>
+
+      <p>
+        It is a bet that the next interface is not a rectangle, not a feed, not
+        a timeline.
+      </p>
+
+      <p>It's the world.</p>
+
+      <p>A world where no moment is lost—because the place remembers.</p>
+
+      <p><strong>The strategy is clear:</strong></p>
+      <ol>
+        <li>
+          <strong>Start mobile-first</strong> — the technology is ready, the
+          devices are deployed, the user behaviors are proven
+        </li>
+        <li>
+          <strong>Build the content network</strong> — every place with a memory
+          becomes more valuable
+        </li>
+        <li>
+          <strong>Establish the social graph</strong> — connections rooted in
+          shared places
+        </li>
+        <li>
+          <strong>Prepare for glasses</strong> — architect for the transition
+          that will reshape computing
+        </li>
+        <li>
+          <strong>Own the meaning layer</strong> — not the AR Cloud, but what
+          makes it matter to humans
+        </li>
+      </ol>
+    </section>
+
+    <hr />
+
+    <section id="appendix" class="appendix">
+      <h2>Appendix A: Research Sources</h2>
+
+      <h3>Market Research</h3>
+      <ul>
+        <li>
+          <a
+            href="https://www.grandviewresearch.com/industry-analysis/augmented-reality-market"
+            >Grand View Research - AR Market</a
+          >
+        </li>
+        <li>
+          <a
+            href="https://www.fortunebusinessinsights.com/industry-reports/location-based-services-market-101060"
+            >Fortune Business Insights - Location-Based Services</a
+          >
+        </li>
+        <li>
+          <a
+            href="https://www.globenewswire.com/news-release/2025/10/28/3175180/0/en/Mobile-Augmented-Reality-Market-Size-to-Surpass-USD-327-7-Billion-by-2032-Rising-at-a-CAGR-of-30-84-Report-by-SNS-Insider.html"
+            >SNS Insider - Mobile AR Market</a
+          >
+        </li>
+      </ul>
+
+      <h3>Technology & Platforms</h3>
+      <ul>
+        <li>
+          <a href="https://developers.google.com/ar/develop/geospatial"
+            >Google ARCore Geospatial API</a
+          >
+        </li>
+        <li>
+          <a href="https://lightship.dev/docs/ardk/features/lightship_vps/"
+            >Niantic Lightship VPS</a
+          >
+        </li>
+        <li>
+          <a href="https://developer.apple.com/documentation/arkit"
+            >Apple ARKit Documentation</a
+          >
+        </li>
+      </ul>
+
+      <h3>Competitive Analysis</h3>
+      <ul>
+        <li>
+          <a href="https://www.businessofapps.com/data/pokemon-go-statistics/"
+            >Business of Apps - Pokemon GO Statistics</a
+          >
+        </li>
+        <li>
+          <a
+            href="https://techcrunch.com/2025/05/07/snap-map-reaches-new-milestone-of-400m-monthly-active-users/"
+            >Snap Map 400M MAU</a
+          >
+        </li>
+      </ul>
+
+      <h3>Gen Z & Social Trends</h3>
+      <ul>
+        <li>
+          <a
+            href="https://www.wearehuman8.com/blog/gen-z-in-2025-navigating-digital-exhaustion-in-a-digitally-native-world/"
+            >Human8 - Gen Z Digital Exhaustion 2025</a
+          >
+        </li>
+        <li>
+          <a href="https://cropink.com/social-media-mental-health-statistics"
+            >Cropink - Social Media Mental Health Statistics</a
+          >
+        </li>
+      </ul>
+
+      <h3>AR Glasses Timeline</h3>
+      <ul>
+        <li>
+          <a
+            href="https://glassalmanac.com/7-ar-glasses-and-platforms-in-2026-that-could-surprise-consumers-what-changes/"
+            >Glass Almanac - AR Glasses 2026</a
+          >
+        </li>
+        <li>
+          <a href="https://www.idc.com/promo/arvr/"
+            >IDC - AR/VR Market Insights</a
+          >
+        </li>
+      </ul>
+
+      <h3>Historical Lessons</h3>
+      <ul>
+        <li>
+          <a href="https://slidebean.com/story/what-happened-to-foursquare"
+            >Slidebean - What Happened to Foursquare</a
+          >
+        </li>
+        <li>
+          <a
+            href="https://journals.law.harvard.edu/jsel/2019/04/pokemon-go-class-action-settles-as-augmented-reality-legal-questions-remain/"
+            >Harvard JSEL - Pokemon Go Class Action</a
+          >
+        </li>
+        <li>
+          <a href="https://a16z.com/books/the-cold-start-problem/"
+            >A16Z - The Cold Start Problem</a
+          >
+        </li>
+      </ul>
+    </section>
+
+    <hr />
+  </body>
+</html>

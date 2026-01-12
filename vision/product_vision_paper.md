@@ -1,8 +1,33 @@
 # CANVS - It's the world: The Spatial Social Layer
 
-## Product Vision Paper & Strategic Roadmap (2026–2030)
+## Product Vision Paper & Strategic Roadmap
 
 **Tagline:** *The end of the feed. The beginning of the world.*
+
+---
+
+## Table of Contents
+
+- [0. Executive Summary: What CANVS Is](#0-executive-summary-what-canvs-is)
+- [1. Manifesto: The End of the Feed, the Beginning of the World](#1-manifesto-the-end-of-the-feed-the-beginning-of-the-world)
+- [2. The Problem: Context Loss and the "Ghost Event"](#2-the-problem-context-loss-and-the-ghost-event)
+- [3. The Solution: Persistent Emotional Anchoring](#3-the-solution-persistent-emotional-anchoring)
+- [4. The Product Thesis: "The Spatial Social Layer"](#4-the-product-thesis-the-spatial-social-layer)
+- [5. Core Experience: The Spatial Browser](#5-core-experience-the-spatial-browser)
+- [6. Core Building Blocks: Spatial Primitives](#6-core-building-blocks-spatial-primitives)
+- [7. Deep-Tech Foundation: How This Becomes Real](#7-deep-tech-foundation-how-this-becomes-real)
+- [8. Market Opportunity: Why This, Why Now](#8-market-opportunity-why-this-why-now)
+- [9. Competitive Landscape](#9-competitive-landscape)
+- [10. LLM Agents as the "Reality Filter"](#10-llm-agents-as-the-reality-filter-not-a-chatbot)
+- [11. Emotional & Social Use Cases: Re-enchanting Reality](#11-emotional--social-use-cases-re-enchanting-reality)
+- [12. Societal Impact: Why the World Needs This](#12-societal-impact-why-the-world-needs-this)
+- [13. Challenges & Mitigations](#13-challenges--mitigations)
+- [14. Trust, Safety, and Governance](#14-trust-safety-and-governance-the-layer-must-be-safe-by-design)
+- [15. Monetization: Non-Intrusive, Spatial-Native, Opt-In](#15-monetization-non-intrusive-spatial-native-opt-in)
+- [16. Strategic Roadmap: Mobile-First, Then Glass-Native](#16-strategic-roadmap-mobile-first-then-glass-native)
+- [17. The Big Opportunity](#17-the-big-opportunity-why-this-can-become-a-once-a-decade-platform)
+- [18. Conclusion: Build the Layer](#18-conclusion-build-the-layer)
+- [Appendix A: Research Sources](#appendix-a-research-sources)
 
 ---
 
@@ -14,10 +39,10 @@ CANVS turns the planet into an **addressable surface**: every bench, alley, beac
 
 This idea is now feasible because the enabling stack has matured:
 
-* **World-scale AR anchoring is real and productized.** Visual Positioning Systems (VPS) combine GPS with vision-based localization to place content far more reliably than GPS alone.
-* **Persistent, shareable AR at real-world locations is shipping.** Modern AR platforms can lock content to places in a way that multiple people can reliably see over time.
-* **Consumers and creators are being trained for location-anchored AR.** Place-anchored AR content creation is becoming mainstream.
-* **Spatial computing hardware is moving from "demo" to "platform."** Headsets and smart glasses are evolving into everyday computing surfaces.
+- **World-scale AR anchoring is real and productized.** Visual Positioning Systems (VPS) combine GPS with vision-based localization to place content far more reliably than GPS alone.
+- **Persistent, shareable AR at real-world locations is shipping.** Modern AR platforms can lock content to places in a way that multiple people can reliably see over time.
+- **Consumers and creators are being trained for location-anchored AR.** Place-anchored AR content creation is becoming mainstream.
+- **Spatial computing hardware is moving from "demo" to "platform."** Headsets and smart glasses are evolving into everyday computing surfaces.
 
 CANVS is designed to become **glass-native**: as AR glasses and spatial computers transition into everyday devices, CANVS becomes an always-available layer—less like an app, more like a **new default interface for place**.
 
@@ -31,9 +56,9 @@ Today's social platforms are optimized for **infinite scrolling**, not for human
 
 CANVS flips the direction of attention:
 
-* The feed is not the home screen. **The world is.**
-* Content is not something you "go find." It's something you **encounter**, because you are there.
-* Meaning is not manufactured by engagement hacks. Meaning is **in context**.
+- The feed is not the home screen. **The world is.**
+- Content is not something you "go find." It's something you **encounter**, because you are there.
+- Meaning is not manufactured by engagement hacks. Meaning is **in context**.
 
 A story about a sunset is powerful anywhere.
 A story about a sunset becomes *inevitable* when you're sitting in the exact place it happened—at the same angle, the same horizon line, the same wind.
@@ -69,14 +94,14 @@ Not as a gimmick, but as a new medium:
 
 CANVS enables:
 
-* **Reality Time Capsules:** content (text, audio, video, 3D captures, sketches) pinned to real-world locations so future visitors can "open" the moment where it happened.
-* **Asynchronous presence:** you can experience a moment later, not by "watching a video," but by seeing the memory **in situ**, aligned to the geometry of the world.
+- **Reality Time Capsules:** content (text, audio, video, 3D captures, sketches) pinned to real-world locations so future visitors can "open" the moment where it happened.
+- **Asynchronous presence:** you can experience a moment later, not by "watching a video," but by seeing the memory **in situ**, aligned to the geometry of the world.
 
 This depends on a real technical foundation: **world-locked anchoring**.
 
-* GPS alone often breaks immersion due to drift and urban multipath.
-* Modern stacks combine GPS with vision-based localization (VPS) and mapping for stable placement.
-* Reliable persistence requires multi-tier anchoring, re-localization, and confidence-aware rendering.
+- GPS alone often breaks immersion due to drift and urban multipath.
+- Modern stacks combine GPS with vision-based localization (VPS) and mapping for stable placement.
+- Reliable persistence requires multi-tier anchoring, re-localization, and confidence-aware rendering.
 
 ---
 
@@ -84,9 +109,9 @@ This depends on a real technical foundation: **world-locked anchoring**.
 
 CANVS is not:
 
-* a traditional social network (feed-first)
-* a maps app (utility-first)
-* a game (loop-first)
+- a traditional social network (feed-first)
+- a maps app (utility-first)
+- a game (loop-first)
 
 CANVS is a new primitive:
 
@@ -96,13 +121,13 @@ A **Spatial Browser** that lets you "read" places the way you read websites.
 
 If the 1990s internet was made of pages and links, the spatial internet is made of:
 
-* **Places**
-* **Anchors**
-* **Layers**
-* **Memories**
-* **Paths**
-* **Social context**
-* **AI mediation**
+- **Places**
+- **Anchors**
+- **Layers**
+- **Memories**
+- **Paths**
+- **Social context**
+- **AI mediation**
 
 ---
 
@@ -123,10 +148,10 @@ If the 1990s internet was made of pages and links, the spatial internet is made 
 
 CANVS is built around "micro-encounters":
 
-* see a story
-* feel something
-* reply, add context, or create your own layer
-* move on, carrying the place with you
+- see a story
+- feel something
+- reply, add context, or create your own layer
+- move on, carrying the place with you
 
 The goal is not infinite consumption.
 The goal is **meaningful place interactions**.
@@ -149,9 +174,9 @@ A shared container anchored to a place.
 
 Examples:
 
-* "We used to meet here every Friday."
-* "This bench is where she told me yes."
-* "We found this spot during our first week in this city."
+- "We used to meet here every Friday."
+- "This bench is where she told me yes."
+- "We found this spot during our first week in this city."
 
 ### C. Time Capsules
 
@@ -161,10 +186,10 @@ Richer artifacts: multi-media + 3D capture + timeline.
 
 A sequence of anchors that forms a narrative route:
 
-* "My break-up walk."
-* "Best street art within 12 minutes."
-* "The city through immigrant food."
-* "A grief trail for remembrance."
+- "My break-up walk."
+- "Best street art within 12 minutes."
+- "The city through immigrant food."
+- "A grief trail for remembrance."
 
 ### E. Drops (Geo-fenced Releases)
 
@@ -174,8 +199,8 @@ Music, artwork, collectibles, or messages that only unlock at a location and tim
 
 A place anchored to another place via story logic:
 
-* "If you liked this, go to that."
-* "This spot is the sibling of that spot."
+- "If you liked this, go to that."
+- "This spot is the sibling of that spot."
 
 ---
 
@@ -195,7 +220,7 @@ Build a **multi-tier anchoring strategy**:
 3. **Local SLAM anchoring** for stable, low-jitter placement in the user's immediate session
 4. **Re-localization & drift correction** for persistence across time and devices
 
-### 7.2 Technology Stack (2025-2026 Reality)
+### 7.2 Technology Stack
 
 The AR technology landscape has matured significantly. Here's what's production-ready today:
 
@@ -225,17 +250,17 @@ In practice, CANVS should treat positioning vendors as interchangeable backends.
 
 CANVS creates its own stable concept:
 
-* **CANVS Anchor ID** (a persistent identifier)
-* **Anchor bundles** (multi-representation: lat/long/alt + visual features + local map fragments + constraints)
-* **Confidence-aware rendering** (content fades in only when tracking confidence is sufficient)
+- **CANVS Anchor ID** (a persistent identifier)
+- **Anchor bundles** (multi-representation: lat/long/alt + visual features + local map fragments + constraints)
+- **Confidence-aware rendering** (content fades in only when tracking confidence is sufficient)
 
 ### 7.5 3D capture becomes a native media type (not a luxury)
 
 To "freeze" moments, CANVS should support **spatial capture formats**:
 
-* Quick scan (phone LiDAR / photogrammetry)
-* "Spatial clips" (short 3D snapshots)
-* High-fidelity capture for creators
+- Quick scan (phone LiDAR / photogrammetry)
+- "Spatial clips" (short 3D snapshots)
+- High-fidelity capture for creators
 
 **Product implication:**
 Time capsules evolve from "video pinned to a spot" into "walkable memory fragments."
@@ -250,8 +275,8 @@ Spatial computing hardware is diversifying (headsets, AR glasses, smart glasses 
 
 CANVS should architect for **portable XR**:
 
-* Use standards where possible.
-* Treat the phone as the bootstrapping device, but maintain a "glass-first" UX philosophy.
+- Use standards where possible.
+- Treat the phone as the bootstrapping device, but maintain a "glass-first" UX philosophy.
 
 ---
 
@@ -274,18 +299,18 @@ The convergence of AR, location services, and social media creates a massive opp
 
 We are at a cultural inflection point:
 
-* **73% of Gen Z** report digital exhaustion despite 7.2 hours daily online
-* **62%** struggle to build meaningful relationships through current platforms
-* **41%** of Americans are actively reducing screen time
-* **32%** report social media fatigue - demand for new experiences is real
+- **73% of Gen Z** report digital exhaustion despite 7.2 hours daily online
+- **62%** struggle to build meaningful relationships through current platforms
+- **41%** of Americans are actively reducing screen time
+- **32%** report social media fatigue - demand for new experiences is real
 
 ### 8.3 Proven Model at Scale
 
 Location-based AR is not speculative:
 
-* **Pokemon GO**: $8+ billion lifetime revenue, 100M+ users, 40-minute average daily sessions
-* **Snap Map**: 400M+ monthly active users, 8 billion AR lens plays per day
-* **Google Maps Live View**: Billions of users with AR navigation
+- **Pokemon GO**: $8+ billion lifetime revenue, 100M+ users, 40-minute average daily sessions
+- **Snap Map**: 400M+ monthly active users, 8 billion AR lens plays per day
+- **Google Maps Live View**: Billions of users with AR navigation
 
 The technology works. The user behaviors exist. The gap is a **social layer that isn't a game**.
 
@@ -318,10 +343,10 @@ The technology works. The user behaviors exist. The gap is a **social layer that
 **No mainstream app lets users leave discoverable content at physical locations that persists over time.**
 
 Current solutions are fragmented:
-* Check-ins (Foursquare) → Check-in fatigue killed this
-* Reviews (Yelp/Google) → Transactional, not emotional
-* Location sharing (Snap Map) → Real-time only, no persistence
-* Exploration (Randonautica) → Niche, no user content
+- Check-ins (Foursquare) → Check-in fatigue killed this
+- Reviews (Yelp/Google) → Transactional, not emotional
+- Location sharing (Snap Map) → Real-time only, no persistence
+- Exploration (Randonautica) → Niche, no user content
 
 ### 9.3 Why Location Apps Have Failed Before
 
@@ -343,34 +368,34 @@ In a world where every place can hold content, the core product is not creation�
 
 CANVS needs a personal AI layer that feels like:
 
-* "my taste"
-* "my friends"
-* "my values"
-* "my mental state"
-* "my intent right now"
+- "my taste"
+- "my friends"
+- "my values"
+- "my mental state"
+- "my intent right now"
 
 ### 10.1 The Agent's job
 
-* Summarize the layer you're in
-* Surface what matters
-* Prevent overwhelm
-* Prevent harm
-* Turn raw spatial data into *felt relevance*
+- Summarize the layer you're in
+- Surface what matters
+- Prevent overwhelm
+- Prevent harm
+- Turn raw spatial data into *felt relevance*
 
 ### 10.2 Example features (agent-native)
 
-* **Friend-memory surfacing:** "Your friend left a note here 3 years ago."
-* **Emotion search:** "Show me places where people reported feeling calm."
-* **Context compression:** Turn 400 nearby anchors into 5 meaningful options.
-* **Path generation:** "Give me a 30-minute walk that ends somewhere optimistic."
+- **Friend-memory surfacing:** "Your friend left a note here 3 years ago."
+- **Emotion search:** "Show me places where people reported feeling calm."
+- **Context compression:** Turn 400 nearby anchors into 5 meaningful options.
+- **Path generation:** "Give me a 30-minute walk that ends somewhere optimistic."
 
 ### 10.3 Safety-aware personalization
 
 The agent is also a safety filter:
 
-* suppress stalking-like patterns
-* reduce accidental over-sharing
-* warn if a user is about to publish to a sensitive location context
+- suppress stalking-like patterns
+- reduce accidental over-sharing
+- warn if a user is about to publish to a sensitive location context
 
 (See "Safety & Governance" below.)
 
@@ -422,9 +447,9 @@ Hazards, unsafe corners, mutual aid requests, neighborhood alerts.
 
 Location-based AR can drive real-world activity. CANVS generalizes that mechanism beyond a single game loop:
 
-* content requires presence
-* presence requires movement
-* movement increases serendipity and social contact
+- content requires presence
+- presence requires movement
+- movement increases serendipity and social contact
 
 **Market validation**: 180M+ Americans set outdoor recreation records in 2024 (80% participation rate). People want to be outside—they need reasons.
 
@@ -435,11 +460,11 @@ Location-anchored digital layers can improve discovery and drive attention to lo
 CANVS can become the "local discovery layer" that is emotional, not transactional.
 
 **Partnership opportunities:**
-* Tourism boards and destination marketing (AR tourism market: $29B → $109B by 2030)
-* Local businesses and chambers of commerce
-* Universities and campuses (32.9% dropout rate = engagement crisis)
-* Music/entertainment venues (concert AR experiences)
-* Museums and cultural institutions
+- Tourism boards and destination marketing (AR tourism market: $29B → $109B by 2030)
+- Local businesses and chambers of commerce
+- Universities and campuses (32.9% dropout rate = engagement crisis)
+- Music/entertainment venues (concert AR experiences)
+- Museums and cultural institutions
 
 ### 12.3 The map data itself becomes strategic
 
@@ -496,13 +521,13 @@ Precision is a privilege, not a default.
 
 **CANVS must implement:**
 
-* private-by-default creation modes
-* audience controls (self / friends / groups / public)
-* proximity-based visibility limits
-* strong reporting and rapid takedown
-* "shadow banning" for suspicious behavioral patterns
-* location obfuscation options ("near here" instead of exact)
-* hard blocks that prevent re-appearance in shared spaces
+- private-by-default creation modes
+- audience controls (self / friends / groups / public)
+- proximity-based visibility limits
+- strong reporting and rapid takedown
+- "shadow banning" for suspicious behavioral patterns
+- location obfuscation options ("near here" instead of exact)
+- hard blocks that prevent re-appearance in shared spaces
 
 ### 14.3 Property, nuisance, and crowd externalities
 
@@ -510,11 +535,11 @@ Location-based experiences can generate real-world conflict.
 
 **CANVS mitigation model:**
 
-* **Private Space Shield:** strong exclusion zones and owner claims
-* **Noise budgets:** limit visibility/activation of high-traffic anchors
-* **Event throttles:** prevent "stampede mechanics" near residences
-* **Local governance:** trusted community moderators, verified stewards
-* **"Good citizen" design:** discourage congregating mechanics in sensitive places
+- **Private Space Shield:** strong exclusion zones and owner claims
+- **Noise budgets:** limit visibility/activation of high-traffic anchors
+- **Event throttles:** prevent "stampede mechanics" near residences
+- **Local governance:** trusted community moderators, verified stewards
+- **"Good citizen" design:** discourage congregating mechanics in sensitive places
 
 **Lesson from Pokemon GO:** $4M settlement over trespassing. Property owner opt-out must exist from day one.
 
@@ -522,10 +547,10 @@ Location-based experiences can generate real-world conflict.
 
 Unlike a feed, harmful content in CANVS is **attached to a place**. Moderation needs:
 
-* geofenced rules (schools, hospitals, memorial sites)
-* content type constraints by zone
-* age gating
-* contextual integrity (e.g., memorial vs nightlife area)
+- geofenced rules (schools, hospitals, memorial sites)
+- content type constraints by zone
+- age gating
+- contextual integrity (e.g., memorial vs nightlife area)
 
 ---
 
@@ -536,9 +561,9 @@ CANVS monetizes *without becoming a billboard apocalypse*.
 ### 15.1 Contextual Advertising (Privacy-First)
 
 Location-based advertising can be privacy-first and effective:
-* Contextual ads get 50% more clicks than behavioral
-* 79% of consumers prefer contextual vs behavioral ads
-* Global contextual advertising market: $562.1B by 2030
+- Contextual ads get 50% more clicks than behavioral
+- 79% of consumers prefer contextual vs behavioral ads
+- Global contextual advertising market: $562.1B by 2030
 
 **CANVS approach**: Contextual targeting uses place content, not user tracking.
 
@@ -546,18 +571,18 @@ Location-based advertising can be privacy-first and effective:
 
 Not popups. **Objects with physical logic**:
 
-* collectibles
-* AR mini-experiences
-* limited drops
-* "try before you buy" overlays
-* "story objects" that belong to a location
+- collectibles
+- AR mini-experiences
+- limited drops
+- "try before you buy" overlays
+- "story objects" that belong to a location
 
 ### 15.3 Local business toolkit (the "Digital Footfall Engine")
 
-* claim your place
-* publish offers as spatial objects
-* enable "community moments" (e.g., secret menu, local trivia)
-* get aggregated analytics (privacy-preserving)
+- claim your place
+- publish offers as spatial objects
+- enable "community moments" (e.g., secret menu, local trivia)
+- get aggregated analytics (privacy-preserving)
 
 ### 15.4 Events as high-intensity loops
 
@@ -565,79 +590,79 @@ CANVS can enable "micro-events" at neighborhood scale and "macro-events" for cit
 
 ### 15.5 Premium
 
-* personal memory vaults
-* high-fidelity time capsules
-* private group spaces
-* advanced AI filters
-* creator tools (capture, editing, moderation features)
+- personal memory vaults
+- high-fidelity time capsules
+- private group spaces
+- advanced AI filters
+- creator tools (capture, editing, moderation features)
 
 ### 15.6 Creator Economy
 
 Enable content creators to monetize:
-* Tipping and appreciation features
-* Exclusive experience access
-* Brand collaboration tools
+- Tipping and appreciation features
+- Exclusive experience access
+- Brand collaboration tools
 
 ---
 
-## 16. Strategic Roadmap (2026–2030): Mobile-First, Then Glass-Native
+## 16. Strategic Roadmap: Mobile-First, Then Glass-Native
 
 ### The Phased Approach
 
 CANVS will be built in two major phases, recognizing that AR glasses are 2-4 years from mainstream adoption while mobile AR is production-ready today:
 
 ```
-Phase 1: Mobile App Foundation (2026-2027)
+Phase 1: Mobile App Foundation
     ↓
-Phase 2: Glass-Native Transition (2028-2030)
+Phase 2: Glass-Native Transition
 ```
 
 **Strategic Rationale:**
-* **Billions** of AR-capable smartphones are deployed today
-* AR glasses (Apple, Meta, Google) arriving 2026-2027 as early-adopter products
-* **2-3 year window** to build content networks and user habits before hardware shift
-* Mobile establishes the data assets, social graphs, and behaviors that transfer to glasses
+- **Billions** of AR-capable smartphones are deployed today
+- AR glasses (Apple, Meta, Google) arriving 2026-2029 as early-adopter products
+- **2-3 year window** to build content networks and user habits before hardware shift
+- Mobile establishes the data assets, social graphs, and behaviors that transfer to glasses
 
 ---
 
-### Phase 1: Mobile App MVP (2026)
+### Phase 1: Mobile App MVP
 
 **Objective:** Prove the core loop; establish content networks; build user base.
 
 #### 1A: Core Mobile Features
 
 **Map Mode (Primary Experience)**
-* Discover nearby CANVS content on an interactive map
-* Filter by type: memories, recommendations, community notes, trails
-* See content density "heat maps" for exploration
-* Non-AR native - works on any smartphone
+- Discover nearby CANVS content on an interactive map
+- Filter by type: memories, recommendations, community notes, trails
+- See content density "heat maps" for exploration
+- Non-AR native - works on any smartphone
 
 **Creation Tools (Mobile-First)**
-* Pin text, photos, audio, video to locations
-* Simple capture: point phone, record, anchor
-* Privacy controls: public / friends / groups / self
-* Time-lock options for future reveal
+- Pin text, photos, audio, video to locations
+- Simple capture: point phone, record, anchor
+- Privacy controls: public / friends / groups / self
+- Time-lock options for future reveal
 
 **AR Mode (Enhancement Layer)**
-* Optional AR view using ARKit/ARCore
-* See content floating at anchor points
-* Walk toward content to "approach" it
-* 10-30 second interaction design (not continuous)
-* Graceful degradation when tracking confidence is low
+- Optional AR view using ARKit/ARCore
+- See content floating at anchor points
+- Walk toward content to "approach" it
+- 10-30 second interaction design (not continuous)
+- Graceful degradation when tracking confidence is low
 
 **Social Features**
-* Friend connections (import from contacts)
-* Follow specific places or creators
-* Activity feed: what friends created/discovered
-* Async interaction: reply to content at locations you visit later
+- Friend connections (import from contacts)
+- Follow specific places or creators
+- Activity feed: what friends created/discovered
+- Async interaction: reply to content at locations you visit later
 
 #### 1B: Technical Foundation
 
-* **Multi-provider positioning**: ARCore Geospatial (primary), GPS (fallback)
-* **Cloud anchor system**: Persistent content across users and time
-* **Confidence-aware rendering**: Content appears when positioning is reliable
-* **Battery optimization**: Intelligent polling; AR as opt-in enhancement
-* **Device capability detection**: Graceful feature adaptation
+- **Multi-provider positioning**: ARCore Geospatial (primary), GPS (fallback)
+- **Cloud anchor system**: Persistent content across users and time
+- **Confidence-aware rendering**: Content appears when positioning is reliable
+- **Battery optimization**: Intelligent polling; AR as opt-in enhancement
+- **Device capability detection**: Graceful feature adaptation
 
 #### 1C: Launch Strategy
 
@@ -649,17 +674,17 @@ Phase 2: Glass-Native Transition (2028-2030)
 5. Expand neighborhood by neighborhood, city by city
 
 **Initial Target Markets:**
-* University campuses (captive audience, high engagement potential)
-* Tourist destinations (tourism boards as partners)
-* Music/entertainment venues (concert experiences)
-* Neighborhoods with strong local identity
+- University campuses (captive audience, high engagement potential)
+- Tourist destinations (tourism boards as partners)
+- Music/entertainment venues (concert experiences)
+- Neighborhoods with strong local identity
 
 **Success Metrics:**
-* MPI/week (Meaningful Place Interactions per user per week)
-* Content density per square km in active areas
-* Week 1 / Week 4 / Week 12 retention
-* Time to first content creation
-* AR mode adoption rate (enhancement, not requirement)
+- MPI/week (Meaningful Place Interactions per user per week)
+- Content density per square km in active areas
+- Week 1 / Week 4 / Week 12 retention
+- Time to first content creation
+- AR mode adoption rate (enhancement, not requirement)
 
 ---
 
@@ -667,51 +692,51 @@ Phase 2: Glass-Native Transition (2028-2030)
 
 **Objective:** Expand coverage; introduce AI filtering; build business relationships.
 
-* **AI "Reality Filter" v1**: summarization, semantic search, friend-memory surfacing
-* **Trails, drops, portals**: Richer content primitives
-* **Local business claims**: Venue dashboard and basic analytics
-* **Creator marketplace**: Early tools for content monetization
-* **Web-native sharing**: Location-locked experiences via link (WebAR for discovery)
-* **Geographic expansion**: 10+ cities with meaningful content density
+- **AI "Reality Filter" v1**: summarization, semantic search, friend-memory surfacing
+- **Trails, drops, portals**: Richer content primitives
+- **Local business claims**: Venue dashboard and basic analytics
+- **Creator marketplace**: Early tools for content monetization
+- **Web-native sharing**: Location-locked experiences via link (WebAR for discovery)
+- **Geographic expansion**: 10+ cities with meaningful content density
 
 **Data Assets Being Collected:**
-* User location patterns and preferences
-* Venue/place metadata from user activity
-* Social connection graphs tied to locations
-* User-generated content anchored to millions of places
-* Movement patterns and "moments" data
+- User location patterns and preferences
+- Venue/place metadata from user activity
+- Social connection graphs tied to locations
+- User-generated content anchored to millions of places
+- Movement patterns and "moments" data
 
 *These assets become critical for glasses-native experiences.*
 
 ---
 
-### Phase 2: Glass-Native Transition (2028–2030)
+### Phase 2: Glass-Native Transition (2029–2031)
 
 **Objective:** Become the default spatial social layer across devices.
 
-#### 2028: Early Glass Integration
+#### 2029: Early Glass Integration
 
-* **visionOS app**: Ship for Apple Vision Pro (even with low adoption) for developer credibility
-* **Android XR early access**: Position for Google/Samsung glasses launch
-* **Snap Specs partnership**: Leverage Snap's 400M MAU Snap Map for spatial discovery
-* **Always-on lightweight layer**: "Glanceable place context" UX
-* **Audio-first features**: Voice check-ins, proximity notifications
-* **Spatial audio cues**: Directional sound for content discovery
+- **visionOS app**: Ship for Apple Vision Pro (even with low adoption) for developer credibility
+- **Android XR early access**: Position for Google/Samsung glasses launch
+- **Snap Specs partnership**: Leverage Snap's 400M MAU Snap Map for spatial discovery
+- **Always-on lightweight layer**: "Glanceable place context" UX
+- **Audio-first features**: Voice check-ins, proximity notifications
+- **Spatial audio cues**: Directional sound for content discovery
 
-#### 2029: Platformization
+#### 2030: Platformization
 
-* **Public SDK**: Third-party "place apps" can build on CANVS location layer
-* **Verified civic layers**: Cities, museums, campuses as official content sources
-* **Indoor positioning**: Venue partnerships for interior navigation
-* **Enterprise tools**: Real estate, tourism, retail analytics (privacy-preserving)
-* **Standards alignment**: Portable XR workflows for cross-platform content
+- **Public SDK**: Third-party "place apps" can build on CANVS location layer
+- **Verified civic layers**: Cities, museums, campuses as official content sources
+- **Indoor positioning**: Venue partnerships for interior navigation
+- **Enterprise tools**: Real estate, tourism, retail analytics (privacy-preserving)
+- **Standards alignment**: Portable XR workflows for cross-platform content
 
-#### 2030: The Spatial Social OS
+#### 2031: The Spatial Social OS
 
-* **Default "meaning layer"**: CANVS runs across phones, glasses, and future devices
-* **Places become queryable**: "What should I know about this place?"
-* **Emotionally legible world**: AI understands "vibe" of locations
-* **The feed is obsolete**: Location and context replace algorithmic curation
+- **Default "meaning layer"**: CANVS runs across phones, glasses, and future devices
+- **Places become queryable**: "What should I know about this place?"
+- **Emotionally legible world**: AI understands "vibe" of locations
+- **The feed is obsolete**: Location and context replace algorithmic curation
 
 ---
 
@@ -720,10 +745,10 @@ Phase 2: Glass-Native Transition (2028-2030)
 | Year | Hardware State | CANVS Position |
 |------|----------------|----------------|
 | **2026** | Smart glasses (audio + camera); Meta leads | Mobile app launch; build content network |
-| **2027** | Display glasses emerge ($300-800) | Scale mobile; begin glasses R&D |
-| **2028** | Apple/Google AR glasses launch | Ship glasses apps; establish ecosystem position |
-| **2029** | 43M+ AR devices projected | Multi-platform growth; platformization |
-| **2030** | AR glasses approach mainstream | Glass-native default; spatial social OS |
+| **2028** | Display glasses emerge ($300-800) | Scale mobile; begin glasses R&D |
+| **~2029** | Apple/Google AR glasses launch | Ship glasses apps; establish ecosystem position |
+| **~2029** | 43M+ AR devices projected | Multi-platform growth; platformization |
+| **~2030** | AR glasses approach mainstream | Glass-native default; spatial social OS |
 
 **Strategic Insight:** The race is for **data assets**, not hardware. Whoever has the best location intelligence, social graphs, and spatial content will power the glasses experiences of 2028-2030. Building on mobile NOW creates the foundation.
 
@@ -742,18 +767,18 @@ CANVS is built for the spatial era.
 
 The infrastructure is converging:
 
-* AR anchoring stacks exist across major ecosystems
-* The AR Cloud concept supports persistent shared experiences
-* Spatial computing devices are accelerating beyond labs
-* Location-based AR has demonstrated real-world behavior change at scale
+- AR anchoring stacks exist across major ecosystems
+- The AR Cloud concept supports persistent shared experiences
+- Spatial computing devices are accelerating beyond labs
+- Location-based AR has demonstrated real-world behavior change at scale
 
 This creates a window where a "spatial social layer" can become:
 
-* **the default discovery interface for cities**
-* **the default memory interface for human life**
-* **the default coordination layer for communities**
-* **the default canvas for creators**
-* **the default AR layer for glasses**
+- **the default discovery interface for cities**
+- **the default memory interface for human life**
+- **the default coordination layer for communities**
+- **the default canvas for creators**
+- **the default AR layer for glasses**
 
 ### Why CANVS Can Win
 
@@ -766,10 +791,10 @@ This creates a window where a "spatial social layer" can become:
 
 **Unique Positioning:**
 CANVS occupies a space no one else is targeting:
-* **Not transactional** (unlike Yelp, Google Maps)
-* **Not gamified** (unlike Pokemon GO)
-* **Not forced authenticity** (unlike BeReal)
-* **Not surveillance-based** (unlike Facebook)
+- **Not transactional** (unlike Yelp, Google Maps)
+- **Not gamified** (unlike Pokemon GO)
+- **Not forced authenticity** (unlike BeReal)
+- **Not surveillance-based** (unlike Facebook)
 
 Instead: **Emotional, persistent, movement-encouraging, community-building, privacy-first**
 
@@ -793,40 +818,35 @@ A world where no moment is lost—because the place remembers.
 4. **Prepare for glasses** — architect for the transition that will reshape computing
 5. **Own the meaning layer** — not the AR Cloud, but what makes it matter to humans
 
-The window is 2-3 years. The opportunity is once-a-decade. The time is now.
-
 ---
 
 ## Appendix A: Research Sources
 
 ### Market Research
-* [Grand View Research - AR Market](https://www.grandviewresearch.com/industry-analysis/augmented-reality-market)
-* [Fortune Business Insights - Location-Based Services](https://www.fortunebusinessinsights.com/industry-reports/location-based-services-market-101060)
-* [SNS Insider - Mobile AR Market](https://www.globenewswire.com/news-release/2025/10/28/3175180/0/en/Mobile-Augmented-Reality-Market-Size-to-Surpass-USD-327-7-Billion-by-2032-Rising-at-a-CAGR-of-30-84-Report-by-SNS-Insider.html)
+- [Grand View Research - AR Market](https://www.grandviewresearch.com/industry-analysis/augmented-reality-market)
+- [Fortune Business Insights - Location-Based Services](https://www.fortunebusinessinsights.com/industry-reports/location-based-services-market-101060)
+- [SNS Insider - Mobile AR Market](https://www.globenewswire.com/news-release/2025/10/28/3175180/0/en/Mobile-Augmented-Reality-Market-Size-to-Surpass-USD-327-7-Billion-by-2032-Rising-at-a-CAGR-of-30-84-Report-by-SNS-Insider.html)
 
 ### Technology & Platforms
-* [Google ARCore Geospatial API](https://developers.google.com/ar/develop/geospatial)
-* [Niantic Lightship VPS](https://lightship.dev/docs/ardk/features/lightship_vps/)
-* [Apple ARKit Documentation](https://developer.apple.com/documentation/arkit)
+- [Google ARCore Geospatial API](https://developers.google.com/ar/develop/geospatial)
+- [Niantic Lightship VPS](https://lightship.dev/docs/ardk/features/lightship_vps/)
+- [Apple ARKit Documentation](https://developer.apple.com/documentation/arkit)
 
 ### Competitive Analysis
-* [Business of Apps - Pokemon GO Statistics](https://www.businessofapps.com/data/pokemon-go-statistics/)
-* [Snap Map 400M MAU](https://techcrunch.com/2025/05/07/snap-map-reaches-new-milestone-of-400m-monthly-active-users/)
+- [Business of Apps - Pokemon GO Statistics](https://www.businessofapps.com/data/pokemon-go-statistics/)
+- [Snap Map 400M MAU](https://techcrunch.com/2025/05/07/snap-map-reaches-new-milestone-of-400m-monthly-active-users/)
 
 ### Gen Z & Social Trends
-* [Human8 - Gen Z Digital Exhaustion 2025](https://www.wearehuman8.com/blog/gen-z-in-2025-navigating-digital-exhaustion-in-a-digitally-native-world/)
-* [Cropink - Social Media Mental Health Statistics](https://cropink.com/social-media-mental-health-statistics)
+- [Human8 - Gen Z Digital Exhaustion 2025](https://www.wearehuman8.com/blog/gen-z-in-2025-navigating-digital-exhaustion-in-a-digitally-native-world/)
+- [Cropink - Social Media Mental Health Statistics](https://cropink.com/social-media-mental-health-statistics)
 
 ### AR Glasses Timeline
-* [Glass Almanac - AR Glasses 2026](https://glassalmanac.com/7-ar-glasses-and-platforms-in-2026-that-could-surprise-consumers-what-changes/)
-* [IDC - AR/VR Market Insights](https://www.idc.com/promo/arvr/)
+- [Glass Almanac - AR Glasses 2026](https://glassalmanac.com/7-ar-glasses-and-platforms-in-2026-that-could-surprise-consumers-what-changes/)
+- [IDC - AR/VR Market Insights](https://www.idc.com/promo/arvr/)
 
 ### Historical Lessons
-* [Slidebean - What Happened to Foursquare](https://slidebean.com/story/what-happened-to-foursquare)
-* [Harvard JSEL - Pokemon Go Class Action](https://journals.law.harvard.edu/jsel/2019/04/pokemon-go-class-action-settles-as-augmented-reality-legal-questions-remain/)
-* [A16Z - The Cold Start Problem](https://a16z.com/books/the-cold-start-problem/)
+- [Slidebean - What Happened to Foursquare](https://slidebean.com/story/what-happened-to-foursquare)
+- [Harvard JSEL - Pokemon Go Class Action](https://journals.law.harvard.edu/jsel/2019/04/pokemon-go-class-action-settles-as-augmented-reality-legal-questions-remain/)
+- [A16Z - The Cold Start Problem](https://a16z.com/books/the-cold-start-problem/)
 
 ---
-
-*Document Version: 2.0 - January 2026*
-*Updated with market research, competitive analysis, and mobile-first phased approach*

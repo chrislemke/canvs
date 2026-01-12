@@ -1402,6 +1402,42 @@
         outline: 2px solid var(--terracotta);
         outline-offset: 2px;
       }
+
+      /* ========================================
+           BUTTON STYLES
+           ======================================== */
+      .btn-scribble {
+        background: transparent;
+        border: 2px solid var(--ink);
+        border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+        padding: 14px 32px;
+        font-family: var(--font-sans);
+        font-weight: 500;
+        font-size: 13px;
+        letter-spacing: 0.04em;
+        color: var(--ink);
+        cursor: pointer;
+        transition: all var(--duration-normal) var(--ease-out-quart);
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .btn-scribble:hover {
+        background: var(--terracotta);
+        color: var(--alabaster);
+        border-color: var(--terracotta);
+        transform: translateY(-3px) rotate(-1deg);
+        box-shadow: 4px 4px 0 var(--ink);
+      }
+
+      .btn-scribble:focus-visible {
+        outline: 2px solid var(--terracotta);
+        outline-offset: 4px;
+      }
     </style>
   </head>
   <body>
@@ -1486,6 +1522,29 @@
         <p class="paper-meta">
           Product Vision Paper & Strategic Roadmap (2026-2030)
         </p>
+
+        <a
+          href="assets/pdf/product_vision.pdf"
+          class="btn-scribble"
+          download
+          style="margin-top: 24px"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          Download Vision Paper
+        </a>
       </section>
 
       <!-- Paper Layout with Sidebar -->
