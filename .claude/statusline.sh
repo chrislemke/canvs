@@ -109,17 +109,17 @@ else
   fi
 fi
 
-# Check claude-flow@alpha integration status
+# Check agentic-flow@alpha integration status
 INTEGRATION_STATUS="○"
 if [ -f "package.json" ]; then
-  if grep -q "claude-flow.*alpha" package.json 2>/dev/null; then
+  if grep -q "agentic-flow.*alpha" package.json 2>/dev/null; then
     INTEGRATION_STATUS="●"
   fi
 fi
 
 # REAL-TIME SWARM DETECTION
-# Count active claude-flow processes
-ACTIVE_PROCESSES=$(ps aux 2>/dev/null | grep -E "claude-flow" | grep -v grep | wc -l)
+# Count active agentic-flow processes
+ACTIVE_PROCESSES=$(ps aux 2>/dev/null | grep -E "(agentic-flow|claude-flow)" | grep -v grep | wc -l)
 
 # Check for real-time activity data from swarm monitor
 SWARM_ACTIVITY=".claude-flow/metrics/swarm-activity.json"
@@ -135,9 +135,9 @@ if [ -f "$SWARM_ACTIVITY" ]; then
   fi
 elif [ "$ACTIVE_PROCESSES" -gt 0 ]; then
   # Fallback to heuristic if no swarm monitor data
-  DYNAMIC_AGENTS=$(ps aux 2>/dev/null | grep -E "claude-flow.*agent" | grep -v grep | wc -l)
+  DYNAMIC_AGENTS=$(ps aux 2>/dev/null | grep -E "agentic-flow.*agent" | grep -v grep | wc -l)
 
-  # If we have claude-flow processes but no specific agents, use a heuristic
+  # If we have agentic-flow processes but no specific agents, use a heuristic
   if [ "$DYNAMIC_AGENTS" -eq 0 ] && [ "$ACTIVE_PROCESSES" -gt 0 ]; then
     DYNAMIC_AGENTS=$((ACTIVE_PROCESSES / 2))
     if [ "$DYNAMIC_AGENTS" -eq 0 ] && [ "$ACTIVE_PROCESSES" -gt 0 ]; then

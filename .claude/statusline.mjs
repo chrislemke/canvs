@@ -1,5 +1,5 @@
 /**
- * Claude Flow V3 Statusline for Claude Code
+ * Agentic Flow Statusline for Claude Code
  * Shows model, tokens, cost, swarm status, and memory usage
  */
 
@@ -21,7 +21,7 @@ function getSwarmStatus() {
 
   try {
     const result = execSync(
-      'npx claude-flow@alpha mcp status 2>/dev/null || echo "idle"',
+      'npx agentic-flow@alpha mcp status 2>/dev/null || echo "idle"',
       {
         encoding: "utf-8",
         timeout: 2000,
